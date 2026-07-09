@@ -15,5 +15,6 @@ Original prompt: build this
 
 ## Remaining manual notes
 
-- Production URL is `https://super-sean-007-jrpg.pages.dev/`; canonical metadata, sitemap and robots now use it.
-- Add real Adsterra unit scripts and update `_headers` CSP only after production ad domains are known.
+- Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
+- Production Adsterra units (Social Bar, Native Banner, 728x90/468x60/320x50/300x250/160x600/160x300) are live via `ads.js`; `_headers` CSP allows the network's rotating HTTPS domains.
+- Footer credits © 2026 Fire Dragon Interactive (www.firedragoninteractive.com).

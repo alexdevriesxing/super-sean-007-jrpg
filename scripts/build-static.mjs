@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const projectRoot = path.resolve('super_sean_007_full_project_wired');
 const distRoot = path.resolve('dist');
-const entries = ['assets', 'data', 'docs', 'game.js', 'asset-library.js', 'styles.css', 'favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt', 'ai-summary.json', 'site.webmanifest', 'humans.txt', 'security.txt', '_headers', '_redirects'];
+const entries = ['assets', 'data', 'docs', 'game.js', 'asset-library.js', 'ads.js', 'styles.css', 'favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt', 'ai-summary.json', 'site.webmanifest', 'humans.txt', 'security.txt', '_headers', '_redirects'];
 
 await mkdir(distRoot, { recursive: true });
 

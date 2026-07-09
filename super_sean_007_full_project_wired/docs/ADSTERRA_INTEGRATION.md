@@ -1,24 +1,25 @@
 # Adsterra Integration
 
-This project is prepared for Adsterra monetization, but it does not include production ad scripts, ad unit IDs or third-party tracking code.
+Production Adsterra ad units are live on www.supersean007.com. `ads.js` is the single loader that fills every placement.
 
 ## Config Files
 
-- `data/ad-config.json` controls placement metadata, cooldowns and safe interstitial reasons.
-- `src/config/ads.ts` documents the future typed config surface.
-- `game.js` exposes `AdManager` through `window.SuperSeanGame.adManager`.
+- `ads.js` - production loader: injects the Social Bar, Native Banner and responsive iframe banners.
+- `data/ad-config.json` - documents the live unit keys, placement metadata, cooldowns and safe interstitial reasons.
+- `game.js` exposes `AdManager` through `window.SuperSeanGame.adManager` for reward/interstitial pacing.
 
 ## Website Placements
 
-The HTML uses `data-adsterra-placement` attributes:
+The HTML uses `data-adsterra-placement` attributes; `ads.js` picks the banner size by slot width (728x90 / 468x60 / 320x50):
 
-- `top-banner-728x90` - header/banner placement.
-- `game-sidebar-native` - game sidebar/native placement.
-- `content-native-responsive` - in-content responsive/native placement.
-- `below-game-responsive` - below-game responsive placement.
-- `footer-banner-responsive` - footer responsive placement.
+- `top-banner-728x90` - leaderboard below the hero (728x90 desktop, 320x50 mobile).
+- `game-sidebar-native` - 300x250 box in the game sidebar.
+- `game-sidebar-skyscraper` - desktop-only 160x600 (160x300 on medium layouts).
+- `content-native-responsive` - Adsterra Native Banner in-content.
+- `below-game-responsive` - responsive leaderboard below the game.
+- `footer-banner-responsive` - responsive leaderboard above the footer.
 
-Paste future Adsterra script snippets into the matching containers or initialize them from one loader script that reads `data/ad-config.json`.
+The Social Bar script is injected once per page load and handles desktop and mobile automatically. Each `atOptions` banner is rendered inside its own iframe so multiple units never clash.
 
 ## In-Game Reward Hooks
 
@@ -52,11 +53,4 @@ Do not show interstitials:
 
 ## CSP Notes
 
-`_headers` currently uses a conservative self-hosted CSP with inline support for this static build. Once Adsterra provides production domains, update:
-
-- `script-src`
-- `frame-src`
-- `img-src`
-- `connect-src`
-
-Document every added third-party domain before launch.
+Adsterra serves from rotating domains, so `_headers` allows `https:` for `script-src`, `frame-src`, `img-src`, `connect-src`, `style-src` and `font-src` while keeping `default-src 'self'` and strict `base-uri`. Media stays self-hosted.

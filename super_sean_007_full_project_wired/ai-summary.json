@@ -1,6 +1,12 @@
 {
   "game_title": "Super Sean 007: Legend of the Seven Gems",
   "short_name": "Super Sean 007",
+  "official_url": "https://www.supersean007.com/",
+  "publisher": {
+    "name": "Fire Dragon Interactive",
+    "url": "https://www.firedragoninteractive.com/"
+  },
+  "copyright": "© 2026 Fire Dragon Interactive",
   "genre": ["HTML5 browser JRPG", "2D fantasy role-playing game", "turn-based adventure"],
   "platform": ["Web browser", "HTML5 Canvas", "Desktop", "Tablet", "Mobile"],
   "status": "Production-ready website plus expandable playable HTML5 JRPG foundation.",
@@ -14,7 +20,7 @@
     "summary": "A cozy magical fantasy universe with Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains, Ruushwood, Haraku's Moon Shrine, Ancient Ruins of 007 and Bald Moon Tower."
   },
   "gameplay_summary": "Players guide Super Sean and friends through top-down exploration, NPC dialogue, quests, treasure chests, local save/load, turn-based battles, XP, coins, items, friendship powers and region unlocks.",
-  "monetization_model": "Free-to-play browser game prepared for optional Adsterra ad placements and rewarded ad hooks. No production ad scripts or unit IDs are included yet.",
+  "monetization_model": "Free-to-play, ad-supported browser game with Adsterra banner, native and social bar placements plus in-game rewarded ad hooks.",
   "how_to_play": {
     "movement": "Use WASD or Arrow keys, or mobile touch controls.",
     "interact": "Press E or tap Interact near NPCs, chests, notes or portals.",

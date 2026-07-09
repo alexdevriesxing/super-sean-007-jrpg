@@ -1,4 +1,6 @@
 Super Sean 007: Legend of the Seven Gems
+Site: https://www.supersean007.com/
+Publisher: Fire Dragon Interactive - https://www.firedragoninteractive.com/
 
 Role: Static website and playable HTML5 JRPG foundation
 Build: Browser-first HTML/CSS/JavaScript with generated asset, audio, and slice manifests

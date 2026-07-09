@@ -61,19 +61,18 @@ The browser-game smoke payload used for Playwright client checks is `qa/gameplay
 
 The site includes metadata, Open Graph/Twitter cards, JSON-LD for VideoGame/WebApplication/FAQ, `robots.txt`, `sitemap.xml`, `llms.txt`, `ai-summary.json`, semantic sections and an asset gallery with lazy loading.
 
-Canonical metadata and sitemap URLs currently point at `https://super-sean-007-jrpg.pages.dev/`. Update them if you later attach a custom domain.
+Canonical metadata and sitemap URLs point at the production domain `https://www.supersean007.com/`.
 
 ## Adsterra Integration
 
-No production Adsterra script or ad unit ID is included. Future scripts should be added only after real placement IDs and domains are available.
+Production Adsterra ad units are live and loaded by `super_sean_007_full_project_wired/ads.js`:
 
-Ad configuration lives in:
+- Social Bar (site-wide, desktop and mobile)
+- Native Banner (in-content placement)
+- Responsive iframe banners: 728x90 / 468x60 / 320x50 chosen per slot width (top, below-game, footer)
+- 300x250 box plus a desktop-only 160x600/160x300 skyscraper in the game sidebar
 
-- `super_sean_007_full_project_wired/data/ad-config.json`
-- `super_sean_007_full_project_wired/src/config/ads.ts`
-- `super_sean_007_full_project_wired/docs/ADSTERRA_INTEGRATION.md`
-
-Update `_headers` CSP once the exact Adsterra script, frame, image and connect domains are known.
+Each banner unit renders inside its own isolated iframe so multiple `atOptions` units coexist safely. Unit keys are also documented in `super_sean_007_full_project_wired/data/ad-config.json`, and the `_headers` CSP allows the ad network's rotating HTTPS domains.
 
 ## Cloudflare Pages
 

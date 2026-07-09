@@ -845,7 +845,7 @@
     ctx.fillStyle='#8b4a16'; ctx.font='800 23px Nunito, Arial'; ctx.fillText('Legend of the Seven Gems',480,356);
     ctx.textAlign='start';
     button(365,383,230,36,'New Game / Continue');
-    ctx.font='15px Nunito'; ctx.fillStyle='#ecfbff'; ctx.fillText('Playable HTML5 JRPG foundation · expanded asset library wired in · Adsterra-ready hooks',215,505);
+    ctx.font='15px Nunito'; ctx.fillStyle='#ecfbff'; ctx.fillText('Explore Asteria-007 · Restore the Seven Gems · Stop Xelar the Bald Wizard',255,505);
   }
 
   function drawDialogue() {

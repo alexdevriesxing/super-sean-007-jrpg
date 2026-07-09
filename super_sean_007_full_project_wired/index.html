@@ -12,7 +12,7 @@
   <meta name="author" content="Super Sean 007 Game Team">
   <meta name="category" content="Game">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="canonical" href="https://super-sean-007-jrpg.pages.dev/">
+  <link rel="canonical" href="https://www.supersean007.com/">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="assets/icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
@@ -24,13 +24,13 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Play Super Sean 007: Legend of the Seven Gems">
   <meta property="og:description" content="A free browser JRPG where Super Sean and friends explore Asteria-007, collect treasures, level up and battle Xelar the Bald Wizard.">
-  <meta property="og:image" content="assets/og-image.jpg">
-  <meta property="og:url" content="https://super-sean-007-jrpg.pages.dev/">
+  <meta property="og:image" content="https://www.supersean007.com/assets/og-image.jpg">
+  <meta property="og:url" content="https://www.supersean007.com/">
   <meta property="og:site_name" content="Super Sean 007">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Super Sean 007: Legend of the Seven Gems">
   <meta name="twitter:description" content="Free HTML5 browser JRPG with kawaii sprites, quests, treasures and magical worlds.">
-  <meta name="twitter:image" content="assets/og-image.jpg">
+  <meta name="twitter:image" content="https://www.supersean007.com/assets/og-image.jpg">
 
   <script type="application/ld+json">
   {
@@ -40,6 +40,7 @@
         "@type": "VideoGame",
         "name": "Super Sean 007: Legend of the Seven Gems",
         "alternateName": "Super Sean 007",
+        "url": "https://www.supersean007.com/",
         "description": "A free HTML5 2D browser JRPG where Super Sean and friends explore Asteria-007, collect treasures, complete quests, level up and battle Xelar the Bald Wizard.",
         "genre": ["JRPG", "Role-playing game", "Adventure", "Fantasy"],
         "gamePlatform": ["Web browser", "HTML5", "Desktop browser", "Mobile browser"],
@@ -47,17 +48,27 @@
         "operatingSystem": "Any modern browser",
         "playMode": "SinglePlayer",
         "isAccessibleForFree": true,
-        "image": "assets/og-image.jpg",
+        "image": "https://www.supersean007.com/assets/og-image.jpg",
         "character": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
+        "copyrightYear": 2026,
+        "copyrightHolder": {"@type": "Organization", "name": "Fire Dragon Interactive", "url": "https://www.firedragoninteractive.com/"},
+        "publisher": {"@type": "Organization", "name": "Fire Dragon Interactive", "url": "https://www.firedragoninteractive.com/"},
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
       },
       {
         "@type": "WebApplication",
         "name": "Super Sean 007 HTML5 Game",
+        "url": "https://www.supersean007.com/#play",
         "applicationCategory": "GameApplication",
         "browserRequirements": "Requires JavaScript and HTML5 Canvas",
         "operatingSystem": "Any",
         "isAccessibleForFree": true
+      },
+      {
+        "@type": "WebSite",
+        "name": "Super Sean 007",
+        "url": "https://www.supersean007.com/",
+        "publisher": {"@type": "Organization", "name": "Fire Dragon Interactive", "url": "https://www.firedragoninteractive.com/"}
       },
       {
         "@type": "FAQPage",
@@ -109,7 +120,7 @@
             <li>Turn-based JRPG battles</li>
             <li>Cozy village exploration</li>
             <li>Treasure chests and quests</li>
-            <li>Adsterra-ready reward hooks</li>
+            <li>Free to play in your browser</li>
           </ul>
         </div>
         <div class="hero-card art-card">
@@ -119,7 +130,7 @@
     </section>
 
     <aside class="ad-shell container" aria-label="Sponsored placement">
-      <div class="ad-slot ad-slot-wide" data-adsterra-placement="top-banner-728x90">Adsterra top banner placement · 728×90 / responsive</div>
+      <div class="ad-slot ad-slot-wide" data-adsterra-placement="top-banner-728x90" aria-label="Advertisement">Advertisement</div>
     </aside>
 
     <section id="play" class="section-pad game-section" aria-labelledby="play-title">
@@ -127,22 +138,23 @@
         <div class="section-heading centered">
           <p class="eyebrow">Playable vertical slice</p>
           <h2 id="play-title">Enter Asteria-007</h2>
-          <p>The embedded HTML5 game includes exploration, NPC dialogue, quests, chests, local save/load, simple turn-based battles, XP, coins, items, unlockable paths and ad reward placeholders.</p>
+          <p>The embedded HTML5 game includes exploration, NPC dialogue, quests, chests, local save/load, simple turn-based battles, XP, coins, items, unlockable paths and optional bonus rewards.</p>
         </div>
         <div class="game-layout">
           <div class="game-frame">
             <canvas id="gameCanvas" width="960" height="540" aria-label="Super Sean 007 HTML5 game canvas"></canvas>
             <div class="mobile-controls" aria-label="Touch controls">
               <div class="dpad">
-                <button onpointerdown="SuperSeanGame.press('up',true)" onpointerup="SuperSeanGame.press('up',false)" onpointerleave="SuperSeanGame.press('up',false)">▲</button>
-                <button onpointerdown="SuperSeanGame.press('left',true)" onpointerup="SuperSeanGame.press('left',false)" onpointerleave="SuperSeanGame.press('left',false)">◀</button>
-                <button onpointerdown="SuperSeanGame.press('down',true)" onpointerup="SuperSeanGame.press('down',false)" onpointerleave="SuperSeanGame.press('down',false)">▼</button>
-                <button onpointerdown="SuperSeanGame.press('right',true)" onpointerup="SuperSeanGame.press('right',false)" onpointerleave="SuperSeanGame.press('right',false)">▶</button>
+                <button aria-label="Move up" onpointerdown="SuperSeanGame.press('up',true)" onpointerup="SuperSeanGame.press('up',false)" onpointerleave="SuperSeanGame.press('up',false)" onpointercancel="SuperSeanGame.press('up',false)" oncontextmenu="return false">▲</button>
+                <button aria-label="Move left" onpointerdown="SuperSeanGame.press('left',true)" onpointerup="SuperSeanGame.press('left',false)" onpointerleave="SuperSeanGame.press('left',false)" onpointercancel="SuperSeanGame.press('left',false)" oncontextmenu="return false">◀</button>
+                <button aria-label="Move down" onpointerdown="SuperSeanGame.press('down',true)" onpointerup="SuperSeanGame.press('down',false)" onpointerleave="SuperSeanGame.press('down',false)" onpointercancel="SuperSeanGame.press('down',false)" oncontextmenu="return false">▼</button>
+                <button aria-label="Move right" onpointerdown="SuperSeanGame.press('right',true)" onpointerup="SuperSeanGame.press('right',false)" onpointerleave="SuperSeanGame.press('right',false)" onpointercancel="SuperSeanGame.press('right',false)" oncontextmenu="return false">▶</button>
               </div>
               <div class="action-pad">
                 <button onclick="SuperSeanGame.interact()">Interact</button>
                 <button onclick="SuperSeanGame.menu('quest')">Quest</button>
                 <button onclick="SuperSeanGame.menu('inventory')">Bag</button>
+                <button onclick="SuperSeanGame.menu('map')">Map</button>
                 <button onclick="SuperSeanGame.save()">Save</button>
               </div>
             </div>
@@ -150,16 +162,17 @@
           <aside class="game-sidebar">
             <div class="info-card">
               <h3>Controls</h3>
-              <p><strong>Move:</strong> WASD / Arrow keys<br><strong>Interact:</strong> E<br><strong>Quest log:</strong> Q<br><strong>Inventory:</strong> I<br><strong>World map:</strong> M<br><strong>Save:</strong> P<br><strong>Battle:</strong> click commands or press 1–6</p>
+              <p><strong>Move:</strong> WASD / Arrow keys or touch D-pad<br><strong>Interact:</strong> E or tap Interact<br><strong>Quest log:</strong> Q<br><strong>Inventory:</strong> I<br><strong>World map:</strong> M<br><strong>Save:</strong> P<br><strong>Battle:</strong> click/tap commands or press 1–6<br><strong>Audio:</strong> O music · L sound effects</p>
             </div>
-            <div class="ad-slot ad-slot-box" data-adsterra-placement="game-sidebar-native">Adsterra native/sidebar placement</div>
+            <div class="ad-slot ad-slot-box" data-adsterra-placement="game-sidebar-native" aria-label="Advertisement">Advertisement</div>
+            <div class="ad-slot ad-slot-sky desktop-only" data-adsterra-placement="game-sidebar-skyscraper" aria-label="Advertisement">Advertisement</div>
             <div class="info-card">
-              <h3>Build status</h3>
-              <p>This package is a production-ready static website and playable expandable game foundation. The full RPG content can now be expanded region-by-region using the included data, assets and code structure.</p>
+              <h3>Adventure tips</h3>
+              <p>Talk to Elder Brightbeard to begin your quest, open every chest you find, and build your Friendship meter by guarding in battle — a full meter unleashes the mighty Friendship Burst. Your progress saves right in your browser.</p>
             </div>
           </aside>
         </div>
-        <div class="ad-slot ad-slot-wide below-game-ad" data-adsterra-placement="below-game-responsive">Adsterra below-game responsive placement</div>
+        <div class="ad-slot ad-slot-wide below-game-ad" data-adsterra-placement="below-game-responsive" aria-label="Advertisement">Advertisement</div>
       </div>
     </section>
 
@@ -280,7 +293,7 @@
           <article><h3>Leveling</h3><p>XP, level-ups, HP/MP growth, attack/defense growth and future skill tree hooks.</p></article>
           <article><h3>Items and treasures</h3><p>Coins, Berry Juice, Crystal Candy, Moon Tea, Guardian Shards and collectible future decorations.</p></article>
           <article><h3>Friendship meter</h3><p>Build friendship by guarding, casting skills and defeating bosses, then unleash combo power.</p></article>
-          <article><h3>Adsterra-ready design</h3><p>Ad slots are placed around natural breaks: menu banners, native sidebar, optional reward chest and revive reward placeholder.</p></article>
+          <article><h3>Free, ad-supported play</h3><p>The adventure is completely free. Ads sit around natural breaks, and optional reward chests and battle revives give bonus perks.</p></article>
         </div>
       </div>
     </section>
@@ -339,7 +352,7 @@
           <h2 id="seo-title">Ready to be found by search engines and AI answer engines</h2>
           <p>The package includes semantic HTML, rich internal sections, Open Graph metadata, Twitter cards, structured data for VideoGame/WebApplication/FAQ, robots.txt, sitemap.xml, manifest icons, llms.txt and an AI summary JSON file.</p>
         </div>
-        <div class="ad-slot ad-slot-wide small" data-adsterra-placement="content-native-responsive">Adsterra in-content responsive/native placement</div>
+        <div class="ad-slot ad-slot-wide small" data-adsterra-placement="content-native-responsive" aria-label="Advertisement">Advertisement</div>
       </div>
     </section>
 
@@ -349,7 +362,7 @@
         <h2 id="faq-title">Frequently asked questions</h2>
         <details open><summary>Is this a complete finished commercial JRPG?</summary><p>This package is a full SEO/GAIO website plus a playable HTML5 JRPG foundation/vertical slice. It is built to expand into the complete game with additional maps, quests, assets, bosses and systems.</p></details>
         <details><summary>Does it work without a backend?</summary><p>Yes. The game is a static HTML5 Canvas app and saves progress locally in the browser with localStorage.</p></details>
-        <details><summary>Where do Adsterra ads go?</summary><p>Adsterra placeholders are included on the website and in the game reward flow. Production ad scripts can be inserted into the marked ad containers and the AdManager hooks in game.js.</p></details>
+        <details><summary>Is the game really free?</summary><p>Yes. Super Sean 007 is completely free to play in your browser. The site is supported by non-intrusive ads placed around natural breaks in the page and game flow.</p></details>
         <details><summary>Can AI coding tools expand this?</summary><p>Yes. The code is modular enough for AI build tools to add maps, items, quests, enemies, dialogue and mechanics. The ZIP includes metadata JSON files and build notes.</p></details>
         <details><summary>What music and sound effects are included?</summary><p>The project includes procedurally generated WAV music loops for the title screen, village exploration, battles and victory, plus SFX for UI, menus, slashes, hits, chests, rewards, level-ups and portals.</p></details>
         <details><summary>Are the graphics sliced?</summary><p>Yes. The build generates sliced character frames, region tiles, enemies, HUD parts, pickups and VFX metadata from the included source sheets while preserving the full original asset library.</p></details>
@@ -361,10 +374,10 @@
         <div>
           <p class="eyebrow">Privacy, cookies and ads</p>
           <h2 id="privacy-title">Ad-supported free-to-play placeholders</h2>
-          <p>Super Sean 007 is prepared as a free browser game with optional ad-supported placements and reward hooks. No production ad network scripts or tracking IDs are included in this build.</p>
-          <p>Before launch, replace this placeholder with a full privacy policy, cookie notice, consent flow where legally required, real contact details and the exact Adsterra domains used by each placement.</p>
+          <p>Super Sean 007 is a free browser game supported by advertising. This site shows ads served by the Adsterra network across banner, native and social bar placements, and offers optional rewarded ad hooks inside the game.</p>
+          <p>Ad partners may use cookies or similar technologies to measure and serve ads. By playing, you agree to the display of these ads. Game progress is saved only in your own browser via localStorage and is never uploaded.</p>
         </div>
-        <div class="ad-slot ad-slot-wide" data-adsterra-placement="footer-banner-responsive">Adsterra footer responsive placement</div>
+        <div class="ad-slot ad-slot-wide" data-adsterra-placement="footer-banner-responsive" aria-label="Advertisement">Advertisement</div>
       </div>
     </section>
   </main>
@@ -389,14 +402,18 @@
       </div>
       <div>
         <h3>Legal</h3>
-        <a href="docs/README_BUILD.md">Build notes</a>
+        <a href="#privacy">Privacy &amp; ads</a>
         <a href="llms.txt">LLMS summary</a>
         <a href="ai-summary.json">AI summary</a>
       </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 by <a href="https://www.firedragoninteractive.com" rel="noopener">Fire Dragon Interactive</a> · <a href="https://www.firedragoninteractive.com" rel="noopener">www.firedragoninteractive.com</a></p>
     </div>
   </footer>
 
   <script src="asset-library.js" defer></script>
   <script src="game.js" defer></script>
+  <script src="ads.js" defer></script>
 </body>
 </html>

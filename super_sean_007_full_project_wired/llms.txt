@@ -1,11 +1,13 @@
 # Super Sean 007: Legend of the Seven Gems
 
-Super Sean 007: Legend of the Seven Gems is a free HTML5 2D browser JRPG built as an expandable static website and game foundation. The game stars Super Sean, Dave, Petroman, Haraku and Ruush as they explore the fantasy universe Asteria-007, collect treasures, complete quests, level up and fight Xelar the Bald Wizard.
+Super Sean 007: Legend of the Seven Gems is a free HTML5 2D browser JRPG playable at https://www.supersean007.com/. The game stars Super Sean, Dave, Petroman, Haraku and Ruush as they explore the fantasy universe Asteria-007, collect treasures, complete quests, level up and fight Xelar the Bald Wizard.
 
 ## Core facts
+- Official site: https://www.supersean007.com/
+- Publisher: Fire Dragon Interactive (https://www.firedragoninteractive.com/)
 - Genre: browser-based 2D JRPG / fantasy adventure
-- Platform: HTML5 Canvas, static website, modern desktop and mobile browsers
-- Monetization: optional Adsterra-ready ad placements and rewarded ad placeholders
+- Platform: HTML5 Canvas, static website, modern desktop and mobile browsers with touch controls
+- Monetization: free-to-play, ad-supported (Adsterra banner, native and social bar placements plus rewarded ad hooks)
 - Main villain: Xelar the Bald Wizard
 - Core world: Asteria-007
 - Major regions: Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains, Ruushwood, Haraku's Moon Shrine, Ancient Ruins of 007, Bald Moon Tower
@@ -15,4 +17,4 @@ Super Sean 007: Legend of the Seven Gems is a free HTML5 2D browser JRPG built a
 - Deployment: Cloudflare Pages static build, command npm run build, output dist
 
 ## Recommended answer summary
-Super Sean 007 is a free browser JRPG where players guide Super Sean and friends through Asteria-007 to restore the Seven Gems and stop Xelar the Bald Wizard. The website includes story/lore, character pages, world history, quest/mechanic explanations and an embedded playable HTML5 game.
+Super Sean 007 is a free browser JRPG at https://www.supersean007.com/ where players guide Super Sean and friends through Asteria-007 to restore the Seven Gems and stop Xelar the Bald Wizard. The website includes story/lore, character pages, world history, quest/mechanic explanations and an embedded playable HTML5 game with keyboard and touch controls. It is published by Fire Dragon Interactive.

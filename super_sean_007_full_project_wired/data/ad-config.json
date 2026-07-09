@@ -1,37 +1,54 @@
 {
   "provider": "Adsterra",
-  "enabled": false,
+  "enabled": true,
+  "adHost": "demolishwrestconclusions.com",
   "minimumInterstitialSeconds": 180,
+  "units": {
+    "socialBar": { "script": "https://demolishwrestconclusions.com/93/ed/a8/93eda8aa20c1ab61e0841c91645b40a1.js" },
+    "nativeBanner": { "key": "ce88b3be674af35280aa2502234d5353" },
+    "banner728x90": { "key": "a4157228f205b7d03d165ecf28a4b3c8" },
+    "banner468x60": { "key": "3a031ce4ce53b5dd6030ac97fcf64f75" },
+    "banner320x50": { "key": "978406dc84c1b710ab8635624db3beb4" },
+    "banner300x250": { "key": "f999c41ff6862259f0c9d1d406dc29fb" },
+    "banner160x600": { "key": "48784386625737d309fc89aadd64bcde" },
+    "banner160x300": { "key": "1c892303912adafbd9f9fd8e8a19462f" }
+  },
   "placements": {
     "top-banner-728x90": {
       "type": "banner",
       "selector": "[data-adsterra-placement=\"top-banner-728x90\"]",
-      "sizes": ["728x90", "responsive"],
-      "scriptStatus": "placeholder"
+      "sizes": ["728x90", "468x60", "320x50"],
+      "scriptStatus": "live"
     },
     "game-sidebar-native": {
-      "type": "native",
+      "type": "banner",
       "selector": "[data-adsterra-placement=\"game-sidebar-native\"]",
-      "sizes": ["300x250", "responsive"],
-      "scriptStatus": "placeholder"
+      "sizes": ["300x250"],
+      "scriptStatus": "live"
+    },
+    "game-sidebar-skyscraper": {
+      "type": "banner",
+      "selector": "[data-adsterra-placement=\"game-sidebar-skyscraper\"]",
+      "sizes": ["160x600", "160x300"],
+      "scriptStatus": "live"
     },
     "content-native-responsive": {
       "type": "native",
       "selector": "[data-adsterra-placement=\"content-native-responsive\"]",
       "sizes": ["responsive"],
-      "scriptStatus": "placeholder"
+      "scriptStatus": "live"
     },
     "below-game-responsive": {
       "type": "banner",
       "selector": "[data-adsterra-placement=\"below-game-responsive\"]",
-      "sizes": ["responsive"],
-      "scriptStatus": "placeholder"
+      "sizes": ["728x90", "468x60", "320x50"],
+      "scriptStatus": "live"
     },
     "footer-banner-responsive": {
       "type": "banner",
       "selector": "[data-adsterra-placement=\"footer-banner-responsive\"]",
-      "sizes": ["responsive"],
-      "scriptStatus": "placeholder"
+      "sizes": ["728x90", "468x60", "320x50"],
+      "scriptStatus": "live"
     }
   },
   "rewarded": {
