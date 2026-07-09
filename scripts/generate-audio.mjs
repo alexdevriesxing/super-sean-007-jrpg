@@ -36,6 +36,26 @@ function sine(freq, time) {
   return Math.sin(Math.PI * 2 * freq * time);
 }
 
+function hashString(value) {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededRandom(seed) {
+  let value = seed >>> 0;
+  return () => {
+    value += 0x6D2B79F5;
+    let t = value;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 function square(freq, time) {
   return sine(freq, time) >= 0 ? 1 : -1;
 }
@@ -70,12 +90,13 @@ function makeMusic({ duration, bpm, chords, lead, pad = 0.18 }) {
 function makeSfx({ duration, start, end = start, wave = 'sine', gain = 0.45, noise = 0 }) {
   const total = Math.floor(duration * sampleRate);
   const samples = new Float32Array(total);
+  const random = seededRandom(hashString(`${duration}:${start}:${end}:${wave}:${gain}:${noise}`));
   for (let i = 0; i < total; i += 1) {
     const t = i / sampleRate;
     const p = t / duration;
     const freq = start + (end - start) * p;
     const tone = wave === 'square' ? square(freq, t) : sine(freq, t);
-    const hiss = (Math.random() * 2 - 1) * noise;
+    const hiss = (random() * 2 - 1) * noise;
     samples[i] = (tone + hiss) * envelope(t, duration, 0.005, duration * 0.62) * gain;
   }
   return samples;
@@ -151,7 +172,7 @@ await mkdir(path.join(audioRoot, 'music'), { recursive: true });
 await mkdir(path.join(audioRoot, 'sfx'), { recursive: true });
 
 const manifest = {
-  generatedAt: new Date().toISOString(),
+  generatedAt: 'deterministic-build',
   format: 'PCM WAV, mono, 44.1kHz, 16-bit',
   licenseNote: 'Procedurally generated for this project by scripts/generate-audio.mjs.',
   music: {},
