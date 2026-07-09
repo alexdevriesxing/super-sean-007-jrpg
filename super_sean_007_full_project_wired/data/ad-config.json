@@ -1,0 +1,59 @@
+{
+  "provider": "Adsterra",
+  "enabled": false,
+  "minimumInterstitialSeconds": 180,
+  "placements": {
+    "top-banner-728x90": {
+      "type": "banner",
+      "selector": "[data-adsterra-placement=\"top-banner-728x90\"]",
+      "sizes": ["728x90", "responsive"],
+      "scriptStatus": "placeholder"
+    },
+    "game-sidebar-native": {
+      "type": "native",
+      "selector": "[data-adsterra-placement=\"game-sidebar-native\"]",
+      "sizes": ["300x250", "responsive"],
+      "scriptStatus": "placeholder"
+    },
+    "content-native-responsive": {
+      "type": "native",
+      "selector": "[data-adsterra-placement=\"content-native-responsive\"]",
+      "sizes": ["responsive"],
+      "scriptStatus": "placeholder"
+    },
+    "below-game-responsive": {
+      "type": "banner",
+      "selector": "[data-adsterra-placement=\"below-game-responsive\"]",
+      "sizes": ["responsive"],
+      "scriptStatus": "placeholder"
+    },
+    "footer-banner-responsive": {
+      "type": "banner",
+      "selector": "[data-adsterra-placement=\"footer-banner-responsive\"]",
+      "sizes": ["responsive"],
+      "scriptStatus": "placeholder"
+    }
+  },
+  "rewarded": {
+    "daily_chest": {
+      "enabled": true,
+      "cooldownSeconds": 15,
+      "fallbackReward": { "coins": 25 }
+    },
+    "revive": {
+      "enabled": true,
+      "cooldownSeconds": 15,
+      "fallbackReward": { "hpPercent": 60, "mpPercent": 40 }
+    },
+    "post_battle_bonus": {
+      "enabled": true,
+      "cooldownSeconds": 60,
+      "fallbackReward": { "coins": 20 }
+    }
+  },
+  "safeInterstitialReasons": [
+    "dungeon_completion",
+    "boss_victory",
+    "return_to_village"
+  ]
+}

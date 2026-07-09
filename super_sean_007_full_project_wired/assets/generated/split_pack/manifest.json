@@ -1,0 +1,332 @@
+[
+  {
+    "file": "00_full_original_asset_pack.png",
+    "box": [
+      0,
+      0,
+      1536,
+      1024
+    ],
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "file": "01_title_and_pack_cover.png",
+    "box": [
+      0,
+      0,
+      180,
+      245
+    ],
+    "width": 180,
+    "height": 245
+  },
+  {
+    "file": "02_battle_backgrounds.png",
+    "box": [
+      180,
+      0,
+      512,
+      245
+    ],
+    "width": 332,
+    "height": 245
+  },
+  {
+    "file": "03_overworld_map_backgrounds.png",
+    "box": [
+      512,
+      0,
+      813,
+      245
+    ],
+    "width": 301,
+    "height": 245
+  },
+  {
+    "file": "04_dungeon_backgrounds.png",
+    "box": [
+      813,
+      0,
+      1112,
+      245
+    ],
+    "width": 299,
+    "height": 245
+  },
+  {
+    "file": "05_key_art_posters.png",
+    "box": [
+      1112,
+      0,
+      1362,
+      178
+    ],
+    "width": 250,
+    "height": 178
+  },
+  {
+    "file": "06_loading_screens.png",
+    "box": [
+      1112,
+      178,
+      1362,
+      245
+    ],
+    "width": 250,
+    "height": 67
+  },
+  {
+    "file": "07_event_screens_and_dialogue_examples.png",
+    "box": [
+      1362,
+      0,
+      1536,
+      392
+    ],
+    "width": 174,
+    "height": 392
+  },
+  {
+    "file": "08_terrain_tiles.png",
+    "box": [
+      0,
+      245,
+      210,
+      492
+    ],
+    "width": 210,
+    "height": 247
+  },
+  {
+    "file": "09_buildings_and_interiors.png",
+    "box": [
+      210,
+      245,
+      512,
+      492
+    ],
+    "width": 302,
+    "height": 247
+  },
+  {
+    "file": "10_objects_and_decorations.png",
+    "box": [
+      512,
+      245,
+      705,
+      492
+    ],
+    "width": 193,
+    "height": 247
+  },
+  {
+    "file": "11_animated_tiles_water_lava.png",
+    "box": [
+      705,
+      245,
+      914,
+      492
+    ],
+    "width": 209,
+    "height": 247
+  },
+  {
+    "file": "12_ui_hud_elements.png",
+    "box": [
+      914,
+      245,
+      1362,
+      492
+    ],
+    "width": 448,
+    "height": 247
+  },
+  {
+    "file": "13_heroes_party_members.png",
+    "box": [
+      0,
+      492,
+      210,
+      705
+    ],
+    "width": 210,
+    "height": 213
+  },
+  {
+    "file": "14_npcs_townspeople.png",
+    "box": [
+      210,
+      492,
+      512,
+      705
+    ],
+    "width": 302,
+    "height": 213
+  },
+  {
+    "file": "15_enemies_monsters.png",
+    "box": [
+      512,
+      492,
+      705,
+      705
+    ],
+    "width": 193,
+    "height": 213
+  },
+  {
+    "file": "16_bosses_special_enemies.png",
+    "box": [
+      705,
+      492,
+      914,
+      705
+    ],
+    "width": 209,
+    "height": 213
+  },
+  {
+    "file": "17_chests_items_pickups.png",
+    "box": [
+      914,
+      492,
+      1112,
+      705
+    ],
+    "width": 198,
+    "height": 213
+  },
+  {
+    "file": "18_vehicles_mounts.png",
+    "box": [
+      1112,
+      492,
+      1362,
+      705
+    ],
+    "width": 250,
+    "height": 213
+  },
+  {
+    "file": "19_visual_effects_vfx.png",
+    "box": [
+      1362,
+      392,
+      1536,
+      810
+    ],
+    "width": 174,
+    "height": 418
+  },
+  {
+    "file": "20_tileset_expansions_biomes.png",
+    "box": [
+      0,
+      705,
+      512,
+      810
+    ],
+    "width": 512,
+    "height": 105
+  },
+  {
+    "file": "21_animations_partial_examples.png",
+    "box": [
+      512,
+      705,
+      914,
+      912
+    ],
+    "width": 402,
+    "height": 207
+  },
+  {
+    "file": "22_gui_customization_pack.png",
+    "box": [
+      914,
+      705,
+      1362,
+      912
+    ],
+    "width": 448,
+    "height": 207
+  },
+  {
+    "file": "23_misc_weather_fog_map_transitions.png",
+    "box": [
+      1362,
+      810,
+      1536,
+      960
+    ],
+    "width": 174,
+    "height": 150
+  },
+  {
+    "file": "24_parallax_backgrounds_map_and_battle.png",
+    "box": [
+      0,
+      810,
+      512,
+      912
+    ],
+    "width": 512,
+    "height": 102
+  },
+  {
+    "file": "25_achievements_badges_equipment.png",
+    "box": [
+      0,
+      912,
+      305,
+      1024
+    ],
+    "width": 305,
+    "height": 112
+  },
+  {
+    "file": "26_books_food_materials_ores.png",
+    "box": [
+      305,
+      912,
+      610,
+      1024
+    ],
+    "width": 305,
+    "height": 112
+  },
+  {
+    "file": "27_puzzle_doors_portals_switches.png",
+    "box": [
+      610,
+      912,
+      914,
+      1024
+    ],
+    "width": 304,
+    "height": 112
+  },
+  {
+    "file": "28_gui_borders_cursors_font_styles.png",
+    "box": [
+      914,
+      912,
+      1362,
+      1024
+    ],
+    "width": 448,
+    "height": 112
+  },
+  {
+    "file": "29_banners_flags_face_expressions.png",
+    "box": [
+      1362,
+      960,
+      1536,
+      1024
+    ],
+    "width": 174,
+    "height": 64
+  }
+]

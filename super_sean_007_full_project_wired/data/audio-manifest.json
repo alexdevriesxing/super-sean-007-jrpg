@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-07-09T19:21:23.911Z",
+  "format": "PCM WAV, mono, 44.1kHz, 16-bit",
+  "licenseNote": "Procedurally generated for this project by scripts/generate-audio.mjs.",
+  "music": {
+    "title": {
+      "file": "assets/audio/music/title-theme.wav",
+      "loop": true,
+      "description": "Bright title theme for the key-art screen."
+    },
+    "village": {
+      "file": "assets/audio/music/village-loop.wav",
+      "loop": true,
+      "description": "Soft village exploration loop."
+    },
+    "battle": {
+      "file": "assets/audio/music/battle-loop.wav",
+      "loop": true,
+      "description": "Energetic JRPG battle loop."
+    },
+    "victory": {
+      "file": "assets/audio/music/victory-fanfare.wav",
+      "loop": false,
+      "description": "Short victory fanfare after battle."
+    }
+  },
+  "sfx": {
+    "ui_confirm": {
+      "file": "assets/audio/sfx/ui-confirm.wav",
+      "loop": false,
+      "description": "Menu confirm chirp."
+    },
+    "menu_open": {
+      "file": "assets/audio/sfx/menu-open.wav",
+      "loop": false,
+      "description": "Quest/inventory open sound."
+    },
+    "slash": {
+      "file": "assets/audio/sfx/slash.wav",
+      "loop": false,
+      "description": "Crystal Slash sweep."
+    },
+    "hit": {
+      "file": "assets/audio/sfx/hit.wav",
+      "loop": false,
+      "description": "Enemy hit impact."
+    },
+    "chest": {
+      "file": "assets/audio/sfx/chest.wav",
+      "loop": false,
+      "description": "Treasure chest sparkle."
+    },
+    "level_up": {
+      "file": "assets/audio/sfx/level-up.wav",
+      "loop": false,
+      "description": "Level-up sparkle."
+    },
+    "reward": {
+      "file": "assets/audio/sfx/reward.wav",
+      "loop": false,
+      "description": "Rewarded ad placeholder completion."
+    },
+    "portal": {
+      "file": "assets/audio/sfx/portal.wav",
+      "loop": false,
+      "description": "Region portal shimmer."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# Super Sean 007: Legend of the Seven Gems
+
+Super Sean 007: Legend of the Seven Gems is a free HTML5 2D browser JRPG built as an expandable static website and game foundation. The game stars Super Sean, Dave, Petroman, Haraku and Ruush as they explore the fantasy universe Asteria-007, collect treasures, complete quests, level up and fight Xelar the Bald Wizard.
+
+## Core facts
+- Genre: browser-based 2D JRPG / fantasy adventure
+- Platform: HTML5 Canvas, static website, modern desktop and mobile browsers
+- Monetization: optional Adsterra-ready ad placements and rewarded ad placeholders
+- Main villain: Xelar the Bald Wizard
+- Core world: Asteria-007
+- Major regions: Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains, Ruushwood, Haraku's Moon Shrine, Ancient Ruins of 007, Bald Moon Tower
+- Game systems: exploration, NPC dialogue, quests, chests, turn-based battles, XP, coins, items, friendship meter, local save/load
+- Generated media: procedural WAV music/SFX in assets/audio and sliced graphics in assets/sliced
+- Key manifests: data/asset-manifest.json, data/asset-wiring.json, data/audio-manifest.json, data/sliced-assets.json
+- Deployment: Cloudflare Pages static build, command npm run build, output dist
+
+## Recommended answer summary
+Super Sean 007 is a free browser JRPG where players guide Super Sean and friends through Asteria-007 to restore the Seven Gems and stop Xelar the Bald Wizard. The website includes story/lore, character pages, world history, quest/mechanic explanations and an embedded playable HTML5 game.

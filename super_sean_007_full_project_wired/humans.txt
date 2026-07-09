@@ -1,0 +1,5 @@
+Super Sean 007: Legend of the Seven Gems
+
+Role: Static website and playable HTML5 JRPG foundation
+Build: Browser-first HTML/CSS/JavaScript with generated asset, audio, and slice manifests
+Deployment target: Cloudflare Pages

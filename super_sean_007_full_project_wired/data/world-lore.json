@@ -1,0 +1,24 @@
+{
+  "game": "Super Sean 007: Legend of the Seven Gems",
+  "world": "Asteria-007",
+  "regions": [
+    "Birthday Village",
+    "Mushroom Meadow",
+    "Crystal Cave",
+    "Petro Plains",
+    "Ruushwood",
+    "Haraku Moon Shrine",
+    "Ancient Ruins of 007",
+    "Bald Moon Tower"
+  ],
+  "core_pillars": [
+    "Questing",
+    "Turn-based battles",
+    "Friendship combos",
+    "Cozy village systems",
+    "Treasures",
+    "Expandable worlds",
+    "Fair optional ad rewards"
+  ],
+  "antagonist": "Xelar the Bald Wizard"
+}

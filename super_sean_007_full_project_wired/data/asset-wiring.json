@@ -1,0 +1,17 @@
+{
+  "titleScreen": "assets/key-art-main.png",
+  "battleBackgrounds": {
+    "village": "assets/generated/battle_backgrounds/zonnig_fantasiedorp_met_kastelen_en_brug.png",
+    "meadow": "assets/generated/battle_backgrounds/sfeervol_bloemenlandschap_met_fruitbomen.png",
+    "countryside": "assets/generated/battle_backgrounds/vrolijk_fantasielandschap_met_cottages.png",
+    "farm": "assets/generated/battle_backgrounds/zonnig_boerderijlandschap_met_houten_hek.png",
+    "mountain": "assets/generated/battle_backgrounds/magisch_landschap_met_kristallen_en_watervallen.png",
+    "lake": "assets/generated/battle_backgrounds/fantasierijk_landschap_met_een_meer.png",
+    "river": "assets/generated/battle_backgrounds/vrolijke_natuurlijke_strijdarena_met_riviertje.png",
+    "sky": "assets/generated/battle_backgrounds/magische_luchtlandschappen_met_kristallen_toppen.png",
+    "winter": "assets/generated/battle_backgrounds/betoverend_winterlandschap_met_kristallen.png",
+    "autumn": "assets/generated/battle_backgrounds/herfstlandschap_met_pompoenen_en_bladeren.png"
+  },
+  "assetManifest": "data/asset-manifest.json",
+  "generatedRoot": "assets/generated/"
+}

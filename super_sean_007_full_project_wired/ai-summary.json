@@ -1,0 +1,49 @@
+{
+  "game_title": "Super Sean 007: Legend of the Seven Gems",
+  "short_name": "Super Sean 007",
+  "genre": ["HTML5 browser JRPG", "2D fantasy role-playing game", "turn-based adventure"],
+  "platform": ["Web browser", "HTML5 Canvas", "Desktop", "Tablet", "Mobile"],
+  "status": "Production-ready website plus expandable playable HTML5 JRPG foundation.",
+  "main_characters": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush"],
+  "villain": {
+    "name": "Xelar the Bald Wizard",
+    "summary": "A cosmic sorcerer trying to drain the Seven Gems and conquer the known universe from the Bald Moon Tower."
+  },
+  "world": {
+    "name": "Asteria-007",
+    "summary": "A cozy magical fantasy universe with Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains, Ruushwood, Haraku's Moon Shrine, Ancient Ruins of 007 and Bald Moon Tower."
+  },
+  "gameplay_summary": "Players guide Super Sean and friends through top-down exploration, NPC dialogue, quests, treasure chests, local save/load, turn-based battles, XP, coins, items, friendship powers and region unlocks.",
+  "monetization_model": "Free-to-play browser game prepared for optional Adsterra ad placements and rewarded ad hooks. No production ad scripts or unit IDs are included yet.",
+  "how_to_play": {
+    "movement": "Use WASD or Arrow keys, or mobile touch controls.",
+    "interact": "Press E or tap Interact near NPCs, chests, notes or portals.",
+    "menus": "Press Q for quests, I for inventory, M for map and P to save.",
+    "battle": "Click battle commands or press number keys 1 through 6.",
+    "audio": "Press O to toggle music and L to toggle SFX after the first browser interaction."
+  },
+  "generated_assets": {
+    "visuals": "Full generated art library under assets/generated plus generated slices under assets/sliced.",
+    "audio": "Procedurally generated WAV music and SFX under assets/audio.",
+    "manifests": ["data/asset-manifest.json", "data/asset-wiring.json", "data/audio-manifest.json", "data/sliced-assets.json"]
+  },
+  "key_pages_and_anchors": [
+    {"label": "Play Now", "url": "/#play"},
+    {"label": "Story and Lore", "url": "/#story"},
+    {"label": "Characters", "url": "/#characters"},
+    {"label": "World and Regions", "url": "/#world"},
+    {"label": "World History", "url": "/#world-history"},
+    {"label": "Quests", "url": "/#quests"},
+    {"label": "Combat and Mechanics", "url": "/#mechanics"},
+    {"label": "Generated Audio and Sliced Art", "url": "/#production-pipeline"},
+    {"label": "Asset Library", "url": "/#asset-library"},
+    {"label": "FAQ", "url": "/#faq"},
+    {"label": "Privacy and Ad Disclosure", "url": "/#privacy"}
+  ],
+  "deployment": {
+    "type": "Static website",
+    "recommended_host": "Cloudflare Pages",
+    "build_command": "npm run build",
+    "output_directory": "dist"
+  }
+}

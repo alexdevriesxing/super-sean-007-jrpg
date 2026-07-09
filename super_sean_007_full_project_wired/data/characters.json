@@ -1,0 +1,59 @@
+{
+  "characters": [
+    {
+      "id": "sean",
+      "name": "Super Sean",
+      "role": "Crystal hero",
+      "theme": "Courage",
+      "sprite": "assets/characters/sean_strip.png"
+    },
+    {
+      "id": "dave",
+      "name": "Dave",
+      "role": "Gadget strategist",
+      "theme": "Ingenuity",
+      "sprite": "assets/characters/dave_strip.png"
+    },
+    {
+      "id": "petroman",
+      "name": "Petroman",
+      "role": "Fire tank",
+      "theme": "Strength",
+      "sprite": "assets/characters/petroman_strip.png"
+    },
+    {
+      "id": "haraku",
+      "name": "Haraku",
+      "role": "Moon healer",
+      "theme": "Wisdom",
+      "sprite": "assets/characters/haraku_strip.png"
+    },
+    {
+      "id": "ruush",
+      "name": "Ruush",
+      "role": "Wind rogue",
+      "theme": "Freedom",
+      "sprite": "assets/characters/ruush_strip.png"
+    },
+    {
+      "id": "xelar",
+      "name": "Xelar the Bald Wizard",
+      "role": "Arch enemy",
+      "theme": "Vanity and conquest",
+      "sprite": "assets/characters/xelar_portrait.png"
+    }
+  ],
+  "frameOrder": [
+    "idle",
+    "idle2",
+    "walk1",
+    "walk2",
+    "run1",
+    "run2",
+    "attack",
+    "skill",
+    "hurt",
+    "victory"
+  ],
+  "frameSize": 88
+}

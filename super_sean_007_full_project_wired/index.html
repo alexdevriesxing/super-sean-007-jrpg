@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Play Super Sean 007: Legend of the Seven Gems | Free Browser JRPG</title>
+  <meta name="description" content="Play Super Sean 007: Legend of the Seven Gems, a free HTML5 browser JRPG with quests, turn-based battles, treasures, cozy villages, magical worlds and Xelar the Bald Wizard.">
+  <meta name="keywords" content="Super Sean 007, free browser JRPG, HTML5 RPG, kawaii RPG, online RPG, fantasy quest game, Xelar Bald Wizard, free 2D JRPG">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="theme-color" content="#168ed0">
+  <meta name="application-name" content="Super Sean 007">
+  <meta name="author" content="Super Sean 007 Game Team">
+  <meta name="category" content="Game">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://example.com/super-sean-007/">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="preload" as="image" href="assets/og-image.jpg">
+  <link rel="preload" as="image" href="assets/key-art-main.png">
+  <link rel="preload" as="image" href="assets/characters/sean_strip.png">
+  <link rel="stylesheet" href="styles.css">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Play Super Sean 007: Legend of the Seven Gems">
+  <meta property="og:description" content="A free browser JRPG where Super Sean and friends explore Asteria-007, collect treasures, level up and battle Xelar the Bald Wizard.">
+  <meta property="og:image" content="assets/og-image.jpg">
+  <meta property="og:url" content="https://example.com/super-sean-007/">
+  <meta property="og:site_name" content="Super Sean 007">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Super Sean 007: Legend of the Seven Gems">
+  <meta name="twitter:description" content="Free HTML5 browser JRPG with kawaii sprites, quests, treasures and magical worlds.">
+  <meta name="twitter:image" content="assets/og-image.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "VideoGame",
+        "name": "Super Sean 007: Legend of the Seven Gems",
+        "alternateName": "Super Sean 007",
+        "description": "A free HTML5 2D browser JRPG where Super Sean and friends explore Asteria-007, collect treasures, complete quests, level up and battle Xelar the Bald Wizard.",
+        "genre": ["JRPG", "Role-playing game", "Adventure", "Fantasy"],
+        "gamePlatform": ["Web browser", "HTML5", "Desktop browser", "Mobile browser"],
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Any modern browser",
+        "playMode": "SinglePlayer",
+        "isAccessibleForFree": true,
+        "image": "assets/og-image.jpg",
+        "character": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+      },
+      {
+        "@type": "WebApplication",
+        "name": "Super Sean 007 HTML5 Game",
+        "applicationCategory": "GameApplication",
+        "browserRequirements": "Requires JavaScript and HTML5 Canvas",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {"@type":"Question","name":"Is Super Sean 007 free to play?","acceptedAnswer":{"@type":"Answer","text":"Yes. Super Sean 007 is designed as a free browser JRPG with optional ad-supported rewards."}},
+          {"@type":"Question","name":"Can I play Super Sean 007 in a browser?","acceptedAnswer":{"@type":"Answer","text":"Yes. The game runs in HTML5 Canvas and is playable in modern desktop, tablet and mobile browsers."}},
+          {"@type":"Question","name":"Who is the villain?","acceptedAnswer":{"@type":"Answer","text":"The main antagonist is Xelar the Bald Wizard, a cosmic sorcerer trying to drain the Seven Gems and conquer the known universe."}},
+          {"@type":"Question","name":"What type of game is it?","acceptedAnswer":{"@type":"Answer","text":"It is a 2D JRPG-style adventure with quests, exploration, turn-based battles, collectible items, level progression and cozy village systems."}}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#play">Skip to game</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="Super Sean 007 home">
+        <img src="assets/ui/super_sean_logo.png" alt="Super Sean 007 logo">
+      </a>
+      <button class="nav-toggle" aria-label="Open navigation" onclick="document.body.classList.toggle('nav-open')">☰</button>
+      <div class="nav-links">
+        <a href="#play">Play</a>
+        <a href="#story">Story</a>
+        <a href="#characters">Characters</a>
+        <a href="#world">World</a>
+        <a href="#quests">Quests</a>
+        <a href="#mechanics">Mechanics</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section-pad" aria-labelledby="hero-title">
+      <div class="hero-bg"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Free HTML5 2D browser JRPG</p>
+          <h1 id="hero-title">Super Sean 007: Legend of the Seven Gems</h1>
+          <p class="hero-lead">Quest through cozy villages, enchanted forests, crystal caves and moonlit ruins with Super Sean, Dave, Petroman, Haraku and Ruush. Collect treasures, level up, unlock friendship powers and stop Xelar the Bald Wizard from conquering the known universe.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#play">Play the browser demo</a>
+            <a class="btn secondary" href="#world-history">Read the world history</a>
+          </div>
+          <ul class="quick-facts" aria-label="Game highlights">
+            <li>Turn-based JRPG battles</li>
+            <li>Cozy village exploration</li>
+            <li>Treasure chests and quests</li>
+            <li>Adsterra-ready reward hooks</li>
+          </ul>
+        </div>
+        <div class="hero-card art-card">
+          <img src="assets/og-image.jpg" alt="Super Sean, Dave, Haraku, Petroman and Ruush facing Xelar in a magical forest">
+        </div>
+      </div>
+    </section>
+
+    <aside class="ad-shell container" aria-label="Sponsored placement">
+      <div class="ad-slot ad-slot-wide" data-adsterra-placement="top-banner-728x90">Adsterra top banner placement · 728×90 / responsive</div>
+    </aside>
+
+    <section id="play" class="section-pad game-section" aria-labelledby="play-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Playable vertical slice</p>
+          <h2 id="play-title">Enter Asteria-007</h2>
+          <p>The embedded HTML5 game includes exploration, NPC dialogue, quests, chests, local save/load, simple turn-based battles, XP, coins, items, unlockable paths and ad reward placeholders.</p>
+        </div>
+        <div class="game-layout">
+          <div class="game-frame">
+            <canvas id="gameCanvas" width="960" height="540" aria-label="Super Sean 007 HTML5 game canvas"></canvas>
+            <div class="mobile-controls" aria-label="Touch controls">
+              <div class="dpad">
+                <button onpointerdown="SuperSeanGame.press('up',true)" onpointerup="SuperSeanGame.press('up',false)" onpointerleave="SuperSeanGame.press('up',false)">▲</button>
+                <button onpointerdown="SuperSeanGame.press('left',true)" onpointerup="SuperSeanGame.press('left',false)" onpointerleave="SuperSeanGame.press('left',false)">◀</button>
+                <button onpointerdown="SuperSeanGame.press('down',true)" onpointerup="SuperSeanGame.press('down',false)" onpointerleave="SuperSeanGame.press('down',false)">▼</button>
+                <button onpointerdown="SuperSeanGame.press('right',true)" onpointerup="SuperSeanGame.press('right',false)" onpointerleave="SuperSeanGame.press('right',false)">▶</button>
+              </div>
+              <div class="action-pad">
+                <button onclick="SuperSeanGame.interact()">Interact</button>
+                <button onclick="SuperSeanGame.menu('quest')">Quest</button>
+                <button onclick="SuperSeanGame.menu('inventory')">Bag</button>
+                <button onclick="SuperSeanGame.save()">Save</button>
+              </div>
+            </div>
+          </div>
+          <aside class="game-sidebar">
+            <div class="info-card">
+              <h3>Controls</h3>
+              <p><strong>Move:</strong> WASD / Arrow keys<br><strong>Interact:</strong> E<br><strong>Quest log:</strong> Q<br><strong>Inventory:</strong> I<br><strong>World map:</strong> M<br><strong>Save:</strong> P<br><strong>Battle:</strong> click commands or press 1–6</p>
+            </div>
+            <div class="ad-slot ad-slot-box" data-adsterra-placement="game-sidebar-native">Adsterra native/sidebar placement</div>
+            <div class="info-card">
+              <h3>Build status</h3>
+              <p>This package is a production-ready static website and playable expandable game foundation. The full RPG content can now be expanded region-by-region using the included data, assets and code structure.</p>
+            </div>
+          </aside>
+        </div>
+        <div class="ad-slot ad-slot-wide below-game-ad" data-adsterra-placement="below-game-responsive">Adsterra below-game responsive placement</div>
+      </div>
+    </section>
+
+    <section id="story" class="section-pad" aria-labelledby="story-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Story and lore</p>
+          <h2 id="story-title">The birthday that cracked the sky</h2>
+          <p>On the morning of Sean’s seventh birthday, Birthday Village glows with lanterns, cakes and crystal music. The village crystal, a relic older than any map, begins to pulse when Sean receives the Crystal Sword. For one perfect moment, every bell in the valley rings by itself.</p>
+          <p>Then the sky turns silver. Xelar the Bald Wizard descends through a moon-shaped rift, steals the first Gem fragment and curses the crystal. Haraku senses the location of the Moon Shrine and is marked by Xelar’s shadow. Sean, Dave, Petroman and Ruush must gather the Seven Gems before the Bald Moon Tower awakens.</p>
+          <p>The story balances cozy moments with epic stakes: villagers need help, friends argue and grow, Xelar’s ridiculous speeches hide real danger, and every restored Gem brings color, music and hope back to the world.</p>
+        </div>
+        <div class="lore-panel">
+          <h3>The Seven Gems</h3>
+          <ol class="gem-list">
+            <li><strong>Courage</strong> — awakens Sean’s Crystal Sword.</li>
+            <li><strong>Friendship</strong> — powers party combo attacks.</li>
+            <li><strong>Wonder</strong> — opens hidden routes and strange worlds.</li>
+            <li><strong>Wisdom</strong> — reveals ancient languages and Moon Shrine lore.</li>
+            <li><strong>Laughter</strong> — protects villages from grey magic.</li>
+            <li><strong>Hope</strong> — restores ruined lands and lost spirits.</li>
+            <li><strong>Balance</strong> — seals Xelar’s universe engine.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="characters" class="section-pad tinted" aria-labelledby="characters-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Playable heroes and villain</p>
+          <h2 id="characters-title">Meet the party</h2>
+          <p>The sprite style uses the uploaded kawaii Super Sean sheet as the foundation, then packages each hero into game-ready strips and portraits.</p>
+        </div>
+        <div class="character-grid">
+          <article class="character-card"><img src="assets/characters/sean_portrait.png" alt="Super Sean portrait"><h3>Super Sean</h3><p>Crystal sword hero with courage skills, guardian blocks and friendship bursts. Sean is brave, funny and always one step from either saving the day or touching the suspicious glowing button.</p></article>
+          <article class="character-card"><img src="assets/characters/dave_portrait.png" alt="Dave portrait"><h3>Dave</h3><p>Gadget strategist, trap expert and practical best friend. Dave reveals hidden treasure, weakens enemies and keeps the adventure running with snacks and sarcasm.</p></article>
+          <article class="character-card"><img src="assets/characters/petroman_portrait.png" alt="Petroman portrait"><h3>Petroman</h3><p>Fire-powered tank from Petro Plains. Petroman smashes barriers, absorbs damage and solves many ancient puzzles by asking, “Can I punch it?”</p></article>
+          <article class="character-card"><img src="assets/characters/haraku_portrait.png" alt="Haraku portrait"><h3>Haraku</h3><p>Mystic healer and Moon Shrine guide. Haraku cleanses curses, reads ancient scripts and brings calm wisdom when the party is surrounded by chaos.</p></article>
+          <article class="character-card"><img src="assets/characters/ruush_portrait.png" alt="Ruush portrait"><h3>Ruush</h3><p>Wind-fast rogue and treasure chaser. Ruush dashes across gaps, finds rare drops and turns every forest path into a race.</p></article>
+          <article class="character-card villain"><img src="assets/characters/xelar_portrait.png" alt="Xelar the Bald Wizard portrait"><h3>Xelar</h3><p>The evil bald wizard, cosmic show-off and architect of the Bald Moon Tower. Xelar wants to drain the Seven Gems and crown himself emperor of every known star.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="world" class="section-pad" aria-labelledby="world-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">The world of Asteria-007</p>
+          <h2 id="world-title">A magical universe built for expansion</h2>
+          <p>The world is designed as a hub-and-region JRPG, so new areas, bosses, monsters, treasures and story chapters can be added after launch.</p>
+        </div>
+        <img class="region-preview" src="assets/ui/region_preview_strip.png" alt="Preview tiles for Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains and Moon Shrine">
+        <div class="region-grid">
+          <article><h3>Birthday Village</h3><p>The cozy home hub with shops, inn, quest board, reward chest, village crystal, fishing pond and Sean’s future room decoration system.</p></article>
+          <article><h3>Mushroom Meadow</h3><p>A gentle forest of mischievous mushrooms, slime sprouts, hidden chests and the first boss, Moldor the Mushroom Grump.</p></article>
+          <article><h3>Crystal Cave</h3><p>A glowing cavern of light puzzles, crystal creatures and ancient guardian echoes tied to the first Gem civilization.</p></article>
+          <article><h3>Petro Plains</h3><p>Petroman’s machine-strewn homeland of fire vents, old engines, oil blobs and soot-armored enemies.</p></article>
+          <article><h3>Ruushwood</h3><p>A wind forest with speed routes, sky bridges, racing shrines and feather rogues who challenge Ruush’s pride.</p></article>
+          <article><h3>Haraku’s Moon Shrine</h3><p>A sacred moonlit temple of spirit lanterns, mirror puzzles and curse magic where Haraku’s deeper story begins.</p></article>
+          <article><h3>Ancient Ruins of 007</h3><p>The collapsed capital of the Gem Guardians, filled with murals, relic doors, old portals and hidden lore trials.</p></article>
+          <article><h3>Bald Moon Tower</h3><p>Xelar’s final fortress, powered by stolen Gem light and designed to project grey magic across the universe.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="world-history" class="section-pad lore-history" aria-labelledby="history-title">
+      <div class="container narrow">
+        <p class="eyebrow">Fictional world history</p>
+        <h2 id="history-title">The Chronicles of Asteria-007</h2>
+        <p>Long before Birthday Village had a name, Asteria-007 was a wandering star-garden drifting between seven cosmic rivers. The first magical creatures were the Gemkin: tiny crystal spirits who sang color into stone, water, trees and dreams. Where they sang longest, forests learned to glow, caves grew blue crystals, and moonflowers opened even during the day.</p>
+        <p>The Gemkin eventually met the Hearthfolk, small village-builders who loved festivals, recipes and impossible bridges. Together they formed the First Circle and forged the Seven Gems to keep the world balanced. Each Gem held a virtue, not as an abstract idea, but as real energy. Courage could turn fear into light. Friendship could link hearts across distance. Wonder could open doors no map could show. Wisdom could translate the language of ruins. Laughter could break curses. Hope could restore broken lands. Balance could keep all powers from consuming one another.</p>
+        <p>The age of heroes began when the Star Beasts arrived: cloud lions, moon deer, mushroom dragons, lantern fish and sleepy stone turtles large enough to carry villages on their backs. Most became allies. Some became guardians. A few became monsters after touching raw shadow between the stars.</p>
+        <p>Xelar was once a student of the Moon Library, a brilliant wizard who could fold space into mirrors. But he became obsessed with being remembered as the greatest sorcerer in history. When the library elders told him magic served life rather than vanity, he shaved his head in dramatic protest, declared baldness the perfect shape of destiny and vanished into the Dark Orbit.</p>
+        <p>Centuries later, Xelar returned with the Bald Moon Tower, a machine that could drain virtue from the Gems and convert it into obedience. His first conquest failed when the Gem Guardians sealed the tower beyond the clouds, but the seal weakened over generations. Now Xelar has found a crack in the sky, and only Super Sean’s awakened Crystal Sword can restore the ancient promise.</p>
+        <p>The known universe around Asteria-007 includes the Frosted Cake Kingdom, the Fire Engine City, the Sky Islands of Ruush, the Spirit Realm of Haraku, the Clockwork Asteroids and the Grey Comet where Xelar trains his bald wizard apprentices. Each future expansion can open one of these places as a new chapter in the same world history.</p>
+      </div>
+    </section>
+
+    <section id="quests" class="section-pad tinted" aria-labelledby="quests-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Quests and progression</p>
+          <h2 id="quests-title">Built as a living JRPG quest platform</h2>
+          <p>The current playable slice starts with Birthday Village and Mushroom Meadow, but the structure supports a larger quest database with main quests, side quests, loyalty quests, daily tasks, boss hunts and treasure map stories.</p>
+          <ul class="feature-list">
+            <li><strong>Main story:</strong> restore the Seven Gems and confront Xelar.</li>
+            <li><strong>Side quests:</strong> help villagers, repair shops, unlock recipes and find relics.</li>
+            <li><strong>Friend quests:</strong> unlock character combos and emotional story scenes.</li>
+            <li><strong>Daily quests:</strong> quick tasks for coins, items and optional ad rewards.</li>
+            <li><strong>Treasure maps:</strong> hidden chests, rare decorations and lore pages.</li>
+          </ul>
+        </div>
+        <div class="quest-card">
+          <h3>Example launch quest chain</h3>
+          <ol>
+            <li>The Birthday Crystal</li>
+            <li>Gather the First Friend</li>
+            <li>The Meadow Road</li>
+            <li>The Mushroom Grump</li>
+            <li>Echoes in Crystal Cave</li>
+            <li>The Bald Moon Rises</li>
+            <li>Portal of Future Worlds</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="mechanics" class="section-pad" aria-labelledby="mechanics-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Game systems</p>
+          <h2 id="mechanics-title">JRPG depth with browser-friendly sessions</h2>
+        </div>
+        <div class="mechanic-grid">
+          <article><h3>Exploration</h3><p>Top-down movement, interactive NPCs, chests, portals, region unlocks and local map state.</p></article>
+          <article><h3>Turn-based combat</h3><p>Fast command battles with Attack, Crystal Slash, Guard, items, Friendship Burst and escape options.</p></article>
+          <article><h3>Leveling</h3><p>XP, level-ups, HP/MP growth, attack/defense growth and future skill tree hooks.</p></article>
+          <article><h3>Items and treasures</h3><p>Coins, Berry Juice, Crystal Candy, Moon Tea, Guardian Shards and collectible future decorations.</p></article>
+          <article><h3>Friendship meter</h3><p>Build friendship by guarding, casting skills and defeating bosses, then unleash combo power.</p></article>
+          <article><h3>Adsterra-ready design</h3><p>Ad slots are placed around natural breaks: menu banners, native sidebar, optional reward chest and revive reward placeholder.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="production-pipeline" class="section-pad tinted" aria-labelledby="pipeline-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Generated audio and sliced art</p>
+          <h2 id="pipeline-title">A concrete asset pipeline for expansion</h2>
+          <p>The build now generates original WAV music loops and SFX, writes `data/audio-manifest.json`, slices the game-critical character strips, enemies, tilesets, UI, items and VFX into `assets/sliced/`, and writes `data/sliced-assets.json` for future animation tooling.</p>
+          <p>The current game uses the slice metadata for character frame and tile coordinates while drawing from the source sheets for performance. Future quests can load individual sliced PNGs when a system needs isolated frames, icons, items or effects.</p>
+        </div>
+        <div class="lore-panel">
+          <h3>Current generated outputs</h3>
+          <ul class="feature-list">
+            <li>Title, village, battle and victory music loops.</li>
+            <li>UI confirm, menu, slash, hit, chest, level-up, reward and portal SFX.</li>
+            <li>Character frame slices for Sean, Dave, Petroman, Haraku and Ruush.</li>
+            <li>64px tiles from each current region tileset.</li>
+            <li>HUD, pickup and VFX slices from the generated split pack.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="asset-library" class="section-pad asset-library" aria-labelledby="asset-library-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Expanded production asset library</p>
+          <h2 id="asset-library-title">All generated assets are wired into this project</h2>
+          <p>The ZIP now includes the complete generated asset library: playable sprites, NPCs, enemies, bosses, terrain tiles, buildings, UI/HUD, VFX, key art, loading screens, event screens, world maps and JRPG battle scenery. The game canvas uses the new key art and battle backgrounds, while the site exposes the full asset manifest for AI build tools.</p>
+        </div>
+        <div class="asset-stats" id="assetStats">
+          <span>Loading asset manifest…</span>
+        </div>
+        <div class="asset-toolbar" role="toolbar" aria-label="Asset category filters">
+          <button class="asset-filter active" data-filter="all">All</button>
+          <button class="asset-filter" data-filter="battle_backgrounds">Battle backgrounds</button>
+          <button class="asset-filter" data-filter="spritesheets">Spritesheets</button>
+          <button class="asset-filter" data-filter="tilesets">Tiles & buildings</button>
+          <button class="asset-filter" data-filter="ui_vfx">UI / VFX</button>
+          <button class="asset-filter" data-filter="loading_event_screens">Screens</button>
+          <button class="asset-filter" data-filter="split_pack">Split pack</button>
+        </div>
+        <div class="asset-grid" id="assetGrid" aria-live="polite"></div>
+        <noscript>
+          <p>The asset manifest is available at <code>data/asset-manifest.json</code>. Enable JavaScript to browse the visual gallery on this page.</p>
+        </noscript>
+      </div>
+    </section>
+
+    <section id="seo" class="section-pad seo-block" aria-labelledby="seo-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">SEO and GAIO foundation</p>
+          <h2 id="seo-title">Ready to be found by search engines and AI answer engines</h2>
+          <p>The package includes semantic HTML, rich internal sections, Open Graph metadata, Twitter cards, structured data for VideoGame/WebApplication/FAQ, robots.txt, sitemap.xml, manifest icons, llms.txt and an AI summary JSON file.</p>
+        </div>
+        <div class="ad-slot ad-slot-wide small" data-adsterra-placement="content-native-responsive">Adsterra in-content responsive/native placement</div>
+      </div>
+    </section>
+
+    <section id="faq" class="section-pad tinted" aria-labelledby="faq-title">
+      <div class="container narrow">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <details open><summary>Is this a complete finished commercial JRPG?</summary><p>This package is a full SEO/GAIO website plus a playable HTML5 JRPG foundation/vertical slice. It is built to expand into the complete game with additional maps, quests, assets, bosses and systems.</p></details>
+        <details><summary>Does it work without a backend?</summary><p>Yes. The game is a static HTML5 Canvas app and saves progress locally in the browser with localStorage.</p></details>
+        <details><summary>Where do Adsterra ads go?</summary><p>Adsterra placeholders are included on the website and in the game reward flow. Production ad scripts can be inserted into the marked ad containers and the AdManager hooks in game.js.</p></details>
+        <details><summary>Can AI coding tools expand this?</summary><p>Yes. The code is modular enough for AI build tools to add maps, items, quests, enemies, dialogue and mechanics. The ZIP includes metadata JSON files and build notes.</p></details>
+        <details><summary>What music and sound effects are included?</summary><p>The project includes procedurally generated WAV music loops for the title screen, village exploration, battles and victory, plus SFX for UI, menus, slashes, hits, chests, rewards, level-ups and portals.</p></details>
+        <details><summary>Are the graphics sliced?</summary><p>Yes. The build generates sliced character frames, region tiles, enemies, HUD parts, pickups and VFX metadata from the included source sheets while preserving the full original asset library.</p></details>
+      </div>
+    </section>
+
+    <section id="privacy" class="section-pad" aria-labelledby="privacy-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Privacy, cookies and ads</p>
+          <h2 id="privacy-title">Ad-supported free-to-play placeholders</h2>
+          <p>Super Sean 007 is prepared as a free browser game with optional ad-supported placements and reward hooks. No production ad network scripts or tracking IDs are included in this build.</p>
+          <p>Before launch, replace this placeholder with a full privacy policy, cookie notice, consent flow where legally required, real contact details and the exact Adsterra domains used by each placement.</p>
+        </div>
+        <div class="ad-slot ad-slot-wide" data-adsterra-placement="footer-banner-responsive">Adsterra footer responsive placement</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <img src="assets/ui/super_sean_logo.png" alt="Super Sean 007 logo" class="footer-logo">
+        <p>Super Sean 007: Legend of the Seven Gems is a free browser JRPG foundation built for expansion.</p>
+      </div>
+      <div>
+        <h3>Game</h3>
+        <a href="#play">Play</a>
+        <a href="#story">Story</a>
+        <a href="#characters">Characters</a>
+      </div>
+      <div>
+        <h3>World</h3>
+        <a href="#world">Regions</a>
+        <a href="#world-history">History</a>
+        <a href="#quests">Quests</a>
+      </div>
+      <div>
+        <h3>Legal</h3>
+        <a href="docs/README_BUILD.md">Build notes</a>
+        <a href="llms.txt">LLMS summary</a>
+        <a href="ai-summary.json">AI summary</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="asset-library.js" defer></script>
+  <script src="game.js" defer></script>
+</body>
+</html>
