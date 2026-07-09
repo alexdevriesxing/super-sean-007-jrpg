@@ -1,4 +1,4 @@
-Contact: mailto:security@example.com
+Contact: https://github.com/alexdevriesxing/super-sean-007-jrpg/issues
 Preferred-Languages: en
 Policy: This is a placeholder. Replace with the real security contact before production launch.
 Expires: 2027-07-09T00:00:00Z

@@ -61,7 +61,7 @@ Replace the placeholder logic with production Adsterra scripts only after real u
 3. Add separate skill trees for Sean, Dave, Petroman, Haraku and Ruush.
 4. Add village repair, cooking, fishing, gardening and room decoration systems.
 5. Expand each region with new monsters, NPCs, side quests and bosses.
-6. Replace the placeholder canonical URL and sitemap domain.
+6. Update the canonical URL and sitemap domain if a custom domain replaces the Pages URL.
 7. Connect real Adsterra scripts after ad domains and unit IDs are available.
 8. Add Cloudflare Pages analytics or another privacy-reviewed analytics provider.
 

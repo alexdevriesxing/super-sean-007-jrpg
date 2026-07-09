@@ -15,5 +15,5 @@ Original prompt: build this
 
 ## Remaining manual notes
 
-- Replace `https://example.com/super-sean-007/` placeholders in canonical metadata, sitemap, robots and AI summary after the real production URL is known.
+- Production URL is `https://super-sean-007-jrpg.pages.dev/`; canonical metadata, sitemap and robots now use it.
 - Add real Adsterra unit scripts and update `_headers` CSP only after production ad domains are known.

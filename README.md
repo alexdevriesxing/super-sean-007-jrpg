@@ -61,7 +61,7 @@ The browser-game smoke payload used for Playwright client checks is `qa/gameplay
 
 The site includes metadata, Open Graph/Twitter cards, JSON-LD for VideoGame/WebApplication/FAQ, `robots.txt`, `sitemap.xml`, `llms.txt`, `ai-summary.json`, semantic sections and an asset gallery with lazy loading.
 
-Replace the canonical URL placeholder in `index.html` and sitemap URLs before production launch.
+Canonical metadata and sitemap URLs currently point at `https://super-sean-007-jrpg.pages.dev/`. Update them if you later attach a custom domain.
 
 ## Adsterra Integration
 
