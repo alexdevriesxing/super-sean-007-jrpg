@@ -25,6 +25,24 @@ Original prompt: build this
 - Browser-verified end-to-end: quest chain (elder→dave→slimes), harvesting, battle with party skill, homestead claim, piece placement, Cozy Cottage blueprint stamp (advanced quest + unlocked cave), planting crops, crafting planks, buying at Bobo's shop. No console errors.
 - Fixed during verification: side quests no longer hijack main-quest talk triggers.
 
+## 2026-07-10 — Persistence suite + depth features (commit 9e3a1fd)
+
+- Persistence: 20s autosave, save on tab hide/close, playtime tracking, title-screen
+  progress summary, base64 save codes, opt-in cloud sync (Pages Function `/api/save`
+  + KV `SSG_SAVES`, personal sync ID, cross-device restore). API verified live:
+  PUT/GET roundtrip 200, 404 on missing, 400 on invalid IDs.
+- Combat depth: mushroom poison spores, bat screech weaken, crystal harden,
+  Xelar-kind bosses rally at 50% HP, boss-battle music, NG+ scaling (+25%/cycle).
+- Homestead life: pond fishing minigame (Sunfish, Grilled Fish recipe), comfort-based
+  NPC visitors at the homestead (Mila 60, Pip 100).
+- Content cadence: daily quest board (date-seeded), Bobo sells Treasure Maps with dig
+  spots in every region, Gemkin Avatar superboss gated on 7 gems (drops Gemkin Crown),
+  New Game+ via G at the Homestead Crystal (postgame).
+- Meta: 16 achievements with toasts + quest-log panel, stats counters, screenshot
+  export (T / Photo button). Fixed dig-vs-node interact priority during verification.
+- All verified in preview via QA hooks; build + validation pass; deployed with
+  Functions bundle via `npx wrangler pages deploy`.
+
 ## Remaining manual notes
 
 - Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
