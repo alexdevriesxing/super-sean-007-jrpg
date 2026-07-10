@@ -39,6 +39,8 @@ await Promise.all([
   expectFile('js/systems.js'),
   expectFile('js/battle.js'),
   expectFile('js/render.js'),
+  expectFile('site.js'),
+  expectFile('assets/web/zonnig_fantasiedorp_met_kastelen_en_brug.webp'),
   expectFile('styles.css'),
   expectFile('favicon.ico'),
   expectFile('data/asset-manifest.json'),

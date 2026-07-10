@@ -17,8 +17,9 @@
   <link rel="icon" href="assets/icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="preload" as="image" href="assets/og-image.jpg">
-  <link rel="preload" as="image" href="assets/key-art-main.png">
-  <link rel="preload" as="image" href="assets/characters/sean_strip.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
   <link rel="stylesheet" href="styles.css">
 
   <meta property="og:type" content="website">
@@ -48,6 +49,11 @@
         "operatingSystem": "Any modern browser",
         "playMode": "SinglePlayer",
         "isAccessibleForFree": true,
+        "inLanguage": "en",
+        "datePublished": "2026-07-09",
+        "dateModified": "2026-07-10",
+        "keywords": "free browser JRPG, base building game, crafting RPG, cozy farming RPG, HTML5 game, no download RPG",
+        "numberOfPlayers": {"@type": "QuantitativeValue", "minValue": 1, "maxValue": 1},
         "image": "https://www.supersean007.com/assets/og-image.jpg",
         "character": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
         "copyrightYear": 2026,
@@ -77,7 +83,21 @@
           {"@type":"Question","name":"Can I build my own base?","acceptedAnswer":{"@type":"Answer","text":"Yes. You claim a homestead south of Birthday Village and build it tile by tile: cottages, stone keeps, gardens, orchards, ponds, forges and more, or stamp complete blueprints in one go."}},
           {"@type":"Question","name":"Can I play Super Sean 007 in a browser?","acceptedAnswer":{"@type":"Answer","text":"Yes. The game runs in HTML5 Canvas and is playable in modern desktop, tablet and mobile browsers. Progress saves locally."}},
           {"@type":"Question","name":"Who is the villain?","acceptedAnswer":{"@type":"Answer","text":"The main antagonist is Xelar the Bald Wizard, a cosmic sorcerer trying to drain the Seven Gems and conquer the known universe."}},
-          {"@type":"Question","name":"What type of game is it?","acceptedAnswer":{"@type":"Answer","text":"It is a 2D JRPG adventure with quests, turn-based battles and level progression, blended with Minecraft-style gathering, crafting, gardening and base building."}}
+          {"@type":"Question","name":"What type of game is it?","acceptedAnswer":{"@type":"Answer","text":"It is a 2D JRPG adventure with quests, turn-based battles and level progression, blended with Minecraft-style gathering, crafting, gardening and base building."}},
+          {"@type":"Question","name":"Is Super Sean 007 similar to Minecraft or Stardew Valley?","acceptedAnswer":{"@type":"Answer","text":"It shares their gathering, crafting, building and farming loops - chop trees, mine crystals, build a base tile by tile and grow crops - wrapped in a story-driven JRPG with turn-based battles and a full campaign."}},
+          {"@type":"Question","name":"How do I unlock all party members?","acceptedAnswer":{"@type":"Answer","text":"Dave joins in Birthday Village, Petroman joins after you bring him 3 Gear Parts in Petro Plains, Ruush joins after the Elder Treeguard hunt in Ruushwood, and Haraku joins when you brew her Moon Tea at the Moon Shrine."}}
+        ]
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to build your homestead in Super Sean 007",
+        "description": "Claim a base and build houses, castles and gardens in the free browser JRPG Super Sean 007.",
+        "step": [
+          {"@type": "HowToStep", "name": "Earn the deed", "text": "Defeat Moldor the Mushroom Grump in Mushroom Meadow to earn the homestead land deed from Elder Brightbeard."},
+          {"@type": "HowToStep", "name": "Claim the land", "text": "Take the south path from Birthday Village and touch the Homestead Crystal to claim the Sunrise Homestead."},
+          {"@type": "HowToStep", "name": "Gather materials", "text": "Chop trees for wood, mine boulders for stone and craft planks and stone bricks with the C menu."},
+          {"@type": "HowToStep", "name": "Build", "text": "Press B for build mode to place floors, walls, roofs, fences, gardens and stations - or press V to stamp a complete blueprint like the Cozy Cottage or Stone Keep."},
+          {"@type": "HowToStep", "name": "Grow and prosper", "text": "Plant seeds in tilled soil, cook at your kitchen, forge gear and raise Comfort to unlock XP, shop and stat bonuses."}
         ]
       }
     ]
@@ -99,6 +119,7 @@
         <a href="#characters">Heroes</a>
         <a href="#world">World</a>
         <a href="#homestead">Homestead</a>
+        <a href="#guide">Guide</a>
         <a href="#gallery">Gallery</a>
         <a href="#faq">FAQ</a>
       </div>
@@ -329,6 +350,24 @@
       </div>
     </section>
 
+    <section id="guide" class="section-pad tinted" aria-labelledby="guide-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Beginner's guide</p>
+          <h2 id="guide-title">From first quest to first castle</h2>
+          <p>Everything a new hero needs for a strong start in Asteria-007.</p>
+        </div>
+        <div class="guide-grid">
+          <article class="guide-step"><span class="guide-num">1</span><h3>Start in Birthday Village</h3><p>Talk to <strong>Elder Brightbeard</strong> by the north hall, then find <strong>Dave</strong> on the plaza — he joins your party with his enemy-stunning Gadget Zap. Open the village chest for free supplies.</p></article>
+          <article class="guide-step"><span class="guide-num">2</span><h3>Learn to harvest</h3><p>Walk up to any tree, boulder, mushroom or berry hedge and press <strong>E</strong> a few times. Materials go straight to your bag, and nodes regrow after a minute. Monsters drop materials too.</p></article>
+          <article class="guide-step"><span class="guide-num">3</span><h3>Beat Moldor, earn your land</h3><p>Defeat 3 Slime Sprouts in Mushroom Meadow, then challenge <strong>Moldor the Mushroom Grump</strong> in the northeast. Victory earns the Meadow Gem and your <strong>homestead deed</strong>.</p></article>
+          <article class="guide-step"><span class="guide-num">4</span><h3>Claim and build</h3><p>Take the south path from the village and touch the <strong>Homestead Crystal</strong>. Press <strong>B</strong> to build, <strong>V</strong> for blueprints — craft Planks from Wood with <strong>C</strong> and your Cozy Cottage is minutes away.</p></article>
+          <article class="guide-step"><span class="guide-num">5</span><h3>Plant your first garden</h3><p>Place <strong>Tilled Soil</strong> from the Garden palette, craft a Berry Seed from any berry, and press E on the soil to plant. Ripe crops feed your kitchen — Mushroom Stew heals 120 HP.</p></article>
+          <article class="guide-step"><span class="guide-num">6</span><h3>Gear up and go deeper</h3><p>Build a <strong>Forge</strong> to craft the Crystal Sword +1 (3 Crystal Shards + 2 Planks), equip it in your bag, and take the north cave path. Four more friends and six more Gems await.</p></article>
+        </div>
+      </div>
+    </section>
+
     <section id="gallery" class="section-pad gallery-section" aria-labelledby="gallery-title">
       <div class="container">
         <div class="section-heading centered">
@@ -337,14 +376,14 @@
           <p>Battle backdrops and vistas you’ll encounter on the road to the Bald Moon Tower.</p>
         </div>
         <div class="gallery-grid">
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/zonnig_fantasiedorp_met_kastelen_en_brug.png" alt="Sunny fantasy village with castles and a bridge"><figcaption>Birthday Village</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/zonnig_boerderijlandschap_met_houten_hek.png" alt="Sunny farmland with a wooden fence"><figcaption>Sunrise Homestead</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/sfeervol_bloemenlandschap_met_fruitbomen.png" alt="Flower fields with fruit trees"><figcaption>Mushroom Meadow</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/magisch_landschap_met_kristallen_en_watervallen.png" alt="Magical landscape with crystals and waterfalls"><figcaption>Crystal Falls</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/herfstlandschap_met_pompoenen_en_bladeren.png" alt="Autumn landscape with pumpkins and leaves"><figcaption>Petro Plains in autumn</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/vrolijke_natuurlijke_strijdarena_met_riviertje.png" alt="Natural arena with a small river"><figcaption>Ruushwood river</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/betoverend_winterlandschap_met_kristallen.png" alt="Enchanting winter landscape with crystals"><figcaption>Moon Shrine in winter</figcaption></figure>
-          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/magische_luchtlandschappen_met_kristallen_toppen.png" alt="Magical sky landscape with crystal peaks"><figcaption>Bald Moon Tower skies</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/zonnig_fantasiedorp_met_kastelen_en_brug.webp" alt="Sunny fantasy village with castles and a bridge in Super Sean 007"><figcaption>Birthday Village</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/zonnig_boerderijlandschap_met_houten_hek.webp" alt="Sunny farmland with a wooden fence — the Sunrise Homestead"><figcaption>Sunrise Homestead</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/sfeervol_bloemenlandschap_met_fruitbomen.webp" alt="Flower fields with fruit trees in Mushroom Meadow"><figcaption>Mushroom Meadow</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/magisch_landschap_met_kristallen_en_watervallen.webp" alt="Magical landscape with crystals and waterfalls near Crystal Cave"><figcaption>Crystal Falls</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/herfstlandschap_met_pompoenen_en_bladeren.webp" alt="Autumn landscape with pumpkins and leaves in Petro Plains"><figcaption>Petro Plains in autumn</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/vrolijke_natuurlijke_strijdarena_met_riviertje.webp" alt="Natural battle arena with a small river in Ruushwood"><figcaption>Ruushwood river</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/betoverend_winterlandschap_met_kristallen.webp" alt="Enchanting winter landscape with crystals at the Moon Shrine"><figcaption>Moon Shrine in winter</figcaption></figure>
+          <figure><img loading="lazy" width="1024" height="768" src="assets/web/magische_luchtlandschappen_met_kristallen_toppen.webp" alt="Magical sky landscape with crystal peaks around Bald Moon Tower"><figcaption>Bald Moon Tower skies</figcaption></figure>
         </div>
         <div class="ad-slot ad-slot-wide small" data-adsterra-placement="content-native-responsive" aria-label="Advertisement">Advertisement</div>
       </div>
@@ -360,6 +399,8 @@
         <details><summary>Do I need to download anything or make an account?</summary><p>No. The game is a static HTML5 Canvas app: click play and you’re in. Progress saves automatically in your browser with localStorage.</p></details>
         <details><summary>Does it work on my phone?</summary><p>Yes. The game runs in modern desktop, tablet and mobile browsers, with a touch D-pad and dedicated Craft/Build buttons on smaller screens.</p></details>
         <details><summary>How long is the campaign?</summary><p>Fifteen main chapters across nine regions with eight boss fights, plus side quests, gear crafting, comfort perks and an open-ended building endgame.</p></details>
+        <details><summary>Is it like Minecraft or Stardew Valley?</summary><p>It borrows their best loops — chop, mine, craft, build and farm — and wraps them in a story-driven JRPG with turn-based battles, recruitable heroes and a proper villain. If you love cozy building games and classic RPGs, this is both at once.</p></details>
+        <details><summary>How do I unlock all party members?</summary><p>Dave joins in Birthday Village. Petroman joins when you bring him 3 Gear Parts in Petro Plains. Ruush joins after facing the Elder Treeguard in Ruushwood. Haraku joins when you brew her Moon Tea — you’ll need a Kitchen at your homestead.</p></details>
       </div>
     </section>
 
@@ -406,6 +447,7 @@
     </div>
   </footer>
 
+  <script src="site.js" defer></script>
   <script src="js/data-items.js" defer></script>
   <script src="js/data-build.js" defer></script>
   <script src="js/data-quests.js" defer></script>
