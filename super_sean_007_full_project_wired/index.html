@@ -85,7 +85,8 @@
           {"@type":"Question","name":"Who is the villain?","acceptedAnswer":{"@type":"Answer","text":"The main antagonist is Xelar the Bald Wizard, a cosmic sorcerer trying to drain the Seven Gems and conquer the known universe."}},
           {"@type":"Question","name":"What type of game is it?","acceptedAnswer":{"@type":"Answer","text":"It is a 2D JRPG adventure with quests, turn-based battles and level progression, blended with Minecraft-style gathering, crafting, gardening and base building."}},
           {"@type":"Question","name":"Is Super Sean 007 similar to Minecraft or Stardew Valley?","acceptedAnswer":{"@type":"Answer","text":"It shares their gathering, crafting, building and farming loops - chop trees, mine crystals, build a base tile by tile and grow crops - wrapped in a story-driven JRPG with turn-based battles and a full campaign."}},
-          {"@type":"Question","name":"How do I unlock all party members?","acceptedAnswer":{"@type":"Answer","text":"Dave joins in Birthday Village, Petroman joins after you bring him 3 Gear Parts in Petro Plains, Ruush joins after the Elder Treeguard hunt in Ruushwood, and Haraku joins when you brew her Moon Tea at the Moon Shrine."}}
+          {"@type":"Question","name":"How do I unlock all party members?","acceptedAnswer":{"@type":"Answer","text":"Dave joins in Birthday Village, Petroman joins after you bring him 3 Gear Parts in Petro Plains, Ruush joins after the Elder Treeguard hunt in Ruushwood, and Haraku joins when you brew her Moon Tea at the Moon Shrine."}},
+          {"@type":"Question","name":"Does my progress carry over between devices?","acceptedAnswer":{"@type":"Answer","text":"Yes. Progress autosaves in your browser, and you can continue anywhere using a copyable save code or free cloud sync with a personal sync ID from the title screen."}}
         ]
       },
       {
@@ -185,6 +186,7 @@
                 <button onclick="SuperSeanGame.menu('quest')">Quest</button>
                 <button onclick="SuperSeanGame.menu('inventory')">Bag</button>
                 <button onclick="SuperSeanGame.menu('map')">Map</button>
+                <button onclick="SuperSeanGame.screenshot()">Photo</button>
                 <button onclick="SuperSeanGame.save()">Save</button>
               </div>
             </div>
@@ -192,7 +194,7 @@
           <aside class="game-sidebar">
             <div class="info-card">
               <h3>Controls</h3>
-              <p><strong>Move:</strong> WASD / Arrows or D-pad<br><strong>Interact &amp; harvest:</strong> E (hit trees, rocks and crystals more than once!)<br><strong>Craft:</strong> C · <strong>Build:</strong> B · <strong>Blueprints:</strong> V<br><strong>Bag &amp; gear:</strong> I · <strong>Quests:</strong> Q · <strong>Map:</strong> M<br><strong>Save:</strong> P · <strong>Battle:</strong> tap commands or keys 1–9<br><strong>Audio:</strong> O music · L sound effects</p>
+              <p><strong>Move:</strong> WASD / Arrows or D-pad<br><strong>Interact, harvest &amp; fish:</strong> E (ponds are fishable!)<br><strong>Craft:</strong> C · <strong>Build:</strong> B · <strong>Blueprints:</strong> V<br><strong>Bag &amp; gear:</strong> I · <strong>Quests &amp; achievements:</strong> Q · <strong>Map:</strong> M<br><strong>Save:</strong> P · <strong>Screenshot:</strong> T · <strong>Battle:</strong> keys 1–9<br><strong>Audio:</strong> O music · L sound effects</p>
             </div>
             <div class="ad-slot ad-slot-box" data-adsterra-placement="game-sidebar-native" aria-label="Advertisement">Advertisement</div>
             <div class="ad-slot ad-slot-sky desktop-only" data-adsterra-placement="game-sidebar-skyscraper" aria-label="Advertisement">Advertisement</div>
@@ -396,7 +398,8 @@
         <details open><summary>Is the game really free?</summary><p>Yes. Super Sean 007 is completely free to play in your browser. The site is supported by non-intrusive ads placed around natural breaks in the page and game flow.</p></details>
         <details><summary>How does building work?</summary><p>Defeat Moldor in Mushroom Meadow to earn the homestead deed, then touch the Homestead Crystal south of the village to claim your land. Press <strong>B</strong> to build tile by tile, or <strong>V</strong> to stamp full blueprints like the Cozy Cottage and Stone Keep. Removing pieces refunds all materials.</p></details>
         <details><summary>Do my crops grow while I’m away?</summary><p>Yes. Gardens grow in real time, even while you explore other regions or close the tab. Come back to ripe berries, flowers and moonfruit.</p></details>
-        <details><summary>Do I need to download anything or make an account?</summary><p>No. The game is a static HTML5 Canvas app: click play and you’re in. Progress saves automatically in your browser with localStorage.</p></details>
+        <details><summary>Do I need to download anything or make an account?</summary><p>No. The game is a static HTML5 Canvas app: click play and you’re in. Progress autosaves in your browser every few seconds and whenever you leave the page.</p></details>
+        <details><summary>Can I continue on another device?</summary><p>Yes, two ways: copy a <strong>save code</strong> from the title screen and paste it anywhere via Load Code, or turn on <strong>cloud sync</strong> to get a personal sync ID that restores your full adventure — level, gear, homestead and gardens — on any device.</p></details>
         <details><summary>Does it work on my phone?</summary><p>Yes. The game runs in modern desktop, tablet and mobile browsers, with a touch D-pad and dedicated Craft/Build buttons on smaller screens.</p></details>
         <details><summary>How long is the campaign?</summary><p>Fifteen main chapters across nine regions with eight boss fights, plus side quests, gear crafting, comfort perks and an open-ended building endgame.</p></details>
         <details><summary>Is it like Minecraft or Stardew Valley?</summary><p>It borrows their best loops — chop, mine, craft, build and farm — and wraps them in a story-driven JRPG with turn-based battles, recruitable heroes and a proper villain. If you love cozy building games and classic RPGs, this is both at once.</p></details>

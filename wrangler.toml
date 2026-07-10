@@ -1,0 +1,7 @@
+name = "super-sean-007-jrpg"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "SSG_SAVES"
+id = "d24ef7eb2db8476b8e0d2702b490163b"

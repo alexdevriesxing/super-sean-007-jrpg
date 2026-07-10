@@ -119,6 +119,8 @@
       {id:'ad_reward_chest', x:14*T, y:7*T, reward:{coins:25}, label:'Optional reward chest', ad:true}
     ];
     node(m, 'berry', 20, 3); node(m, 'berry', 27, 5); node(m, 'flower', 15, 12);
+    m.board = {tx: 14, ty: 6}; // daily quest board (sign tile)
+    m.digSpots = [[6, 7], [19, 13], [16, 17]];
     portal(m, 'to_meadow', 30, 9, 'meadow', 2, 9, 'Mushroom Meadow');
     portal(m, 'to_cave', 10, 1, 'cave', 2, 8, 'Crystal Cave', 'cave');
     portal(m, 'to_petro', 1, 9, 'petro', 31, 10, 'Petro Plains', 'petro');
@@ -142,7 +144,9 @@
     node(m, 'berry', 4, 4); node(m, 'berry', 31, 4); node(m, 'tree', 5, 19);
     node(m, 'rock', 4, 12); node(m, 'flower', 30, 12);
     m.npcs = [
-      {id:'dave_home', name:'Dave', char:'dave', x:23*T, y:7*T, role:'Homestead tinkerer', requiresClaimed:true, requiresParty:'dave'}
+      {id:'dave_home', name:'Dave', char:'dave', x:23*T, y:7*T, role:'Homestead tinkerer', requiresClaimed:true, requiresParty:'dave'},
+      {id:'mila_home', name:'Mila', char:'haraku', hue:140, x:28*T, y:16*T, role:'Homestead visitor', requiresClaimed:true, requiresComfort:60},
+      {id:'pip_home', name:'Pip', char:'ruush', hue:200, x:10*T, y:16*T, role:'Homestead visitor', requiresClaimed:true, requiresComfort:100}
     ];
     portal(m, 'home_to_village', 18, 0, 'village', 22, 16, 'Birthday Village');
     m.notes = [{x:18*T, y:8*T, text:'Rich soil, open sky, a crystal humming with welcome. This could be home.'}];
@@ -172,6 +176,7 @@
       {id:'meadow_chest_a', x:13*T, y:4*T, reward:{coins:35, item:'Crystal Candy'}, label:'Hidden meadow chest'},
       {id:'meadow_chest_b', x:28*T, y:17*T, reward:{coins:45, item:'Moon Tea'}, label:'Firefly chest'}
     ];
+    m.digSpots = [[5, 7], [20, 5], [26, 14]];
     portal(m, 'back_village', 1, 9, 'village', 29, 9, 'Birthday Village');
     portal(m, 'to_ruushwood', 32, 12, 'ruushwood', 2, 10, 'Ruushwood', 'ruushwood');
     m.notes = [{x:5*T, y:10*T, text:'Mushroom Meadow smells like rain, berries and tiny mischief.'}];
@@ -197,6 +202,7 @@
     mon(m, {id:'cavebat', kind:'bat', name:'Cave Bat', x:22*T, y:8*T, hp:64, atk:13, xp:28, coins:20, hue:220});
     mon(m, {id:'guardian', kind:'crystal', name:'Cracked Crystal Guardian', x:26*T, y:9*T, hp:190, atk:18, xp:85, coins:70, boss:true});
     m.chests = [{id:'cave_chest', x:20*T, y:3*T, reward:{coins:70, item:'Guardian Shard'}, label:'Glowing crystal chest'}];
+    m.digSpots = [[5, 5], [22, 12], [14, 8]];
     portal(m, 'back_village_cave', 1, 8, 'village', 10, 2, 'Birthday Village');
     m.notes = [{x:5*T, y:8*T, text:'The crystals sing in chords. Mine gently and they sing brighter.'}];
     return m;
@@ -224,6 +230,7 @@
     m.npcs = [
       {id:'petroman', name:'Petroman', char:'petroman', x:17*T, y:9*T+40, role:'Machine whisperer', hideWhenParty:'petroman'}
     ];
+    m.digSpots = [[7, 4], [22, 10], [30, 14]];
     portal(m, 'petro_to_village', 32, 10, 'village', 2, 9, 'Birthday Village');
     m.notes = [{x:7*T, y:9*T, text:'Old plank roads hum underfoot. The machines only sleep.'}];
     return m;
@@ -247,6 +254,7 @@
     m.npcs = [
       {id:'ruush', name:'Ruush', char:'ruush', x:27*T, y:13*T, role:'Silent forest scout', hideWhenParty:'ruush'}
     ];
+    m.digSpots = [[6, 8], [16, 16], [26, 4]];
     portal(m, 'ruush_to_meadow', 1, 10, 'meadow', 31, 12, 'Mushroom Meadow');
     portal(m, 'to_moon', 20, 1, 'moon', 14, 15, 'Moon Shrine', 'moon');
     m.notes = [{x:13*T, y:6*T, text:'Wind arcs dance between the pines. The forest is watching, kindly.'}];
@@ -275,6 +283,7 @@
     m.npcs = [
       {id:'haraku', name:'Haraku', char:'haraku', x:14*T-20, y:6*T+10, role:'Shrine keeper', hideWhenParty:'haraku'}
     ];
+    m.digSpots = [[5, 6], [20, 12], [11, 14]];
     portal(m, 'moon_to_ruush', 14, 17, 'ruushwood', 20, 2, 'Ruushwood');
     portal(m, 'to_ruins', 1, 9, 'ruins', 28, 9, 'Ancient Ruins', 'ruins');
     m.notes = [{x:10*T, y:10*T, text:'Two moons share this sky. One of them is humming your name.'}];
@@ -299,7 +308,9 @@
     mon(m, {id:'tombbat', kind:'bat', name:'Tomb Bat', x:17*T, y:12*T, hp:180, atk:27, xp:80, coins:52, hue:160});
     mon(m, {id:'ancientshroom', kind:'mushroom', name:'Ancient Sporecap', x:24*T, y:8*T, hp:210, atk:29, xp:90, coins:60, hue:180});
     mon(m, {id:'guardian_prime', kind:'crystal', name:'Guardian Prime', x:14*T, y:4*T+30, hp:460, atk:34, xp:220, coins:200, boss:true, hue:150});
+    mon(m, {id:'gemkin_avatar', kind:'xelar', name:'Gemkin Avatar', x:4*T, y:4*T, hp:900, atk:44, xp:500, coins:500, boss:true, hue:120, requiresGems:7});
     m.chests = [{id:'ruins_chest', x:27*T, y:15*T, reward:{coins:120, item:'Courage Crumble'}, label:'Kingly chest'}];
+    m.digSpots = [[8, 10], [18, 14], [25, 6]];
     portal(m, 'ruins_to_moon', 29, 9, 'moon', 2, 9, 'Moon Shrine');
     m.notes = [{x:12*T, y:9*T, text:'The old kings built with gold pillars and moss. Take notes for your keep.'}];
     return m;

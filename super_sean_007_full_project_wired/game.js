@@ -268,7 +268,13 @@
     nodeTimers: {},
     crops: {},
     homestead: {claimed: false, level: 1, tiles: {}, blueprintsBuilt: [], perksSeen: [], lastGiftAt: 0},
+    stats: {gathered: 0, battlesWon: 0, fishCaught: 0, treasuresDug: 0, dailiesDone: 0, cropsHarvested: 0},
+    achievements: {},
+    daily: null,
+    treasure: null,
+    ngPlus: 0,
     playMinutes: 0,
+    savedAt: 0,
     lastAdReward: 0
   });
 
@@ -285,9 +291,10 @@
     ['player', 'unlocked', 'hero', 'equipment', 'quest', 'homestead'].forEach(key => {
       merged[key] = {...base[key], ...(raw[key] || {})};
     });
-    ['items', 'flags', 'sideQuests', 'chestsOpened', 'defeatedBosses', 'nodeTimers', 'crops'].forEach(key => {
+    ['items', 'flags', 'sideQuests', 'chestsOpened', 'defeatedBosses', 'nodeTimers', 'crops', 'achievements'].forEach(key => {
       merged[key] = {...(raw[key] || {})};
     });
+    merged.stats = {...base.stats, ...(raw.stats || {})};
     merged.gems = Array.isArray(raw.gems) ? raw.gems : [];
     merged.party = Array.isArray(raw.party) && raw.party.length ? raw.party : base.party;
     if (!SSG.MAIN_QUESTS.some(q => q.id === merged.quest.id)) merged.quest = base.quest;
@@ -300,13 +307,141 @@
   }
 
   function save() {
+    state.savedAt = Date.now();
+    try { systems.checkAchievements(); } catch (e) {}
     try { localStorage.setItem('super-sean-007-save', JSON.stringify(state)); } catch (e) {}
+    CloudSync.push();
   }
   function load() {
     try {
       const raw = localStorage.getItem('super-sean-007-save');
       if (raw) state = migrate(JSON.parse(raw));
     } catch (e) { state = defaultState(); }
+  }
+  function applyImportedSave(parsed) {
+    state = migrate(parsed);
+    try { localStorage.setItem('super-sean-007-save', JSON.stringify(state)); } catch (e) {}
+    maps = SSG.buildMaps();
+    state.scene = 'title';
+    showToast(`Save loaded — Lv.${state.hero.level} in ${maps[state.mapId]?.name || 'Asteria'}. Press Continue!`);
+  }
+  function saveSummary() {
+    try {
+      const raw = localStorage.getItem('super-sean-007-save');
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return {
+        level: parsed.hero?.level || 1,
+        mapName: SSG.WORLD_NODES.find(([id]) => id === parsed.mapId)?.[1] || 'Birthday Village',
+        minutes: Math.floor(parsed.playMinutes || 0),
+        gems: (parsed.gems || []).length,
+        ngPlus: parsed.ngPlus || 0
+      };
+    } catch (e) { return null; }
+  }
+
+  /* ---------------- save codes & cloud sync ---------------- */
+  function exportSaveCode() {
+    save();
+    const code = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    const done = () => showToast('Save code copied! Paste it on any device via Load Code.');
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(code).then(done).catch(() => window.prompt('Copy your save code:', code));
+    } else {
+      window.prompt('Copy your save code:', code);
+    }
+    return code;
+  }
+  function importSaveFlow() {
+    const input = (window.prompt('Paste a save code, or a cloud sync ID:') || '').trim();
+    if (!input) return;
+    if (/^[a-z0-9]{16,40}$/.test(input)) {
+      CloudSync.pull(input);
+      return;
+    }
+    try {
+      const parsed = JSON.parse(decodeURIComponent(escape(atob(input))));
+      if (!parsed || typeof parsed.version !== 'number') throw new Error('bad save');
+      applyImportedSave(parsed);
+      AudioManager.playSfx('reward');
+    } catch (e) {
+      showToast('That code could not be read. Check it and try again.');
+    }
+  }
+  const CloudSync = {
+    enabled: readBool('super-sean-007-cloud-enabled', false),
+    lastPush: 0,
+    status: 'idle',
+    get id() {
+      try { return localStorage.getItem('super-sean-007-cloud-id') || ''; } catch (e) { return ''; }
+    },
+    ensureId() {
+      let id = this.id;
+      if (!id) {
+        const bytes = new Uint8Array(20);
+        crypto.getRandomValues(bytes);
+        id = Array.from(bytes, b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join('');
+        try { localStorage.setItem('super-sean-007-cloud-id', id); } catch (e) {}
+      }
+      return id;
+    },
+    toggle() {
+      this.enabled = !this.enabled;
+      writeBool('super-sean-007-cloud-enabled', this.enabled);
+      if (this.enabled) {
+        const id = this.ensureId();
+        this.push(true);
+        if (navigator.clipboard?.writeText) navigator.clipboard.writeText(id).catch(() => {});
+        showToast(`Cloud sync ON. Your sync ID (copied): ${id}`);
+      } else {
+        showToast('Cloud sync off. Progress still saves in this browser.');
+      }
+    },
+    async push(force = false) {
+      if (!this.enabled || state.scene === 'title') return;
+      const now = Date.now();
+      if (!force && now - this.lastPush < 45_000) return;
+      this.lastPush = now;
+      try {
+        const response = await fetch(`/api/save?id=${this.ensureId()}`, {
+          method: 'PUT',
+          headers: {'content-type': 'application/json'},
+          body: JSON.stringify(state),
+          keepalive: force
+        });
+        this.status = response.ok ? 'synced' : 'error';
+      } catch (e) {
+        this.status = 'offline';
+      }
+    },
+    async pull(id) {
+      showToast('Fetching cloud save...');
+      try {
+        const response = await fetch(`/api/save?id=${id}`);
+        if (!response.ok) { showToast(response.status === 404 ? 'No cloud save found for that ID.' : 'Cloud save could not be loaded.'); return; }
+        const parsed = await response.json();
+        try { localStorage.setItem('super-sean-007-cloud-id', id); } catch (e) {}
+        this.enabled = true;
+        writeBool('super-sean-007-cloud-enabled', true);
+        applyImportedSave(parsed);
+        AudioManager.playSfx('reward');
+      } catch (e) {
+        showToast('Cloud is unreachable right now — try a save code instead.');
+      }
+    }
+  };
+
+  function downloadScreenshot() {
+    try {
+      const link = document.createElement('a');
+      link.download = `super-sean-007-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('Screenshot saved to your downloads!');
+      AudioManager.playSfx('ui_confirm');
+    } catch (e) {
+      showToast('Screenshot failed in this browser.');
+    }
   }
 
   async function fetchJson(url) {
@@ -373,6 +508,11 @@
     resetGame: () => resetGame(),
     exitBuild: () => { state.scene = 'explore'; AudioManager.playSfx('menu_open'); },
     adRevive: onSuccess => AdManager.showRewardedAd('revive', onSuccess),
+    rebuildMaps: () => { maps = SSG.buildMaps(); },
+    saveSummary: () => saveSummary(),
+    exportSave: () => exportSaveCode(),
+    importSave: () => importSaveFlow(),
+    cloud: () => ({enabled: CloudSync.enabled, id: CloudSync.id, status: CloudSync.status, toggle: () => CloudSync.toggle()}),
     drawTile: (tileset, id, sx, sy) => AssetManager.drawTile(tileset, id, sx, sy),
     drawTileScaled: (tileset, id, sx, sy, w, h) => AssetManager.drawTileScaled(tileset, id, sx, sy, w, h),
     drawCharacterFrame: (char, frame, x, y, w, h) => AssetManager.drawCharacterFrame(char, frame, x, y, w, h)
@@ -464,6 +604,7 @@
     const p = state.player;
     const npc = m.npcs.find(n => systems.npcVisible(n) && Math.hypot(n.x - p.x, n.y - p.y) < 72);
     if (npc) return systems.talk(npc);
+    if (systems.digTreasure()) return;
     const node = systems.nearestNode(m, p.x, p.y, 80);
     if (node) return systems.harvest(node);
     if (m.id === 'homestead') {
@@ -480,12 +621,16 @@
         if (piece?.station === 'bed') return systems.restAtBed(ptx + dx, pty + dy);
       }
     }
+    if (m.board && Math.hypot(m.board.tx * TILE + 32 - p.x, m.board.ty * TILE + 32 - p.y) < 80) {
+      return systems.interactBoard();
+    }
     const chest = m.chests.find(c => Math.hypot(c.x - p.x, c.y - p.y) < 72);
     if (chest) return openChest(chest);
     const note = m.notes.find(n => Math.hypot(n.x - p.x, n.y - p.y) < 72);
     if (note) return ctx.showDialogue('Asteria-007', [note.text]);
     const portal = m.portals.find(pt => p.x > pt.x - 30 && p.y > pt.y - 30 && p.x < pt.x + pt.w && p.y < pt.y + pt.h);
     if (portal) return usePortal(portal);
+    if (systems.nearWater(m, p.x, p.y)) return systems.startFishing();
     showToast('Nothing to interact with here.');
   }
 
@@ -511,7 +656,9 @@
       f.life -= dt / 16.67;
       if (f.life <= 0) fx.splice(i, 1);
     }
+    if (state.scene !== 'title') state.playMinutes += dt / 60000;
     if (state.scene === 'battle') { battleApi.update(); return; }
+    if (state.scene === 'fishing') { systems.updateFishing(dt); return; }
     if (state.scene !== 'explore') return;
     const p = state.player;
     let dx = 0, dy = 0;
@@ -534,13 +681,14 @@
     for (const mon of currentMap().monsters) {
       if (mon.defeated || state.defeatedBosses[mon.id]) continue;
       if (mon.requiresDefeated && !state.defeatedBosses[mon.requiresDefeated]) continue;
+      if (mon.requiresGems && state.gems.length < mon.requiresGems) continue;
       if (Math.hypot(mon.x - p.x, mon.y - p.y) < 52) battleApi.start(mon);
     }
   }
 
   function drawFx() {
     if (!fx.length) return;
-    const cam = ['explore', 'build', 'dialogue'].includes(state.scene) ? renderer.camera() : {x: 0, y: 0};
+    const cam = ['explore', 'build', 'dialogue', 'fishing'].includes(state.scene) ? renderer.camera() : {x: 0, y: 0};
     g.save();
     for (const f of fx) {
       const x = f.screen ? f.x : f.x - cam.x;
@@ -613,6 +761,11 @@
       if (e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') nextDialogue();
       return;
     }
+    if (state.scene === 'fishing') {
+      if (e.code === 'KeyE' || e.code === 'Enter' || e.code === 'Space') systems.castFishing();
+      if (e.code === 'Escape') systems.cancelFishing();
+      return;
+    }
     if (state.scene === 'battle') {
       const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9'].indexOf(e.code);
       if (idx >= 0) {
@@ -650,9 +803,16 @@
     if (e.code === 'KeyM') toggleScene('map');
     if (e.code === 'KeyC') toggleScene('craft');
     if (e.code === 'KeyB') toggleScene('build');
-    if (e.code === 'KeyP') { save(); AudioManager.playSfx('ui_confirm'); showToast('Game saved locally.'); }
+    if (e.code === 'KeyP') { save(); AudioManager.playSfx('ui_confirm'); showToast(`Game saved${CloudSync.enabled ? ' + cloud sync' : ''}.`); }
     if (e.code === 'KeyO') AudioManager.toggleMusic();
     if (e.code === 'KeyL') AudioManager.toggleSfx();
+    if (e.code === 'KeyT') downloadScreenshot();
+    if (e.code === 'KeyG' && state.scene === 'explore' && state.mapId === 'homestead' && state.quest.id === 'postgame') {
+      const totem = currentMap().totem;
+      if (totem && Math.hypot(totem.tx * TILE + 32 - state.player.x, totem.ty * TILE + 32 - state.player.y) < 110) {
+        systems.startNgPlus();
+      }
+    }
     if (e.code === 'Escape' && ['inventory', 'quest', 'map', 'craft', 'shop'].includes(state.scene)) state.scene = 'explore';
   });
   window.addEventListener('keyup', e => { keys[e.code] = false; });
@@ -706,6 +866,13 @@
         commands: battleApi.commands().map(c => c.id),
         log: battleApi.current.log.slice(0, 4)
       } : null,
+      stats: {...state.stats},
+      achievements: Object.keys(state.achievements || {}),
+      daily: state.daily ? {...systems.dailyRequest()} : null,
+      treasure: state.treasure ? {...state.treasure} : null,
+      ngPlus: state.ngPlus || 0,
+      fishing: state.scene === 'fishing' ? {pos: Number(systems.fishing.pos.toFixed(2))} : null,
+      persistence: {savedAt: state.savedAt, playMinutes: Math.round(state.playMinutes), cloud: {enabled: CloudSync.enabled, status: CloudSync.status}},
       assets: {criticalImages: Object.keys(img).length, missingImages: runtime.assetWarnings, slicedFrames: runtime.slicedAssets?.frames?.length || 0},
       audio: AudioManager.status()
     };
@@ -727,6 +894,10 @@
     interact,
     menu(type) { AudioManager.unlock(); toggleScene(type); },
     save,
+    screenshot: downloadScreenshot,
+    exportSave: exportSaveCode,
+    importSave: importSaveFlow,
+    cloudSync: () => CloudSync.toggle(),
     toggleMusic: () => AudioManager.toggleMusic(),
     toggleSfx: () => AudioManager.toggleSfx(),
     renderState: renderGameToText,
@@ -760,6 +931,17 @@
       this.closePath(); return this;
     };
   }
+
+  // Persistence lifecycle: autosave every 20s and on tab hide/close.
+  setInterval(() => {
+    if (state.scene !== 'title') save();
+  }, 20_000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && state.scene !== 'title') { save(); CloudSync.push(true); }
+  });
+  window.addEventListener('pagehide', () => {
+    if (state.scene !== 'title') { save(); CloudSync.push(true); }
+  });
 
   async function bootstrap() {
     maps = SSG.buildMaps();

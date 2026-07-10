@@ -201,6 +201,7 @@
       Object.entries(type.yields).forEach(([item, [min, max]]) => {
         const qty = min + Math.floor(Math.random() * (max - min + 1));
         addItem(item, qty);
+        bumpStat('gathered', qty);
         got.push(`+${qty} ${item}`);
       });
       ctx.fx(got.join(' '), {x: node.tx * T, y: node.ty * T, color: '#c9ffc0'});
@@ -382,6 +383,13 @@
         ctx.save();
         return;
       }
+      if (currentQuest().id === 'postgame') {
+        ctx.showDialogue('Homestead Crystal', [
+          `The Seven Gems shine within the crystal. Comfort ${comfort()}. Your legend is complete... or is it?`,
+          'Press G at this crystal to begin New Game+ — the story restarts with stronger foes, but you keep your level, gear, friends and entire homestead.'
+        ]);
+        return;
+      }
       const next = SSG.HOMESTEAD_LEVELS[hs.level]; // next level (array is 0-indexed by level-1)
       if (!next) { ctx.showDialogue('Homestead Crystal', [`Comfort ${comfort()}. The whole valley is yours. Build freely!`]); return; }
       if (!hasCost(next.cost)) {
@@ -439,6 +447,7 @@
       }
       delete S().crops[key];
       def.yields.forEach(([item, qty]) => addItem(item, qty));
+      bumpStat('cropsHarvested');
       if (Math.random() < def.seedBack) addItem(def.seed, 1);
       ctx.sfx('chest');
       ctx.showToast(`Harvested ${def.name}: ${def.yields.map(([i, q]) => `+${q} ${i}`).join(', ')}`);
@@ -480,6 +489,7 @@
       if (npc.hideWhenParty && st.party.includes(npc.hideWhenParty)) return false;
       if (npc.requiresClaimed && !st.homestead.claimed) return false;
       if (npc.requiresParty && !st.party.includes(npc.requiresParty)) return false;
+      if (npc.requiresComfort && comfort() < npc.requiresComfort) return false;
       return true;
     }
     function talk(npc) {
@@ -499,6 +509,190 @@
 
     function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' '); }
 
+    /* ---------------- achievements & stats ---------------- */
+    function bumpStat(key, amount = 1) {
+      const st = S();
+      st.stats = st.stats || {};
+      st.stats[key] = (st.stats[key] || 0) + amount;
+    }
+    function achievementConditions() {
+      const st = S();
+      const stats = st.stats || {};
+      return {
+        first_win: (stats.battlesWon || 0) >= 1,
+        gem_1: st.gems.length >= 1,
+        home_claimed: st.homestead.claimed,
+        first_blueprint: (st.homestead.blueprintsBuilt || []).length >= 1,
+        castle: (st.homestead.blueprintsBuilt || []).includes('keep'),
+        comfort_100: st.homestead.claimed && comfort() >= 100,
+        first_crop: (stats.cropsHarvested || 0) >= 1,
+        first_fish: (stats.fishCaught || 0) >= 1,
+        first_treasure: (stats.treasuresDug || 0) >= 1,
+        daily_done: (stats.dailiesDone || 0) >= 1,
+        full_party: st.party.length >= 5,
+        level_10: st.hero.level >= 10,
+        gather_50: (stats.gathered || 0) >= 50,
+        xelar_down: Boolean(st.defeatedBosses.xelar_final),
+        all_gems: st.gems.length >= 7,
+        ng_plus: (st.ngPlus || 0) >= 1
+      };
+    }
+    function checkAchievements() {
+      const st = S();
+      st.achievements = st.achievements || {};
+      const met = achievementConditions();
+      SSG.ACHIEVEMENTS.forEach(def => {
+        if (met[def.id] && !st.achievements[def.id]) {
+          st.achievements[def.id] = Date.now();
+          ctx.showToast(`Achievement unlocked: ${def.label}!`);
+          ctx.sfx('level_up');
+        }
+      });
+    }
+
+    /* ---------------- fishing ---------------- */
+    const fishing = {active: false, pos: 0, dir: 1, speed: 0.9};
+    const WATER_TILES = {birthday: new Set([3, 16]), meadow: new Set([5])};
+    function nearWater(map, px, py) {
+      const waters = WATER_TILES[map.tileset];
+      if (!waters) return false;
+      const ptx = Math.floor(px / T), pty = Math.floor(py / T);
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const tx = ptx + dx, ty = pty + dy;
+        if (tx >= 0 && ty >= 0 && tx < map.w && ty < map.h && waters.has(map.tiles[ty][tx])) return true;
+      }
+      return false;
+    }
+    function startFishing() {
+      fishing.active = true;
+      fishing.pos = 0;
+      fishing.dir = 1;
+      fishing.speed = 0.75 + Math.random() * 0.6;
+      ctx.setScene('fishing');
+      ctx.sfx('menu_open');
+    }
+    function updateFishing(dt) {
+      if (!fishing.active) return;
+      fishing.pos += fishing.dir * fishing.speed * dt / 1000;
+      if (fishing.pos > 1) { fishing.pos = 1; fishing.dir = -1; }
+      if (fishing.pos < 0) { fishing.pos = 0; fishing.dir = 1; }
+    }
+    function castFishing() {
+      if (!fishing.active) return;
+      fishing.active = false;
+      ctx.setScene('explore');
+      if (fishing.pos >= 0.38 && fishing.pos <= 0.62) {
+        const qty = Math.random() < 0.2 ? 2 : 1;
+        addItem('Sunfish', qty);
+        bumpStat('fishCaught', qty);
+        ctx.sfx('chest');
+        ctx.fx(`+${qty} Sunfish`, {color: '#9be8ff'});
+        ctx.showToast(`Splash! Caught ${qty} Sunfish.`);
+      } else {
+        ctx.sfx('menu_open');
+        ctx.showToast('It got away... watch for the green zone!');
+      }
+      ctx.save();
+    }
+    function cancelFishing() {
+      fishing.active = false;
+      ctx.setScene('explore');
+    }
+
+    /* ---------------- daily quest board ---------------- */
+    function todayKey() { return new Date().toISOString().slice(0, 10); }
+    function dailyRequest() {
+      const st = S();
+      const today = todayKey();
+      if (!st.daily || st.daily.date !== today) {
+        let hash = 0;
+        for (const c of today) hash = (hash * 31 + c.charCodeAt(0)) >>> 0;
+        st.daily = {date: today, pick: hash % SSG.DAILY_QUESTS.length, done: false};
+      }
+      return {...SSG.DAILY_QUESTS[st.daily.pick], done: st.daily.done};
+    }
+    function interactBoard() {
+      const st = S();
+      const req = dailyRequest();
+      const reward = 40 + st.hero.level * 5;
+      if (req.done) {
+        ctx.showDialogue('Quest Board', ['Today\'s request is complete. A new one is pinned up every morning!']);
+        return;
+      }
+      if (countItem(req.item) >= req.qty) {
+        removeItem(req.item, req.qty);
+        st.hero.coins += reward;
+        addItem('Crystal Candy', 1);
+        st.daily.done = true;
+        bumpStat('dailiesDone');
+        ctx.sfx('reward');
+        ctx.showDialogue('Quest Board', [`Request fulfilled: ${req.qty} × ${req.item}. The villagers leave ${reward} coins and a Crystal Candy. Come back tomorrow!`]);
+        ctx.save();
+        return;
+      }
+      ctx.showDialogue('Quest Board', [
+        `Today's request: ${req.qty} × ${req.item} (you carry ${countItem(req.item)}).`,
+        `Reward: ${reward} coins and a Crystal Candy. Bring the goods and press E on the board!`
+      ]);
+    }
+
+    /* ---------------- treasure maps ---------------- */
+    function useTreasureMap() {
+      const st = S();
+      if (st.treasure) { ctx.showToast('You already follow a map! Dig up that treasure first.'); return false; }
+      if (!removeItem('Treasure Map', 1)) return false;
+      const candidates = Object.values(ctx.maps())
+        .filter(m => m.digSpots && (m.id === 'village' || st.unlocked[m.id] || m.id === 'meadow'));
+      const map = candidates[Math.floor(Math.random() * candidates.length)];
+      const [tx, ty] = map.digSpots[Math.floor(Math.random() * map.digSpots.length)];
+      st.treasure = {mapId: map.id, tx, ty};
+      ctx.sfx('ui_confirm');
+      ctx.showToast(`The map points to ${map.name}! Look for the glowing X.`);
+      ctx.save();
+      return true;
+    }
+    function digTreasure() {
+      const st = S();
+      const t = st.treasure;
+      if (!t || t.mapId !== st.mapId) return false;
+      const p = st.player;
+      if (Math.hypot(t.tx * T + 32 - p.x, t.ty * T + 32 - p.y) > 80) return false;
+      const coins = 60 + Math.floor(Math.random() * 60);
+      st.hero.coins += coins;
+      const loot = ['Crystal Shard', 'Ore Chunk', 'Moon Herb', 'Gear Part', 'Berry'][Math.floor(Math.random() * 5)];
+      addItem(loot, 2);
+      if (Math.random() < 0.15) addItem('Moonfruit Seed', 1);
+      st.treasure = null;
+      bumpStat('treasuresDug');
+      ctx.sfx('chest');
+      ctx.fx(`+${coins} coins  +2 ${loot}`, {color: '#ffe98a'});
+      ctx.showToast(`Treasure dug up: ${coins} coins and 2 × ${loot}!`);
+      ctx.save();
+      return true;
+    }
+
+    /* ---------------- New Game+ ---------------- */
+    function startNgPlus() {
+      const st = S();
+      st.ngPlus = (st.ngPlus || 0) + 1;
+      st.gems = [];
+      st.defeatedBosses = {};
+      st.chestsOpened = {};
+      st.nodeTimers = {};
+      st.sideQuests = {};
+      st.treasure = null;
+      st.unlocked = {meadow: true, cave: false, petro: false, ruushwood: false, moon: false, ruins: false, tower: false, homestead: true};
+      const first = SSG.MAIN_QUESTS[0];
+      st.quest = {id: first.id, title: first.title, objective: first.objective, progress: 0};
+      st.mapId = 'village';
+      st.player.x = 11 * T;
+      st.player.y = 10 * T;
+      ctx.rebuildMaps();
+      ctx.sfx('level_up');
+      ctx.showToast(`New Game+ ${st.ngPlus} begins! Enemies +${st.ngPlus * 25}% — your legend continues.`);
+      ctx.save();
+    }
+
     return {
       addItem, removeItem, countItem, hasCost, payCost, costText,
       equipBonuses, heroStats, equipItem, useConsumable,
@@ -509,7 +703,11 @@
       comfort, perkActive, canPlace, place, removePiece,
       blueprintCost, stampBlueprint, interactTotem, restAtBed,
       cropAt, cropStage, interactSoil,
-      shop, shopPrices, sellables, buy, sell
+      shop, shopPrices, sellables, buy, sell,
+      bumpStat, checkAchievements,
+      fishing, nearWater, startFishing, updateFishing, castFishing, cancelFishing,
+      dailyRequest, interactBoard,
+      useTreasureMap, digTreasure, startNgPlus
     };
   };
 })();

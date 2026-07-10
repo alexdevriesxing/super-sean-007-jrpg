@@ -94,6 +94,26 @@
       lines:['Legends say a hero once raised a stone keep here. Could you?','A true castle! Xelar will think twice now.']}
   ];
 
+  // Achievements: checked event-driven by systems.checkAchievements().
+  SSG.ACHIEVEMENTS = [
+    {id:'first_win',      label:'First Victory',      desc:'Win your first battle.'},
+    {id:'gem_1',          label:'Gem Bearer',         desc:'Restore your first Gem.'},
+    {id:'home_claimed',   label:'Landowner',          desc:'Claim the Sunrise Homestead.'},
+    {id:'first_blueprint',label:'Master Builder',     desc:'Stamp your first blueprint.'},
+    {id:'castle',         label:'Castle Dreamer',     desc:'Build the Stone Keep.'},
+    {id:'comfort_100',    label:'Cozy Legend',        desc:'Reach 100 Comfort.'},
+    {id:'first_crop',     label:'Green Thumb',        desc:'Harvest your first crop.'},
+    {id:'first_fish',     label:'Gone Fishing',       desc:'Catch a Sunfish.'},
+    {id:'first_treasure', label:'X Marks the Spot',   desc:'Dig up a buried treasure.'},
+    {id:'daily_done',     label:'Helping Hand',       desc:'Complete a quest board request.'},
+    {id:'full_party',     label:'Friendship Five',    desc:'Recruit every friend.'},
+    {id:'level_10',       label:'Seasoned Hero',      desc:'Reach level 10.'},
+    {id:'gather_50',      label:'Forager',            desc:'Harvest 50 materials from nodes.'},
+    {id:'xelar_down',     label:'Bald No More',       desc:'Defeat Xelar the Bald Wizard.'},
+    {id:'all_gems',       label:'Legend of the Seven',desc:'Restore all Seven Gems.'},
+    {id:'ng_plus',        label:'Rebirth of Legends', desc:'Begin New Game+.'}
+  ];
+
   SSG.NPC_LINES = {
     elder: [
       'Sean, the Village Crystal has dimmed. Xelar the Bald Wizard is draining the Seven Gems.',

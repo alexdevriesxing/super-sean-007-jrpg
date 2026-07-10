@@ -84,6 +84,22 @@
         ctx.drawTile('birthday', 20, chest.x - cam.x, chest.y - cam.y);
         if (chest.ad) drawLabel('Reward', chest.x - cam.x - 8, chest.y - cam.y - 14, '#fff4a9');
       }
+      if (m.board) {
+        drawLabel('📌 Quest Board', m.board.tx * T - cam.x - 12, m.board.ty * T - cam.y - 16, '#ffe98a');
+      }
+      const treasure = S().treasure;
+      if (treasure && treasure.mapId === m.id) {
+        const x = treasure.tx * T - cam.x + 32, y = treasure.ty * T - cam.y + 32;
+        g.save();
+        g.globalAlpha = 0.65 + Math.sin(Date.now() / 300) * 0.25;
+        g.strokeStyle = '#ff5f5f'; g.lineWidth = 7; g.lineCap = 'round';
+        g.beginPath();
+        g.moveTo(x - 16, y - 16); g.lineTo(x + 16, y + 16);
+        g.moveTo(x + 16, y - 16); g.lineTo(x - 16, y + 16);
+        g.stroke();
+        g.restore();
+        drawLabel('Dig here! (E)', x - 40, y - 44, '#ffd9d9');
+      }
       for (const npc of m.npcs) {
         if (!sys().npcVisible(npc)) continue;
         drawCharacter(npc.char, npc.x - cam.x, npc.y - cam.y, 0, npc.name, npc.hue);
@@ -91,6 +107,7 @@
       for (const mon of m.monsters) {
         if (mon.defeated || S().defeatedBosses[mon.id]) continue;
         if (mon.requiresDefeated && !S().defeatedBosses[mon.requiresDefeated]) continue;
+        if (mon.requiresGems && S().gems.length < mon.requiresGems) continue;
         drawMonster(mon, cam);
       }
       drawParty(cam);
@@ -209,13 +226,27 @@
         grd.addColorStop(0, '#183a65'); grd.addColorStop(1, '#13a78f');
         g.fillStyle = grd; g.fillRect(0, 0, GAME_W, GAME_H);
       }
-      panel(250, 268, 460, 168, 'rgba(255,255,255,.9)');
+      panel(230, 240, 500, 232, 'rgba(255,255,255,.9)');
       g.textAlign = 'center';
-      g.fillStyle = '#12365a'; g.font = '900 40px Nunito, Arial'; g.fillText('SUPER SEAN 007', 480, 312);
-      g.fillStyle = '#8b4a16'; g.font = '800 21px Nunito, Arial'; g.fillText('Legend of the Seven Gems — Homestead Update', 480, 344);
+      g.fillStyle = '#12365a'; g.font = '900 40px Nunito, Arial'; g.fillText('SUPER SEAN 007', 480, 284);
+      g.fillStyle = '#8b4a16'; g.font = '800 20px Nunito, Arial'; g.fillText('Legend of the Seven Gems — Homestead Update', 480, 314);
+      const summary = ctx.saveSummary();
+      g.font = '700 14px Nunito';
+      g.fillStyle = '#2471a3';
+      g.fillText(summary
+        ? `Saved hero: Lv.${summary.level} · ${summary.mapName} · ${summary.gems}/7 gems · ${summary.minutes} min played${summary.ngPlus ? ` · NG+${summary.ngPlus}` : ''}`
+        : 'No save yet — your legend starts today!', 480, 340);
       g.textAlign = 'start';
-      button(322, 366, 150, 38, 'Continue', () => ctx.startGame());
-      button(492, 366, 150, 38, 'New Game', () => ctx.resetGame());
+      button(292, 356, 180, 38, summary ? 'Continue' : 'Start Adventure', () => ctx.startGame());
+      button(492, 356, 180, 38, 'New Game', () => ctx.resetGame());
+      button(292, 404, 118, 30, 'Save Code', () => ctx.exportSave());
+      button(420, 404, 118, 30, 'Load Code', () => ctx.importSave());
+      const cloud = ctx.cloud();
+      button(548, 404, 124, 30, `Cloud: ${cloud.enabled ? 'ON' : 'OFF'}`, () => cloud.toggle(), !cloud.enabled);
+      if (cloud.enabled && cloud.id) {
+        g.font = '11px Nunito'; g.fillStyle = '#41576b';
+        g.fillText(`Sync ID: ${cloud.id} (${cloud.status}) — use Load Code on another device`, 292, 452);
+      }
       g.font = '15px Nunito'; g.fillStyle = '#ecfbff';
       g.fillText('Explore 9 regions · Gather & craft · Build your homestead · Stop Xelar the Bald Wizard', 200, 505);
     }
@@ -300,6 +331,7 @@
         hotspot(x, y - 8, 280, 26, () => {
           if (def?.type === 'equipment') sys().equipItem(name);
           else if (def?.type === 'consumable') sys().useConsumable(name);
+          else if (def?.type === 'treasure_map') sys().useTreasureMap();
           else ctx.showToast(def?.desc || name);
         });
       });
@@ -328,12 +360,21 @@
       g.font = 'bold 16px Nunito'; g.fillText('Seven Gems', 122, 232);
       SSG.GEMS.forEach((gem, i) => {
         const has = st.gems.includes(gem);
-        const x = 122 + i * 100;
+        const x = 122 + i * 68;
         g.save(); if (!has) g.globalAlpha = 0.25;
-        ctx.drawTileScaled('birthday', 21, x, 244, 34, 34);
+        ctx.drawTileScaled('birthday', 21, x, 244, 30, 30);
         g.restore();
-        g.font = '10px Nunito'; g.fillStyle = has ? '#0f8a3d' : '#93a6b8';
-        g.fillText(gem, x - 4, 294);
+        g.font = '9px Nunito'; g.fillStyle = has ? '#0f8a3d' : '#93a6b8';
+        g.fillText(gem.replace(' Gem', ''), x + 2, 290);
+      });
+      const unlockedCount = Object.keys(st.achievements || {}).length;
+      g.font = 'bold 16px Nunito'; g.fillStyle = '#12365a';
+      g.fillText(`Achievements ${unlockedCount}/${SSG.ACHIEVEMENTS.length}`, 640, 126);
+      SSG.ACHIEVEMENTS.forEach((a, i) => {
+        const has = Boolean(st.achievements?.[a.id]);
+        g.font = has ? 'bold 12px Nunito' : '12px Nunito';
+        g.fillStyle = has ? '#0f8a3d' : '#93a6b8';
+        g.fillText(`${has ? '★' : '☆'} ${a.label}`, 640, 148 + i * 18);
       });
       g.font = 'bold 16px Nunito'; g.fillStyle = '#12365a'; g.fillText('Side Quests', 122, 330);
       let y = 352;
@@ -520,6 +561,25 @@
       g.fillText('Click once to select, again to stamp at the cursor tile (top-left corner). V/Esc closes.', 220, 366);
     }
 
+    /* ---------- fishing ---------- */
+    function drawFishing() {
+      drawWorld(); drawHud();
+      const f = sys().fishing;
+      panel(280, 170, 400, 190, 'rgba(255,255,255,.96)');
+      g.fillStyle = '#12365a'; g.font = 'bold 24px Nunito'; g.fillText('Gone Fishing 🎣', 330, 210);
+      g.font = '14px Nunito'; g.fillStyle = '#41576b';
+      g.fillText('Press E when the bobber is in the green zone!', 316, 238);
+      const barX = 320, barY = 258, barW = 320, barH = 26;
+      g.fillStyle = '#d8f3ff'; g.beginPath(); g.roundRect(barX, barY, barW, barH, 13); g.fill();
+      g.fillStyle = '#59e07c';
+      g.beginPath(); g.roundRect(barX + barW * 0.38, barY, barW * 0.24, barH, 13); g.fill();
+      const bx = barX + barW * Math.max(0, Math.min(1, f.pos));
+      g.fillStyle = '#ff9c2f'; g.beginPath(); g.arc(bx, barY + barH / 2, 13, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = '#0e4f7c'; g.lineWidth = 2; g.stroke();
+      button(390, 306, 180, 34, 'Reel in! (E)', () => sys().castFishing());
+      g.font = '11px Nunito'; g.fillStyle = '#7a90a5'; g.fillText('Esc to put the rod away', 410, 354);
+    }
+
     /* ---------- main render ---------- */
     function render() {
       clickables.length = 0;
@@ -534,6 +594,7 @@
       else if (scene === 'craft') drawCraft();
       else if (scene === 'shop') drawShop();
       else if (scene === 'build') drawBuild();
+      else if (scene === 'fishing') drawFishing();
       else { drawWorld(); drawHud(); }
     }
 

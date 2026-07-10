@@ -27,6 +27,11 @@
     'Courage Crumble':{type:'consumable', icon:{sheet:'meadow', tile:14}, sell:20, heal:80, friendship:20, desc:'Grandma cake: 80 HP and +20 Friendship.'},
     'Guardian Shard':{type:'key', icon:{sheet:'cave', tile:3}, sell:0, desc:'Proof the Crystal Guardian was calmed.'},
 
+    'Sunfish':       {type:'consumable', icon:{sheet:'birthday', tile:16}, sell:6, heal:25, desc:'Fresh pond catch. Restores 25 HP.'},
+    'Grilled Fish':  {type:'consumable', icon:{sheet:'petro', tile:3}, sell:18, heal:150, desc:'Kitchen-grilled sunfish. Restores 150 HP.'},
+    'Treasure Map':  {type:'treasure_map', icon:{sheet:'birthday', tile:14}, sell:10, desc:'A crinkled map. Use it from your bag to reveal a dig spot.'},
+    'Gemkin Crown':  {type:'equipment', slot:'charm', icon:{sheet:'birthday', tile:21}, sell:400, attack:8, defense:8, maxMp:30, desc:'Trophy of the Gemkin Avatar. +8 ATK, +8 DEF, +30 MP.'},
+
     'Berry Seed':    {type:'seed', icon:{sheet:'meadow', tile:15}, sell:2, crop:'berry',  desc:'Plant in tilled soil. Grows berries.'},
     'Flower Seed':   {type:'seed', icon:{sheet:'meadow', tile:15}, sell:2, crop:'flower', desc:'Plant in tilled soil. Grows flowers.'},
     'Moonfruit Seed':{type:'seed', icon:{sheet:'meadow', tile:15}, sell:4, crop:'moon',   desc:'Plant in tilled soil. Grows moon herbs.'},
@@ -54,6 +59,7 @@
     {id:'stew',    name:'Mushroom Stew',   out:{item:'Mushroom Stew', qty:1},ins:[['Mushroom Cap',3],['Berry',1]], station:'kitchen', cat:'food'},
     {id:'moontea', name:'Moon Tea',        out:{item:'Moon Tea', qty:1},     ins:[['Moon Herb',2]], station:'kitchen', cat:'food'},
     {id:'crumble', name:'Courage Crumble', out:{item:'Courage Crumble', qty:1}, ins:[['Berry',2],['Flower',1],['Mushroom Cap',1]], station:'kitchen', cat:'food'},
+    {id:'grilledfish', name:'Grilled Fish', out:{item:'Grilled Fish', qty:1}, ins:[['Sunfish',2]], station:'kitchen', cat:'food'},
 
     {id:'gadgetcharm', name:'Gadget Charm', out:{item:'Gadget Charm', qty:1}, ins:[['Gear Part',2],['Plank',1]], station:'workbench', cat:'gear'},
     {id:'sword1',  name:'Crystal Sword +1',out:{item:'Crystal Sword +1', qty:1}, ins:[['Crystal Shard',3],['Plank',2]], station:'forge', cat:'gear'},
@@ -79,7 +85,19 @@
     {item:'Moonfruit Seed', price:12},
     {item:'Wood', price:6},
     {item:'Stone', price:6},
-    {item:'Mushroom Cap', price:8}
+    {item:'Mushroom Cap', price:8},
+    {item:'Treasure Map', price:30}
+  ];
+
+  // Daily quest board rotation (picked deterministically by date).
+  SSG.DAILY_QUESTS = [
+    {item:'Wood', qty:8},
+    {item:'Stone', qty:8},
+    {item:'Berry', qty:6},
+    {item:'Mushroom Cap', qty:5},
+    {item:'Flower', qty:5},
+    {item:'Crystal Shard', qty:3},
+    {item:'Sunfish', qty:2}
   ];
 
   // Monster material drops by enemy kind (rolled on victory).

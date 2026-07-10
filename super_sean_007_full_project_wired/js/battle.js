@@ -34,14 +34,27 @@
       const st = S();
       if (st.defeatedBosses[monster.id] || monster.defeated) return;
       if (monster.requiresDefeated && !st.defeatedBosses[monster.requiresDefeated]) return;
+      if (monster.requiresGems && st.gems.length < monster.requiresGems) return;
+      const ng = 1 + 0.25 * (st.ngPlus || 0);
       battle = {
-        enemy: {...monster},
-        log: [`${monster.name} appears!`],
+        enemy: {
+          ...monster,
+          hp: Math.floor(monster.hp * ng),
+          maxHp: Math.floor(monster.maxHp * ng),
+          atk: Math.floor(monster.atk * ng),
+          xp: Math.floor(monster.xp * ng),
+          coins: Math.floor(monster.coins * ng)
+        },
+        log: [`${monster.name} appears!${st.ngPlus ? ` (NG+${st.ngPlus})` : ''}`],
         turn: 'player',
         lock: 0,
         guard: false,
         ironGuard: 0,
         stunned: 0,
+        poison: 0,
+        weakened: 0,
+        enemyGuard: 0,
+        phase2: false,
         cooldowns: {},
         buttons: [],
         backgroundKey: selectBackground(monster)
@@ -71,6 +84,12 @@
 
     function dealDamage(amount, source) {
       const e = battle.enemy;
+      if (battle.enemyGuard > 0) {
+        amount = Math.max(1, Math.floor(amount * 0.5));
+        battle.enemyGuard -= 1;
+        battle.log.unshift(`${e.name}'s hardened shell absorbs half the blow!`);
+      }
+      if (battle.weakened > 0) amount = Math.max(1, Math.floor(amount * 0.75));
       e.hp = Math.max(0, e.hp - amount);
       battle.log.unshift(`${source} for ${amount} damage.`);
       ctx.fx(`-${amount}`, {screen: true, x: 690 + Math.random() * 60, y: 170 + Math.random() * 40, color: '#ffd76a', size: 22, life: 55});
@@ -166,9 +185,48 @@
       const h = S().hero;
       const stats = sys().heroStats();
       Object.keys(battle.cooldowns).forEach(k => { battle.cooldowns[k] = Math.max(0, battle.cooldowns[k] - 1); });
+      if (battle.weakened > 0) battle.weakened -= 1;
+      if (battle.poison > 0) {
+        battle.poison -= 1;
+        const tick = Math.max(4, Math.floor(h.maxHp * 0.04));
+        h.hp = Math.max(1, h.hp - tick);
+        battle.log.unshift(`Spores sting Sean for ${tick} poison damage (${battle.poison} turns left).`);
+      }
       if (battle.stunned > 0) {
         battle.stunned -= 1;
         battle.log.unshift(`${e.name} is stunned and loses a turn!`);
+        battle.turn = 'player';
+        return;
+      }
+      // Boss phase two: at half HP, Xelar-kind bosses rally once.
+      if (e.boss && e.kind === 'xelar' && !battle.phase2 && e.hp <= e.maxHp / 2) {
+        battle.phase2 = true;
+        e.atk = Math.floor(e.atk * 1.3);
+        e.hp = Math.min(e.maxHp, e.hp + Math.floor(e.maxHp * 0.15));
+        battle.log.unshift(`${e.name} gleams with true bald power — stronger and partly restored!`);
+        ctx.sfx('portal');
+        battle.turn = 'player';
+        return;
+      }
+      // Species abilities.
+      if (e.kind === 'mushroom' && Math.random() < 0.25) {
+        battle.poison = 3;
+        battle.log.unshift(`${e.name} bursts with toxic spores — Sean is poisoned!`);
+        ctx.sfx('menu_open');
+        battle.turn = 'player';
+        return;
+      }
+      if (e.kind === 'bat' && Math.random() < 0.25) {
+        battle.weakened = 2;
+        battle.log.unshift(`${e.name} screeches — Sean's attack drops for 2 turns!`);
+        ctx.sfx('menu_open');
+        battle.turn = 'player';
+        return;
+      }
+      if (e.kind === 'crystal' && Math.random() < 0.25 && battle.enemyGuard === 0) {
+        battle.enemyGuard = 2;
+        battle.log.unshift(`${e.name} hardens — your next 2 hits are halved!`);
+        ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
       }
@@ -213,7 +271,12 @@
         ctx.sfx('level_up');
         ctx.showToast(`Level up! Sean reached level ${h.level}.`);
       }
+      sys().bumpStat('battlesWon');
       const drops = rollDrops(e.kind);
+      if (e.id === 'gemkin_avatar') {
+        sys().addItem('Gemkin Crown', 1);
+        drops.push('Gemkin Crown');
+      }
       if (drops.length) ctx.showToast(`Spoils: ${drops.join(', ')}!`);
       const map = ctx.currentMap();
       const monster = map.monsters.find(mo => mo.id === e.id);

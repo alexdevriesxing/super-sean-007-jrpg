@@ -41,6 +41,8 @@ await Promise.all([
   expectFile('js/render.js'),
   expectFile('site.js'),
   expectFile('assets/web/zonnig_fantasiedorp_met_kastelen_en_brug.webp'),
+  expectFile('api/save.js', path.resolve('functions')),
+  expectFile('wrangler.toml', path.resolve('.')),
   expectFile('styles.css'),
   expectFile('favicon.ico'),
   expectFile('data/asset-manifest.json'),
