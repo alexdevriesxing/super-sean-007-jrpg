@@ -22,6 +22,26 @@
       "file": "assets/audio/music/victory-fanfare.wav",
       "loop": false,
       "description": "Short victory fanfare after battle."
+    },
+    "forest": {
+      "file": "assets/audio/music/forest-loop.wav",
+      "loop": true,
+      "description": "Breezy meadow and forest exploration loop."
+    },
+    "cave": {
+      "file": "assets/audio/music/cave-loop.wav",
+      "loop": true,
+      "description": "Echoing crystal cave and ruins loop."
+    },
+    "moon": {
+      "file": "assets/audio/music/moon-loop.wav",
+      "loop": true,
+      "description": "Dreamy moon shrine and tower loop."
+    },
+    "boss": {
+      "file": "assets/audio/music/boss-loop.wav",
+      "loop": true,
+      "description": "Driving boss battle loop."
     }
   },
   "sfx": {
@@ -64,6 +84,26 @@
       "file": "assets/audio/sfx/portal.wav",
       "loop": false,
       "description": "Region portal shimmer."
+    },
+    "chop": {
+      "file": "assets/audio/sfx/chop.wav",
+      "loop": false,
+      "description": "Harvesting chop/mine impact."
+    },
+    "build": {
+      "file": "assets/audio/sfx/build.wav",
+      "loop": false,
+      "description": "Build piece placed thunk."
+    },
+    "plant": {
+      "file": "assets/audio/sfx/plant.wav",
+      "loop": false,
+      "description": "Seed planted soft pop."
+    },
+    "coin": {
+      "file": "assets/audio/sfx/coin.wav",
+      "loop": false,
+      "description": "Shop coin chime."
     }
   }
 }

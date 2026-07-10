@@ -32,6 +32,13 @@ async function readJson(relativePath) {
 await Promise.all([
   expectFile('index.html'),
   expectFile('game.js'),
+  expectFile('js/data-items.js'),
+  expectFile('js/data-build.js'),
+  expectFile('js/data-quests.js'),
+  expectFile('js/data-maps.js'),
+  expectFile('js/systems.js'),
+  expectFile('js/battle.js'),
+  expectFile('js/render.js'),
   expectFile('styles.css'),
   expectFile('favicon.ico'),
   expectFile('data/asset-manifest.json'),
@@ -67,7 +74,9 @@ if (slicedManifest?.frames) {
 }
 
 await expectFile('index.html', distRoot);
+await expectFile('js/systems.js', distRoot);
 await expectFile('assets/audio/music/title-theme.wav', distRoot);
+await expectFile('assets/audio/music/boss-loop.wav', distRoot);
 await expectFile('assets/sliced/characters/sean/frame_00.png', distRoot);
 
 if (errors.length) {

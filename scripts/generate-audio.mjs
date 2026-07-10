@@ -66,23 +66,51 @@ function envelope(time, duration, attack = 0.015, release = 0.12) {
   return Math.max(0, Math.min(a, r));
 }
 
-function makeMusic({ duration, bpm, chords, lead, pad = 0.18 }) {
+function triangle(freq, time) {
+  return Math.asin(Math.sin(Math.PI * 2 * freq * time)) * (2 / Math.PI);
+}
+
+function makeMusic({ duration, bpm, chords, lead, pad = 0.18, bass = 0.16, hats = 0.05, swing = 0 }) {
   const total = Math.floor(duration * sampleRate);
   const samples = new Float32Array(total);
   const beat = 60 / bpm;
+  const random = seededRandom(hashString(`${duration}:${bpm}:${lead.join(',')}`));
+  const hatNoise = new Float32Array(total);
+  for (let i = 0; i < total; i += 1) hatNoise[i] = random() * 2 - 1;
   for (let i = 0; i < total; i += 1) {
     const t = i / sampleRate;
     const chord = chords[Math.floor(t / (beat * 4)) % chords.length];
     let value = 0;
+    // detuned pad for warmth
     chord.forEach((note, index) => {
-      value += sine(note, t) * (pad / (index + 1));
-      value += sine(note * 2, t) * 0.025;
+      const gain = pad / (index + 1);
+      value += sine(note, t) * gain * 0.6;
+      value += sine(note * 1.005, t) * gain * 0.4;
+      value += sine(note * 2, t) * 0.02;
     });
-    const leadNote = lead[Math.floor(t / beat) % lead.length];
-    const pulse = envelope(t % beat, beat, 0.01, 0.18);
-    value += square(leadNote, t) * pulse * 0.08;
-    value += sine(leadNote * 2, t) * pulse * 0.04;
+    // walking bass an octave below the chord root
+    const bassNote = chord[0] / 2;
+    const bassStep = Math.floor(t / (beat / 2)) % 4;
+    const bassFreq = bassStep === 3 ? bassNote * 1.5 : bassNote;
+    value += triangle(bassFreq, t) * envelope(t % (beat / 2), beat / 2, 0.008, 0.2) * bass;
+    // lead melody with a slight swing feel
+    const leadPos = t / beat + swing * Math.sin(t * 0.7);
+    const leadNote = lead[Math.floor(leadPos) % lead.length];
+    const pulse = envelope(t % beat, beat, 0.01, 0.22);
+    value += square(leadNote, t) * pulse * 0.07;
+    value += sine(leadNote * 2, t) * pulse * 0.045;
+    value += triangle(leadNote, t) * pulse * 0.05;
+    // hi-hat ticks on off-beats
+    const hatPhase = (t % (beat / 2)) / (beat / 2);
+    if (hatPhase < 0.06) value += hatNoise[i] * hats * (1 - hatPhase / 0.06);
     samples[i] = value * 0.55;
+  }
+  // gentle loop crossfade
+  const fade = Math.floor(sampleRate * 0.05);
+  for (let i = 0; i < fade; i += 1) {
+    const w = i / fade;
+    samples[i] *= w;
+    samples[total - 1 - i] *= w;
   }
   return samples;
 }
@@ -158,6 +186,62 @@ const assets = [
       pad: 0.2
     })
   },
+  {
+    type: 'music',
+    id: 'forest',
+    file: 'assets/audio/music/forest-loop.wav',
+    loop: true,
+    description: 'Breezy meadow and forest exploration loop.',
+    samples: makeMusic({
+      duration: 16,
+      bpm: 84,
+      chords: [[196, 246.94, 293.66], [220, 261.63, 329.63], [174.61, 220, 261.63], [196, 233.08, 293.66]],
+      lead: [392, 440, 493.88, 587.33, 493.88, 440, 392, 329.63],
+      pad: 0.15, bass: 0.13, hats: 0.03, swing: 0.06
+    })
+  },
+  {
+    type: 'music',
+    id: 'cave',
+    file: 'assets/audio/music/cave-loop.wav',
+    loop: true,
+    description: 'Echoing crystal cave and ruins loop.',
+    samples: makeMusic({
+      duration: 18,
+      bpm: 70,
+      chords: [[146.83, 174.61, 220], [130.81, 164.81, 196], [155.56, 185, 233.08], [146.83, 174.61, 220]],
+      lead: [293.66, 349.23, 293.66, 261.63, 220, 261.63, 293.66, 349.23],
+      pad: 0.17, bass: 0.18, hats: 0.015
+    })
+  },
+  {
+    type: 'music',
+    id: 'moon',
+    file: 'assets/audio/music/moon-loop.wav',
+    loop: true,
+    description: 'Dreamy moon shrine and tower loop.',
+    samples: makeMusic({
+      duration: 18,
+      bpm: 76,
+      chords: [[220, 261.63, 311.13], [246.94, 293.66, 349.23], [207.65, 246.94, 311.13], [185, 220, 277.18]],
+      lead: [523.25, 466.16, 415.3, 466.16, 554.37, 523.25, 415.3, 369.99],
+      pad: 0.16, bass: 0.12, hats: 0.02, swing: 0.1
+    })
+  },
+  {
+    type: 'music',
+    id: 'boss',
+    file: 'assets/audio/music/boss-loop.wav',
+    loop: true,
+    description: 'Driving boss battle loop.',
+    samples: makeMusic({
+      duration: 12,
+      bpm: 152,
+      chords: [[174.61, 207.65, 261.63], [155.56, 185, 233.08], [196, 233.08, 293.66], [164.81, 196, 246.94]],
+      lead: [698.46, 622.25, 698.46, 830.61, 622.25, 587.33, 698.46, 523.25],
+      pad: 0.12, bass: 0.22, hats: 0.07
+    })
+  },
   { type: 'sfx', id: 'ui_confirm', file: 'assets/audio/sfx/ui-confirm.wav', description: 'Menu confirm chirp.', samples: makeSfx({ duration: 0.18, start: 660, end: 990 }) },
   { type: 'sfx', id: 'menu_open', file: 'assets/audio/sfx/menu-open.wav', description: 'Quest/inventory open sound.', samples: makeSfx({ duration: 0.22, start: 440, end: 660, gain: 0.32 }) },
   { type: 'sfx', id: 'slash', file: 'assets/audio/sfx/slash.wav', description: 'Crystal Slash sweep.', samples: makeSfx({ duration: 0.32, start: 880, end: 180, wave: 'square', gain: 0.28, noise: 0.35 }) },
@@ -165,7 +249,11 @@ const assets = [
   { type: 'sfx', id: 'chest', file: 'assets/audio/sfx/chest.wav', description: 'Treasure chest sparkle.', samples: makeSfx({ duration: 0.5, start: 520, end: 1180, gain: 0.36 }) },
   { type: 'sfx', id: 'level_up', file: 'assets/audio/sfx/level-up.wav', description: 'Level-up sparkle.', samples: makeSfx({ duration: 0.65, start: 392, end: 1568, gain: 0.34 }) },
   { type: 'sfx', id: 'reward', file: 'assets/audio/sfx/reward.wav', description: 'Rewarded ad placeholder completion.', samples: makeSfx({ duration: 0.42, start: 587, end: 1175, gain: 0.34 }) },
-  { type: 'sfx', id: 'portal', file: 'assets/audio/sfx/portal.wav', description: 'Region portal shimmer.', samples: makeSfx({ duration: 0.7, start: 220, end: 740, gain: 0.3, noise: 0.08 }) }
+  { type: 'sfx', id: 'portal', file: 'assets/audio/sfx/portal.wav', description: 'Region portal shimmer.', samples: makeSfx({ duration: 0.7, start: 220, end: 740, gain: 0.3, noise: 0.08 }) },
+  { type: 'sfx', id: 'chop', file: 'assets/audio/sfx/chop.wav', description: 'Harvesting chop/mine impact.', samples: makeSfx({ duration: 0.14, start: 240, end: 90, wave: 'square', gain: 0.34, noise: 0.4 }) },
+  { type: 'sfx', id: 'build', file: 'assets/audio/sfx/build.wav', description: 'Build piece placed thunk.', samples: makeSfx({ duration: 0.24, start: 150, end: 320, wave: 'square', gain: 0.3, noise: 0.18 }) },
+  { type: 'sfx', id: 'plant', file: 'assets/audio/sfx/plant.wav', description: 'Seed planted soft pop.', samples: makeSfx({ duration: 0.2, start: 320, end: 520, gain: 0.3, noise: 0.1 }) },
+  { type: 'sfx', id: 'coin', file: 'assets/audio/sfx/coin.wav', description: 'Shop coin chime.', samples: makeSfx({ duration: 0.3, start: 987, end: 1318, gain: 0.3 }) }
 ];
 
 await mkdir(path.join(audioRoot, 'music'), { recursive: true });

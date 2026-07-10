@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Play Super Sean 007: Legend of the Seven Gems | Free Browser JRPG</title>
-  <meta name="description" content="Play Super Sean 007: Legend of the Seven Gems, a free HTML5 browser JRPG with quests, turn-based battles, treasures, cozy villages, magical worlds and Xelar the Bald Wizard.">
-  <meta name="keywords" content="Super Sean 007, free browser JRPG, HTML5 RPG, kawaii RPG, online RPG, fantasy quest game, Xelar Bald Wizard, free 2D JRPG">
+  <meta name="description" content="Play Super Sean 007 free in your browser: a cozy JRPG where you quest through 9 magical regions, battle Xelar the Bald Wizard, gather resources, craft gear and build your own homestead with houses, castles and gardens.">
+  <meta name="keywords" content="Super Sean 007, free browser JRPG, HTML5 RPG, building game, crafting RPG, cozy RPG, base building, farming game, online RPG, fantasy quest game, Xelar Bald Wizard">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="theme-color" content="#168ed0">
   <meta name="application-name" content="Super Sean 007">
@@ -23,13 +23,13 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Play Super Sean 007: Legend of the Seven Gems">
-  <meta property="og:description" content="A free browser JRPG where Super Sean and friends explore Asteria-007, collect treasures, level up and battle Xelar the Bald Wizard.">
+  <meta property="og:description" content="A free browser JRPG where Super Sean and friends explore 9 magical regions, restore the Seven Gems, craft gear and build a homestead — houses, castles and gardens included.">
   <meta property="og:image" content="https://www.supersean007.com/assets/og-image.jpg">
   <meta property="og:url" content="https://www.supersean007.com/">
   <meta property="og:site_name" content="Super Sean 007">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Super Sean 007: Legend of the Seven Gems">
-  <meta name="twitter:description" content="Free HTML5 browser JRPG with kawaii sprites, quests, treasures and magical worlds.">
+  <meta name="twitter:description" content="Free browser JRPG: quest, battle, gather, craft, garden and build your own homestead in the world of Asteria-007.">
   <meta name="twitter:image" content="https://www.supersean007.com/assets/og-image.jpg">
 
   <script type="application/ld+json">
@@ -41,8 +41,8 @@
         "name": "Super Sean 007: Legend of the Seven Gems",
         "alternateName": "Super Sean 007",
         "url": "https://www.supersean007.com/",
-        "description": "A free HTML5 2D browser JRPG where Super Sean and friends explore Asteria-007, collect treasures, complete quests, level up and battle Xelar the Bald Wizard.",
-        "genre": ["JRPG", "Role-playing game", "Adventure", "Fantasy"],
+        "description": "A free HTML5 2D browser JRPG where Super Sean and friends explore 9 regions of Asteria-007, complete quests, battle Xelar the Bald Wizard, gather resources, craft equipment, grow gardens and build a personal homestead with houses and castles.",
+        "genre": ["JRPG", "Role-playing game", "Adventure", "Fantasy", "Building", "Crafting"],
         "gamePlatform": ["Web browser", "HTML5", "Desktop browser", "Mobile browser"],
         "applicationCategory": "GameApplication",
         "operatingSystem": "Any modern browser",
@@ -73,10 +73,11 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          {"@type":"Question","name":"Is Super Sean 007 free to play?","acceptedAnswer":{"@type":"Answer","text":"Yes. Super Sean 007 is designed as a free browser JRPG with optional ad-supported rewards."}},
-          {"@type":"Question","name":"Can I play Super Sean 007 in a browser?","acceptedAnswer":{"@type":"Answer","text":"Yes. The game runs in HTML5 Canvas and is playable in modern desktop, tablet and mobile browsers."}},
+          {"@type":"Question","name":"Is Super Sean 007 free to play?","acceptedAnswer":{"@type":"Answer","text":"Yes. Super Sean 007 is a free browser JRPG supported by non-intrusive ads, with optional rewarded bonuses."}},
+          {"@type":"Question","name":"Can I build my own base?","acceptedAnswer":{"@type":"Answer","text":"Yes. You claim a homestead south of Birthday Village and build it tile by tile: cottages, stone keeps, gardens, orchards, ponds, forges and more, or stamp complete blueprints in one go."}},
+          {"@type":"Question","name":"Can I play Super Sean 007 in a browser?","acceptedAnswer":{"@type":"Answer","text":"Yes. The game runs in HTML5 Canvas and is playable in modern desktop, tablet and mobile browsers. Progress saves locally."}},
           {"@type":"Question","name":"Who is the villain?","acceptedAnswer":{"@type":"Answer","text":"The main antagonist is Xelar the Bald Wizard, a cosmic sorcerer trying to drain the Seven Gems and conquer the known universe."}},
-          {"@type":"Question","name":"What type of game is it?","acceptedAnswer":{"@type":"Answer","text":"It is a 2D JRPG-style adventure with quests, exploration, turn-based battles, collectible items, level progression and cozy village systems."}}
+          {"@type":"Question","name":"What type of game is it?","acceptedAnswer":{"@type":"Answer","text":"It is a 2D JRPG adventure with quests, turn-based battles and level progression, blended with Minecraft-style gathering, crafting, gardening and base building."}}
         ]
       }
     ]
@@ -95,10 +96,10 @@
       <div class="nav-links">
         <a href="#play">Play</a>
         <a href="#story">Story</a>
-        <a href="#characters">Characters</a>
+        <a href="#characters">Heroes</a>
         <a href="#world">World</a>
-        <a href="#quests">Quests</a>
-        <a href="#mechanics">Mechanics</a>
+        <a href="#homestead">Homestead</a>
+        <a href="#gallery">Gallery</a>
         <a href="#faq">FAQ</a>
       </div>
     </nav>
@@ -107,20 +108,26 @@
   <main id="top">
     <section class="hero section-pad" aria-labelledby="hero-title">
       <div class="hero-bg"></div>
+      <div class="hero-sprites" aria-hidden="true">
+        <img class="float-sprite fs-1" src="assets/characters/sean_portrait.png" alt="">
+        <img class="float-sprite fs-2" src="assets/characters/haraku_portrait.png" alt="">
+        <img class="float-sprite fs-3" src="assets/characters/ruush_portrait.png" alt="">
+        <img class="float-sprite fs-4" src="assets/characters/dave_portrait.png" alt="">
+      </div>
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">Free HTML5 2D browser JRPG</p>
+          <p class="eyebrow">Free cozy JRPG · play instantly in your browser</p>
           <h1 id="hero-title">Super Sean 007: Legend of the Seven Gems</h1>
-          <p class="hero-lead">Quest through cozy villages, enchanted forests, crystal caves and moonlit ruins with Super Sean, Dave, Petroman, Haraku and Ruush. Collect treasures, level up, unlock friendship powers and stop Xelar the Bald Wizard from conquering the known universe.</p>
+          <p class="hero-lead">Quest through nine magical regions with Sean, Dave, Petroman, Haraku and Ruush. Battle Xelar the Bald Wizard, gather wood, stone and crystals, craft legendary gear — then claim a homestead and build your own cottage, castle and gardens.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="#play">Play the browser demo</a>
-            <a class="btn secondary" href="#world-history">Read the world history</a>
+            <a class="btn primary pulse" href="#play">▶ Play free now</a>
+            <a class="btn secondary" href="#homestead">Build your homestead</a>
           </div>
           <ul class="quick-facts" aria-label="Game highlights">
-            <li>Turn-based JRPG battles</li>
-            <li>Cozy village exploration</li>
-            <li>Treasure chests and quests</li>
-            <li>Free to play in your browser</li>
+            <li>⚔️ Turn-based party battles</li>
+            <li>🏰 Base building &amp; blueprints</li>
+            <li>🌱 Gardens &amp; crafting</li>
+            <li>💎 Seven Gems to restore</li>
           </ul>
         </div>
         <div class="hero-card art-card">
@@ -136,9 +143,9 @@
     <section id="play" class="section-pad game-section" aria-labelledby="play-title">
       <div class="container">
         <div class="section-heading centered">
-          <p class="eyebrow">Playable vertical slice</p>
+          <p class="eyebrow">No download · saves in your browser</p>
           <h2 id="play-title">Enter Asteria-007</h2>
-          <p>The embedded HTML5 game includes exploration, NPC dialogue, quests, chests, local save/load, simple turn-based battles, XP, coins, items, unlockable paths and optional bonus rewards.</p>
+          <p>Explore villages, meadows, caves, forests, shrines and ruins. Talk, quest and fight — then harvest trees, mine crystals, cook stews, forge swords, plant berry gardens and raise your dream base at the Sunrise Homestead.</p>
         </div>
         <div class="game-layout">
           <div class="game-frame">
@@ -152,6 +159,8 @@
               </div>
               <div class="action-pad">
                 <button onclick="SuperSeanGame.interact()">Interact</button>
+                <button onclick="SuperSeanGame.menu('craft')">Craft</button>
+                <button onclick="SuperSeanGame.menu('build')">Build</button>
                 <button onclick="SuperSeanGame.menu('quest')">Quest</button>
                 <button onclick="SuperSeanGame.menu('inventory')">Bag</button>
                 <button onclick="SuperSeanGame.menu('map')">Map</button>
@@ -162,13 +171,13 @@
           <aside class="game-sidebar">
             <div class="info-card">
               <h3>Controls</h3>
-              <p><strong>Move:</strong> WASD / Arrow keys or touch D-pad<br><strong>Interact:</strong> E or tap Interact<br><strong>Quest log:</strong> Q<br><strong>Inventory:</strong> I<br><strong>World map:</strong> M<br><strong>Save:</strong> P<br><strong>Battle:</strong> click/tap commands or press 1–6<br><strong>Audio:</strong> O music · L sound effects</p>
+              <p><strong>Move:</strong> WASD / Arrows or D-pad<br><strong>Interact &amp; harvest:</strong> E (hit trees, rocks and crystals more than once!)<br><strong>Craft:</strong> C · <strong>Build:</strong> B · <strong>Blueprints:</strong> V<br><strong>Bag &amp; gear:</strong> I · <strong>Quests:</strong> Q · <strong>Map:</strong> M<br><strong>Save:</strong> P · <strong>Battle:</strong> tap commands or keys 1–9<br><strong>Audio:</strong> O music · L sound effects</p>
             </div>
             <div class="ad-slot ad-slot-box" data-adsterra-placement="game-sidebar-native" aria-label="Advertisement">Advertisement</div>
             <div class="ad-slot ad-slot-sky desktop-only" data-adsterra-placement="game-sidebar-skyscraper" aria-label="Advertisement">Advertisement</div>
             <div class="info-card">
-              <h3>Adventure tips</h3>
-              <p>Talk to Elder Brightbeard to begin your quest, open every chest you find, and build your Friendship meter by guarding in battle — a full meter unleashes the mighty Friendship Burst. Your progress saves right in your browser.</p>
+              <h3>Adventurer tips</h3>
+              <p>Defeat Moldor in Mushroom Meadow to earn your homestead deed. Build a Kitchen to cook Mushroom Stew, a Forge to craft the Gear Blade, and a Dream Bed to rest for free. A cozier homestead grants real bonuses — extra XP, shop discounts and a daily gift chest.</p>
             </div>
           </aside>
         </div>
@@ -183,18 +192,18 @@
           <h2 id="story-title">The birthday that cracked the sky</h2>
           <p>On the morning of Sean’s seventh birthday, Birthday Village glows with lanterns, cakes and crystal music. The village crystal, a relic older than any map, begins to pulse when Sean receives the Crystal Sword. For one perfect moment, every bell in the valley rings by itself.</p>
           <p>Then the sky turns silver. Xelar the Bald Wizard descends through a moon-shaped rift, steals the first Gem fragment and curses the crystal. Haraku senses the location of the Moon Shrine and is marked by Xelar’s shadow. Sean, Dave, Petroman and Ruush must gather the Seven Gems before the Bald Moon Tower awakens.</p>
-          <p>The story balances cozy moments with epic stakes: villagers need help, friends argue and grow, Xelar’s ridiculous speeches hide real danger, and every restored Gem brings color, music and hope back to the world.</p>
+          <p>Between battles, the valley needs a guardian who stays. The Elder grants Sean the deed to the old Sunrise Homestead — rich soil, open sky and a crystal humming with welcome. What you build there is up to you.</p>
         </div>
         <div class="lore-panel">
           <h3>The Seven Gems</h3>
           <ol class="gem-list">
-            <li><strong>Courage</strong> — awakens Sean’s Crystal Sword.</li>
-            <li><strong>Friendship</strong> — powers party combo attacks.</li>
-            <li><strong>Wonder</strong> — opens hidden routes and strange worlds.</li>
-            <li><strong>Wisdom</strong> — reveals ancient languages and Moon Shrine lore.</li>
-            <li><strong>Laughter</strong> — protects villages from grey magic.</li>
-            <li><strong>Hope</strong> — restores ruined lands and lost spirits.</li>
-            <li><strong>Balance</strong> — seals Xelar’s universe engine.</li>
+            <li><strong>Meadow Gem</strong> — guarded by Moldor the Mushroom Grump.</li>
+            <li><strong>Cave Gem</strong> — held by the Cracked Crystal Guardian.</li>
+            <li><strong>Plains Gem</strong> — beats inside the Petro Titan.</li>
+            <li><strong>Forest Gem</strong> — tangled in the Elder Treeguard’s roots.</li>
+            <li><strong>Moon Gem</strong> — stolen by the Lunar Shade.</li>
+            <li><strong>Ruin Gem</strong> — sealed with Guardian Prime.</li>
+            <li><strong>Seventh Gem</strong> — in Xelar’s own bald grasp.</li>
           </ol>
         </div>
       </div>
@@ -203,17 +212,17 @@
     <section id="characters" class="section-pad tinted" aria-labelledby="characters-title">
       <div class="container">
         <div class="section-heading centered">
-          <p class="eyebrow">Playable heroes and villain</p>
+          <p class="eyebrow">Recruit them all on your journey</p>
           <h2 id="characters-title">Meet the party</h2>
-          <p>The sprite style uses the uploaded kawaii Super Sean sheet as the foundation, then packages each hero into game-ready strips and portraits.</p>
+          <p>Every friend you recruit fights beside you with a unique battle skill — and hangs out at your homestead between adventures.</p>
         </div>
         <div class="character-grid">
-          <article class="character-card"><img src="assets/characters/sean_portrait.png" alt="Super Sean portrait"><h3>Super Sean</h3><p>Crystal sword hero with courage skills, guardian blocks and friendship bursts. Sean is brave, funny and always one step from either saving the day or touching the suspicious glowing button.</p></article>
-          <article class="character-card"><img src="assets/characters/dave_portrait.png" alt="Dave portrait"><h3>Dave</h3><p>Gadget strategist, trap expert and practical best friend. Dave reveals hidden treasure, weakens enemies and keeps the adventure running with snacks and sarcasm.</p></article>
-          <article class="character-card"><img src="assets/characters/petroman_portrait.png" alt="Petroman portrait"><h3>Petroman</h3><p>Fire-powered tank from Petro Plains. Petroman smashes barriers, absorbs damage and solves many ancient puzzles by asking, “Can I punch it?”</p></article>
-          <article class="character-card"><img src="assets/characters/haraku_portrait.png" alt="Haraku portrait"><h3>Haraku</h3><p>Mystic healer and Moon Shrine guide. Haraku cleanses curses, reads ancient scripts and brings calm wisdom when the party is surrounded by chaos.</p></article>
-          <article class="character-card"><img src="assets/characters/ruush_portrait.png" alt="Ruush portrait"><h3>Ruush</h3><p>Wind-fast rogue and treasure chaser. Ruush dashes across gaps, finds rare drops and turns every forest path into a race.</p></article>
-          <article class="character-card villain"><img src="assets/characters/xelar_portrait.png" alt="Xelar the Bald Wizard portrait"><h3>Xelar</h3><p>The evil bald wizard, cosmic show-off and architect of the Bald Moon Tower. Xelar wants to drain the Seven Gems and crown himself emperor of every known star.</p></article>
+          <article class="character-card"><img src="assets/characters/sean_portrait.png" alt="Super Sean portrait"><h3>Super Sean</h3><p>Crystal sword hero with courage skills, guardian blocks and Friendship Bursts. Brave, funny and always one step from touching the suspicious glowing button.</p></article>
+          <article class="character-card"><img src="assets/characters/dave_portrait.png" alt="Dave portrait"><h3>Dave</h3><p>Gadget strategist and practical best friend. His <strong>Gadget Zap</strong> stuns enemies cold, and he tinkers up charms at your homestead workbench.</p></article>
+          <article class="character-card"><img src="assets/characters/petroman_portrait.png" alt="Petroman portrait"><h3>Petroman</h3><p>Machine-whisperer of Petro Plains. His <strong>Iron Guard</strong> halves incoming damage. Solves most ancient puzzles by asking, “Can I punch it?”</p></article>
+          <article class="character-card"><img src="assets/characters/haraku_portrait.png" alt="Haraku portrait"><h3>Haraku</h3><p>Mystic keeper of the Moon Shrine. Share a cup of Moon Tea to earn her trust — her <strong>Moon Blessing</strong> heals the party in battle.</p></article>
+          <article class="character-card"><img src="assets/characters/ruush_portrait.png" alt="Ruush portrait"><h3>Ruush</h3><p>Wind-fast forest scout. His <strong>Twin Arrows</strong> strike twice in a blink, and no treasure in Ruushwood escapes his eyes.</p></article>
+          <article class="character-card villain"><img src="assets/characters/xelar_portrait.png" alt="Xelar the Bald Wizard portrait"><h3>Xelar</h3><p>The evil bald wizard, cosmic show-off and architect of the Bald Moon Tower. Wants to drain the Seven Gems and crown himself emperor of every known star.</p></article>
         </div>
       </div>
     </section>
@@ -221,20 +230,38 @@
     <section id="world" class="section-pad" aria-labelledby="world-title">
       <div class="container">
         <div class="section-heading centered">
-          <p class="eyebrow">The world of Asteria-007</p>
-          <h2 id="world-title">A magical universe built for expansion</h2>
-          <p>The world is designed as a hub-and-region JRPG, so new areas, bosses, monsters, treasures and story chapters can be added after launch.</p>
+          <p class="eyebrow">Nine regions to explore</p>
+          <h2 id="world-title">The world of Asteria-007</h2>
+          <p>Each region has its own monsters, boss, treasures and rare materials. What you gather out there becomes what you build back home.</p>
         </div>
         <img class="region-preview" src="assets/ui/region_preview_strip.png" alt="Preview tiles for Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains and Moon Shrine">
         <div class="region-grid">
-          <article><h3>Birthday Village</h3><p>The cozy home hub with shops, inn, quest board, reward chest, village crystal, fishing pond and Sean’s future room decoration system.</p></article>
-          <article><h3>Mushroom Meadow</h3><p>A gentle forest of mischievous mushrooms, slime sprouts, hidden chests and the first boss, Moldor the Mushroom Grump.</p></article>
-          <article><h3>Crystal Cave</h3><p>A glowing cavern of light puzzles, crystal creatures and ancient guardian echoes tied to the first Gem civilization.</p></article>
-          <article><h3>Petro Plains</h3><p>Petroman’s machine-strewn homeland of fire vents, old engines, oil blobs and soot-armored enemies.</p></article>
-          <article><h3>Ruushwood</h3><p>A wind forest with speed routes, sky bridges, racing shrines and feather rogues who challenge Ruush’s pride.</p></article>
-          <article><h3>Haraku’s Moon Shrine</h3><p>A sacred moonlit temple of spirit lanterns, mirror puzzles and curse magic where Haraku’s deeper story begins.</p></article>
-          <article><h3>Ancient Ruins of 007</h3><p>The collapsed capital of the Gem Guardians, filled with murals, relic doors, old portals and hidden lore trials.</p></article>
-          <article><h3>Bald Moon Tower</h3><p>Xelar’s final fortress, powered by stolen Gem light and designed to project grey magic across the universe.</p></article>
+          <article><h3>Birthday Village</h3><p>Your cozy hub: Elder Brightbeard’s quests, Grandma Berrybun’s bakery, Bobo’s trading post and the village crystal.</p></article>
+          <article><h3>Sunrise Homestead</h3><p>Your claimable base south of the village. Build, garden, craft and expand the claim all the way to the valley edges.</p></article>
+          <article><h3>Mushroom Meadow</h3><p>Gentle fields of slime sprouts and mischievous mushrooms. Chop trees, pick flowers and face Moldor the Mushroom Grump.</p></article>
+          <article><h3>Crystal Cave</h3><p>A glowing cavern of crystal clusters and ore veins — the best mining spot in the valley, guarded by crystal spiders.</p></article>
+          <article><h3>Petro Plains</h3><p>Machine-strewn plains of sleeping engines. Salvage gear parts, wake the generator and recruit Petroman.</p></article>
+          <article><h3>Ruushwood</h3><p>A deep wind-forest of great pines and racing shadows. Ruush waits within — and so does the Elder Treeguard.</p></article>
+          <article><h3>Moon Shrine</h3><p>A moonlit temple where herbs bloom at midnight. Brew Moon Tea for Haraku and banish the Lunar Shade.</p></article>
+          <article><h3>Ancient Ruins &amp; Bald Moon Tower</h3><p>The collapsed capital of the Gem Guardians — and above it, Xelar’s fortress, where the final battle awaits.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="homestead" class="section-pad homestead-section" aria-labelledby="homestead-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Gather · craft · build · grow</p>
+          <h2 id="homestead-title">Claim your homestead, build your legend</h2>
+          <p>Super Sean 007 blends JRPG questing with the joy of building. Everything is made from real materials you harvest in the world — no two homesteads look alike.</p>
+        </div>
+        <div class="mechanic-grid homestead-grid">
+          <article><h3>🪓 Gather everywhere</h3><p>Chop trees, mine boulders and crystal clusters, salvage gear from old machines, pick moon herbs and relics. Nodes respawn, monsters drop spoils.</p></article>
+          <article><h3>🔨 Craft &amp; equip</h3><p>Refine planks and bricks, cook stews and Moon Tea, forge the Crystal Sword +1, Gear Blade and Starfall Edge. Equip weapon, armor and charm.</p></article>
+          <article><h3>🏰 Build tile by tile</h3><p>40+ build pieces across floors, walls, roofs, fences, water and decor — or stamp full blueprints: Cozy Cottage, Stone Keep, Garden Patch, Orchard, Star Shrine.</p></article>
+          <article><h3>🌱 Grow your gardens</h3><p>Till soil, plant berry, flower and moonfruit seeds, and harvest real ingredients. Crops keep growing even while you’re off adventuring.</p></article>
+          <article><h3>✨ Comfort perks</h3><p>Every piece adds Comfort. Reach thresholds for bonus XP, shop discounts, a stat aura and a daily gift chest at your Homestead Crystal.</p></article>
+          <article><h3>🛠️ Working stations</h3><p>Workbench, Kitchen, Crystal Forge, Storage and a Dream Bed that fully restores your party. Your base is your strongest piece of gear.</p></article>
         </div>
       </div>
     </section>
@@ -248,34 +275,36 @@
         <p>The age of heroes began when the Star Beasts arrived: cloud lions, moon deer, mushroom dragons, lantern fish and sleepy stone turtles large enough to carry villages on their backs. Most became allies. Some became guardians. A few became monsters after touching raw shadow between the stars.</p>
         <p>Xelar was once a student of the Moon Library, a brilliant wizard who could fold space into mirrors. But he became obsessed with being remembered as the greatest sorcerer in history. When the library elders told him magic served life rather than vanity, he shaved his head in dramatic protest, declared baldness the perfect shape of destiny and vanished into the Dark Orbit.</p>
         <p>Centuries later, Xelar returned with the Bald Moon Tower, a machine that could drain virtue from the Gems and convert it into obedience. His first conquest failed when the Gem Guardians sealed the tower beyond the clouds, but the seal weakened over generations. Now Xelar has found a crack in the sky, and only Super Sean’s awakened Crystal Sword can restore the ancient promise.</p>
-        <p>The known universe around Asteria-007 includes the Frosted Cake Kingdom, the Fire Engine City, the Sky Islands of Ruush, the Spirit Realm of Haraku, the Clockwork Asteroids and the Grey Comet where Xelar trains his bald wizard apprentices. Each future expansion can open one of these places as a new chapter in the same world history.</p>
+        <p>And the Hearthfolk say something else: the valley remembers every hero who built a home in it. Raise your walls, light your lamps, plant your gardens — Asteria-007 grows stronger with every stone you lay.</p>
       </div>
     </section>
 
     <section id="quests" class="section-pad tinted" aria-labelledby="quests-title">
       <div class="container split">
         <div>
-          <p class="eyebrow">Quests and progression</p>
-          <h2 id="quests-title">Built as a living JRPG quest platform</h2>
-          <p>The current playable slice starts with Birthday Village and Mushroom Meadow, but the structure supports a larger quest database with main quests, side quests, loyalty quests, daily tasks, boss hunts and treasure map stories.</p>
+          <p class="eyebrow">A full campaign</p>
+          <h2 id="quests-title">Fifteen chapters, seven gems, one bald wizard</h2>
+          <p>The main story carries you across every region — and your homestead is part of the legend, with building chapters woven right into the campaign.</p>
           <ul class="feature-list">
-            <li><strong>Main story:</strong> restore the Seven Gems and confront Xelar.</li>
-            <li><strong>Side quests:</strong> help villagers, repair shops, unlock recipes and find relics.</li>
-            <li><strong>Friend quests:</strong> unlock character combos and emotional story scenes.</li>
-            <li><strong>Daily quests:</strong> quick tasks for coins, items and optional ad rewards.</li>
-            <li><strong>Treasure maps:</strong> hidden chests, rare decorations and lore pages.</li>
+            <li><strong>Main story:</strong> restore the Seven Gems and confront Xelar twice — his Echo, then the wizard himself.</li>
+            <li><strong>Building chapters:</strong> earn the land deed, claim the Homestead Crystal and raise your first cottage.</li>
+            <li><strong>Recruitment quests:</strong> fix Petroman’s generator, hunt with Ruush, share Moon Tea with Haraku.</li>
+            <li><strong>Side quests:</strong> Grandma’s soup pot, Dave’s spare parts, Bobo’s berry runs, garden and castle challenges.</li>
+            <li><strong>Endgame:</strong> expand your claim to the whole valley and chase every Comfort perk.</li>
           </ul>
         </div>
         <div class="quest-card">
-          <h3>Example launch quest chain</h3>
+          <h3>Campaign highlights</h3>
           <ol>
             <li>The Birthday Crystal</li>
-            <li>Gather the First Friend</li>
-            <li>The Meadow Road</li>
             <li>The Mushroom Grump</li>
+            <li>A Place To Call Home 🏡</li>
+            <li>Raise the Roof</li>
             <li>Echoes in Crystal Cave</li>
-            <li>The Bald Moon Rises</li>
-            <li>Portal of Future Worlds</li>
+            <li>Heart of the Plains</li>
+            <li>Tea Under Two Moons</li>
+            <li>The Broken Seal</li>
+            <li>Xelar the Bald Wizard 👑</li>
           </ol>
         </div>
       </div>
@@ -285,72 +314,37 @@
       <div class="container">
         <div class="section-heading centered">
           <p class="eyebrow">Game systems</p>
-          <h2 id="mechanics-title">JRPG depth with browser-friendly sessions</h2>
+          <h2 id="mechanics-title">JRPG depth, cozy-builder heart</h2>
         </div>
         <div class="mechanic-grid">
-          <article><h3>Exploration</h3><p>Top-down movement, interactive NPCs, chests, portals, region unlocks and local map state.</p></article>
-          <article><h3>Turn-based combat</h3><p>Fast command battles with Attack, Crystal Slash, Guard, items, Friendship Burst and escape options.</p></article>
-          <article><h3>Leveling</h3><p>XP, level-ups, HP/MP growth, attack/defense growth and future skill tree hooks.</p></article>
-          <article><h3>Items and treasures</h3><p>Coins, Berry Juice, Crystal Candy, Moon Tea, Guardian Shards and collectible future decorations.</p></article>
-          <article><h3>Friendship meter</h3><p>Build friendship by guarding, casting skills and defeating bosses, then unleash combo power.</p></article>
-          <article><h3>Free, ad-supported play</h3><p>The adventure is completely free. Ads sit around natural breaks, and optional reward chests and battle revives give bonus perks.</p></article>
+          <article><h3>Exploration</h3><p>Nine hand-built regions with NPCs, chests, portals, secret notes and respawning resource nodes.</p></article>
+          <article><h3>Party battles</h3><p>Turn-based combat with Sean’s skills plus one unique move per recruited friend — stuns, shields, volleys and heals.</p></article>
+          <article><h3>Crafting &amp; gear</h3><p>19 recipes from Berry Juice to the Relic Crown. Weapon, armor and charm slots that genuinely change your stats.</p></article>
+          <article><h3>Base building</h3><p>Claim, build, expand. Full material refunds when you remodel, so experimenting is always free.</p></article>
+          <article><h3>Gardening</h3><p>Real-time crops that grow while you quest — berries, flowers and moonfruit feed your kitchen and forge.</p></article>
+          <article><h3>Monster variety</h3><p>Over 20 monster types across the regions, plus 8 unique bosses guarding the Gems.</p></article>
+          <article><h3>Leveling</h3><p>XP, level-ups, HP/MP growth and a Friendship meter that unleashes devastating burst attacks.</p></article>
+          <article><h3>Free, ad-supported</h3><p>Completely free. Ads sit around natural breaks; optional reward chests and revives give bonus perks.</p></article>
         </div>
       </div>
     </section>
 
-    <section id="production-pipeline" class="section-pad tinted" aria-labelledby="pipeline-title">
-      <div class="container split">
-        <div>
-          <p class="eyebrow">Generated audio and sliced art</p>
-          <h2 id="pipeline-title">A concrete asset pipeline for expansion</h2>
-          <p>The build now generates original WAV music loops and SFX, writes `data/audio-manifest.json`, slices the game-critical character strips, enemies, tilesets, UI, items and VFX into `assets/sliced/`, and writes `data/sliced-assets.json` for future animation tooling.</p>
-          <p>The current game uses the slice metadata for character frame and tile coordinates while drawing from the source sheets for performance. Future quests can load individual sliced PNGs when a system needs isolated frames, icons, items or effects.</p>
-        </div>
-        <div class="lore-panel">
-          <h3>Current generated outputs</h3>
-          <ul class="feature-list">
-            <li>Title, village, battle and victory music loops.</li>
-            <li>UI confirm, menu, slash, hit, chest, level-up, reward and portal SFX.</li>
-            <li>Character frame slices for Sean, Dave, Petroman, Haraku and Ruush.</li>
-            <li>64px tiles from each current region tileset.</li>
-            <li>HUD, pickup and VFX slices from the generated split pack.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="asset-library" class="section-pad asset-library" aria-labelledby="asset-library-title">
+    <section id="gallery" class="section-pad gallery-section" aria-labelledby="gallery-title">
       <div class="container">
         <div class="section-heading centered">
-          <p class="eyebrow">Expanded production asset library</p>
-          <h2 id="asset-library-title">All generated assets are wired into this project</h2>
-          <p>The ZIP now includes the complete generated asset library: playable sprites, NPCs, enemies, bosses, terrain tiles, buildings, UI/HUD, VFX, key art, loading screens, event screens, world maps and JRPG battle scenery. The game canvas uses the new key art and battle backgrounds, while the site exposes the full asset manifest for AI build tools.</p>
+          <p class="eyebrow">Postcards from the world</p>
+          <h2 id="gallery-title">Scenes of Asteria-007</h2>
+          <p>Battle backdrops and vistas you’ll encounter on the road to the Bald Moon Tower.</p>
         </div>
-        <div class="asset-stats" id="assetStats">
-          <span>Loading asset manifest…</span>
-        </div>
-        <div class="asset-toolbar" role="toolbar" aria-label="Asset category filters">
-          <button class="asset-filter active" data-filter="all">All</button>
-          <button class="asset-filter" data-filter="battle_backgrounds">Battle backgrounds</button>
-          <button class="asset-filter" data-filter="spritesheets">Spritesheets</button>
-          <button class="asset-filter" data-filter="tilesets">Tiles & buildings</button>
-          <button class="asset-filter" data-filter="ui_vfx">UI / VFX</button>
-          <button class="asset-filter" data-filter="loading_event_screens">Screens</button>
-          <button class="asset-filter" data-filter="split_pack">Split pack</button>
-        </div>
-        <div class="asset-grid" id="assetGrid" aria-live="polite"></div>
-        <noscript>
-          <p>The asset manifest is available at <code>data/asset-manifest.json</code>. Enable JavaScript to browse the visual gallery on this page.</p>
-        </noscript>
-      </div>
-    </section>
-
-    <section id="seo" class="section-pad seo-block" aria-labelledby="seo-title">
-      <div class="container split">
-        <div>
-          <p class="eyebrow">SEO and GAIO foundation</p>
-          <h2 id="seo-title">Ready to be found by search engines and AI answer engines</h2>
-          <p>The package includes semantic HTML, rich internal sections, Open Graph metadata, Twitter cards, structured data for VideoGame/WebApplication/FAQ, robots.txt, sitemap.xml, manifest icons, llms.txt and an AI summary JSON file.</p>
+        <div class="gallery-grid">
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/zonnig_fantasiedorp_met_kastelen_en_brug.png" alt="Sunny fantasy village with castles and a bridge"><figcaption>Birthday Village</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/zonnig_boerderijlandschap_met_houten_hek.png" alt="Sunny farmland with a wooden fence"><figcaption>Sunrise Homestead</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/sfeervol_bloemenlandschap_met_fruitbomen.png" alt="Flower fields with fruit trees"><figcaption>Mushroom Meadow</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/magisch_landschap_met_kristallen_en_watervallen.png" alt="Magical landscape with crystals and waterfalls"><figcaption>Crystal Falls</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/herfstlandschap_met_pompoenen_en_bladeren.png" alt="Autumn landscape with pumpkins and leaves"><figcaption>Petro Plains in autumn</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/vrolijke_natuurlijke_strijdarena_met_riviertje.png" alt="Natural arena with a small river"><figcaption>Ruushwood river</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/betoverend_winterlandschap_met_kristallen.png" alt="Enchanting winter landscape with crystals"><figcaption>Moon Shrine in winter</figcaption></figure>
+          <figure><img loading="lazy" src="assets/generated/battle_backgrounds/magische_luchtlandschappen_met_kristallen_toppen.png" alt="Magical sky landscape with crystal peaks"><figcaption>Bald Moon Tower skies</figcaption></figure>
         </div>
         <div class="ad-slot ad-slot-wide small" data-adsterra-placement="content-native-responsive" aria-label="Advertisement">Advertisement</div>
       </div>
@@ -360,12 +354,12 @@
       <div class="container narrow">
         <p class="eyebrow">FAQ</p>
         <h2 id="faq-title">Frequently asked questions</h2>
-        <details open><summary>Is this a complete finished commercial JRPG?</summary><p>This package is a full SEO/GAIO website plus a playable HTML5 JRPG foundation/vertical slice. It is built to expand into the complete game with additional maps, quests, assets, bosses and systems.</p></details>
-        <details><summary>Does it work without a backend?</summary><p>Yes. The game is a static HTML5 Canvas app and saves progress locally in the browser with localStorage.</p></details>
-        <details><summary>Is the game really free?</summary><p>Yes. Super Sean 007 is completely free to play in your browser. The site is supported by non-intrusive ads placed around natural breaks in the page and game flow.</p></details>
-        <details><summary>Can AI coding tools expand this?</summary><p>Yes. The code is modular enough for AI build tools to add maps, items, quests, enemies, dialogue and mechanics. The ZIP includes metadata JSON files and build notes.</p></details>
-        <details><summary>What music and sound effects are included?</summary><p>The project includes procedurally generated WAV music loops for the title screen, village exploration, battles and victory, plus SFX for UI, menus, slashes, hits, chests, rewards, level-ups and portals.</p></details>
-        <details><summary>Are the graphics sliced?</summary><p>Yes. The build generates sliced character frames, region tiles, enemies, HUD parts, pickups and VFX metadata from the included source sheets while preserving the full original asset library.</p></details>
+        <details open><summary>Is the game really free?</summary><p>Yes. Super Sean 007 is completely free to play in your browser. The site is supported by non-intrusive ads placed around natural breaks in the page and game flow.</p></details>
+        <details><summary>How does building work?</summary><p>Defeat Moldor in Mushroom Meadow to earn the homestead deed, then touch the Homestead Crystal south of the village to claim your land. Press <strong>B</strong> to build tile by tile, or <strong>V</strong> to stamp full blueprints like the Cozy Cottage and Stone Keep. Removing pieces refunds all materials.</p></details>
+        <details><summary>Do my crops grow while I’m away?</summary><p>Yes. Gardens grow in real time, even while you explore other regions or close the tab. Come back to ripe berries, flowers and moonfruit.</p></details>
+        <details><summary>Do I need to download anything or make an account?</summary><p>No. The game is a static HTML5 Canvas app: click play and you’re in. Progress saves automatically in your browser with localStorage.</p></details>
+        <details><summary>Does it work on my phone?</summary><p>Yes. The game runs in modern desktop, tablet and mobile browsers, with a touch D-pad and dedicated Craft/Build buttons on smaller screens.</p></details>
+        <details><summary>How long is the campaign?</summary><p>Fifteen main chapters across nine regions with eight boss fights, plus side quests, gear crafting, comfort perks and an open-ended building endgame.</p></details>
       </div>
     </section>
 
@@ -373,7 +367,7 @@
       <div class="container split">
         <div>
           <p class="eyebrow">Privacy, cookies and ads</p>
-          <h2 id="privacy-title">Ad-supported free-to-play placeholders</h2>
+          <h2 id="privacy-title">Free to play, fair to players</h2>
           <p>Super Sean 007 is a free browser game supported by advertising. This site shows ads served by the Adsterra network across banner, native and social bar placements, and offers optional rewarded ad hooks inside the game.</p>
           <p>Ad partners may use cookies or similar technologies to measure and serve ads. By playing, you agree to the display of these ads. Game progress is saved only in your own browser via localStorage and is never uploaded.</p>
         </div>
@@ -386,19 +380,19 @@
     <div class="container footer-grid">
       <div>
         <img src="assets/ui/super_sean_logo.png" alt="Super Sean 007 logo" class="footer-logo">
-        <p>Super Sean 007: Legend of the Seven Gems is a free browser JRPG foundation built for expansion.</p>
+        <p>Super Sean 007: Legend of the Seven Gems — a free browser JRPG where you quest, battle, craft and build your own corner of Asteria-007.</p>
       </div>
       <div>
         <h3>Game</h3>
         <a href="#play">Play</a>
         <a href="#story">Story</a>
-        <a href="#characters">Characters</a>
+        <a href="#characters">Heroes</a>
       </div>
       <div>
         <h3>World</h3>
         <a href="#world">Regions</a>
+        <a href="#homestead">Homestead</a>
         <a href="#world-history">History</a>
-        <a href="#quests">Quests</a>
       </div>
       <div>
         <h3>Legal</h3>
@@ -412,7 +406,13 @@
     </div>
   </footer>
 
-  <script src="asset-library.js" defer></script>
+  <script src="js/data-items.js" defer></script>
+  <script src="js/data-build.js" defer></script>
+  <script src="js/data-quests.js" defer></script>
+  <script src="js/data-maps.js" defer></script>
+  <script src="js/systems.js" defer></script>
+  <script src="js/battle.js" defer></script>
+  <script src="js/render.js" defer></script>
   <script src="game.js" defer></script>
   <script src="ads.js" defer></script>
 </body>
