@@ -40,16 +40,24 @@ await Promise.all([
   expectFile('js/battle.js'),
   expectFile('js/render.js'),
   expectFile('js/coop.js'),
+  expectFile('js/save-core.js'),
   expectFile('site.js'),
   expectFile('consent.js'),
   expectFile('ui-overlays.js'),
   expectFile('sw.js'),
+  expectFile('stats.html'),
+  expectFile('privacy.html'),
+  expectFile('terms.html'),
   expectFile('assets/web/zonnig_fantasiedorp_met_kastelen_en_brug.webp'),
   expectFile('assets/ui/world_map_art.webp'),
   expectFile('assets/ui/super_sean_logo.webp'),
+  expectFile('data/mob-manifest.json'),
+  expectFile('assets/sliced/mobs/boss_sorceress.png'),
+  expectFile('assets/sliced/mobs/npc_elder_man.png'),
   expectFile('api/save.js', path.resolve('functions')),
   expectFile('api/party.js', path.resolve('functions')),
   expectFile('api/stat.js', path.resolve('functions')),
+  expectFile('api/err.js', path.resolve('functions')),
   expectFile('wrangler.toml', path.resolve('.')),
   expectFile('styles.css'),
   expectFile('favicon.ico'),
@@ -85,12 +93,23 @@ if (slicedManifest?.frames) {
   }
 }
 
+const mobManifest = await readJson('data/mob-manifest.json');
+if (mobManifest?.sprites) {
+  for (const name of mobManifest.sprites) {
+    await expectFile(`${mobManifest.base}${name}.png`);
+  }
+}
+
 await expectFile('index.html', distRoot);
 await expectFile('js/systems.js', distRoot);
 await expectFile('js/coop.js', distRoot);
+await expectFile('js/save-core.js', distRoot);
 await expectFile('consent.js', distRoot);
 await expectFile('ui-overlays.js', distRoot);
 await expectFile('sw.js', distRoot);
+await expectFile('stats.html', distRoot);
+await expectFile('privacy.html', distRoot);
+await expectFile('assets/sliced/mobs/boss_sorceress.png', distRoot);
 await expectFile('assets/audio/music/title-theme.wav', distRoot);
 await expectFile('assets/audio/music/boss-loop.wav', distRoot);
 await expectFile('assets/sliced/characters/sean/frame_00.png', distRoot);

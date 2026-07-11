@@ -102,7 +102,12 @@
       }
       for (const npc of m.npcs) {
         if (!sys().npcVisible(npc)) continue;
-        drawCharacter(npc.char, npc.x - cam.x, npc.y - cam.y, 0, npc.name, npc.hue);
+        const spr = npc.sprite && ctx.img[npc.sprite];
+        if (spr && spr.complete && spr.naturalWidth) {
+          drawSprite(spr, npc.x - cam.x, npc.y - cam.y, 72, npc.name);
+        } else {
+          drawCharacter(npc.char, npc.x - cam.x, npc.y - cam.y, 0, npc.name, npc.hue);
+        }
       }
       for (const mon of m.monsters) {
         if (mon.defeated || S().defeatedBosses[mon.id]) continue;
@@ -156,6 +161,14 @@
       }
     }
 
+    function drawSprite(im, x, y, size = 72, label = '') {
+      g.save();
+      g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 8; g.shadowOffsetY = 5;
+      g.drawImage(im, x - size / 2, y - size + 12, size, size);
+      g.restore();
+      if (label) drawLabel(label, x - size / 2 - 6, y - size - 4, '#fff');
+    }
+
     function drawCharacter(char, x, y, frame = 0, label = '', hue = 0) {
       g.save();
       g.shadowColor = 'rgba(0,0,0,.25)'; g.shadowBlur = 8; g.shadowOffsetY = 5;
@@ -167,12 +180,14 @@
 
     function drawMonster(mon, cam) {
       const key = mon.kind === 'xelar' ? 'xelar' : mon.kind;
-      const size = mon.boss ? 78 : 54;
+      // Distinct sliced sprite when assigned; these are pre-coloured so skip the hue tint.
+      const custom = mon.sprite && ctx.img[mon.sprite];
+      const size = mon.boss ? 84 : 58;
       const x = mon.x - cam.x, y = mon.y - cam.y;
-      const im = ctx.img[key] || ctx.img.slime;
+      const im = (custom && custom.naturalWidth ? custom : null) || ctx.img[key] || ctx.img.slime;
       g.save(); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 10; g.shadowOffsetY = 5;
-      if (mon.hue) g.filter = `hue-rotate(${mon.hue}deg)`;
-      g.drawImage(im, x - size / 2, y - size / 2, size, size);
+      if (mon.hue && !(custom && custom.naturalWidth)) g.filter = `hue-rotate(${mon.hue}deg)`;
+      if (im && im.complete && im.naturalWidth) g.drawImage(im, x - size / 2, y - size / 2, size, size);
       g.restore();
       drawLabel(mon.name, x - size / 2, y - size / 2 - 17, mon.boss ? '#ffd76a' : '#fff');
     }
@@ -305,10 +320,12 @@
         g.fillStyle = grd; g.fillRect(0, 0, GAME_W, GAME_H);
       }
       ctx.drawCharacterFrame('sean', 0, 140, 225, 150, 150);
-      const enemyImg = e.kind === 'xelar' ? ctx.img.xelar : ctx.img[e.kind];
-      if (enemyImg && enemyImg.complete) {
+      const custom = e.sprite && ctx.img[e.sprite];
+      const useCustom = custom && custom.complete && custom.naturalWidth;
+      const enemyImg = useCustom ? custom : (e.kind === 'xelar' ? ctx.img.xelar : ctx.img[e.kind]);
+      if (enemyImg && enemyImg.complete && enemyImg.naturalWidth) {
         g.save();
-        if (e.hue) g.filter = `hue-rotate(${e.hue}deg)`;
+        if (e.hue && !useCustom) g.filter = `hue-rotate(${e.hue}deg)`;
         g.drawImage(enemyImg, 620, 105, e.boss ? 220 : 160, e.boss ? 220 : 160);
         g.restore();
       }
@@ -701,10 +718,12 @@
         const bg = ctx.img[r.battle.bg];
         if (bg && bg.complete && bg.naturalWidth) { g.drawImage(bg, 0, 0, GAME_W, GAME_H); g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(0, 0, GAME_W, GAME_H); }
         else panel(60, 60, 840, 420, 'rgba(14,39,68,.92)');
-        const enemyImg = r.battle.enemy.kind === 'xelar' ? ctx.img.xelar : ctx.img[r.battle.enemy.kind];
-        if (enemyImg && enemyImg.complete) {
+        const gCustom = r.battle.enemy.sprite && ctx.img[r.battle.enemy.sprite];
+        const gUse = gCustom && gCustom.complete && gCustom.naturalWidth;
+        const enemyImg = gUse ? gCustom : (r.battle.enemy.kind === 'xelar' ? ctx.img.xelar : ctx.img[r.battle.enemy.kind]);
+        if (enemyImg && enemyImg.complete && enemyImg.naturalWidth) {
           g.save();
-          if (r.battle.enemy.hue) g.filter = `hue-rotate(${r.battle.enemy.hue}deg)`;
+          if (r.battle.enemy.hue && !gUse) g.filter = `hue-rotate(${r.battle.enemy.hue}deg)`;
           g.drawImage(enemyImg, 620, 110, r.battle.enemy.boss ? 210 : 150, r.battle.enemy.boss ? 210 : 150);
           g.restore();
         }

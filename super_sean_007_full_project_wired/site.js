@@ -58,14 +58,27 @@
     if (frame) frame.scrollIntoView({behavior: 'smooth', block: on ? 'start' : 'center'});
   };
 
-  // Fullscreen on the game frame (touch controls stay inside it).
+  // Fullscreen on the game frame. iOS Safari has no element fullscreen, so we
+  // fall back to a CSS "maximize" that pins the frame over the viewport.
+  const supportsNativeFs = () => document.fullscreenEnabled ||
+    document.documentElement.webkitRequestFullscreen;
   window.SSGFullscreen = () => {
     const frame = document.getElementById('gameFrame');
     if (!frame) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    } else {
-      (frame.requestFullscreen || frame.webkitRequestFullscreen || (() => {})).call(frame);
+    if (supportsNativeFs()) {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      } else {
+        const req = frame.requestFullscreen || frame.webkitRequestFullscreen;
+        if (req) { req.call(frame); return; }
+      }
     }
+    // CSS fallback (iPhone and anywhere native FS is blocked).
+    document.body.classList.toggle('ssg-maximize');
+    frame.scrollIntoView({block: 'start'});
   };
+  // Esc leaves the CSS-maximize fallback.
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.body.classList.remove('ssg-maximize');
+  });
 })();

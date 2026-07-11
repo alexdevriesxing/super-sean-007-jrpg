@@ -8,7 +8,7 @@
   const GAME_W = 960;
   const GAME_H = 540;
   const TILE = SSG.TILE;
-  const SAVE_VERSION = 2;
+  const SAVE_VERSION = SSG.SAVE_VERSION;
   canvas.width = GAME_W;
   canvas.height = GAME_H;
 
@@ -37,7 +37,7 @@
     moon: 'assets/tilesets/moon_shrine_tiles.png',
     ruins: 'assets/tilesets/ancient_ruins_tiles.png',
     tower: 'assets/tilesets/bald_moon_tower_tiles.png',
-    keyArtMain: 'assets/key-art-main.png'
+    // keyArtMain is loaded lazily (it is 2.8MB and only used on the title screen)
   };
 
   const TILESET_SHEETS = {
@@ -65,9 +65,10 @@
   /* ---------------- managers ---------------- */
   const AssetManager = {
     async init() {
-      const [assetWiring, slicedAssets] = await Promise.all([
+      const [assetWiring, slicedAssets, mobManifest] = await Promise.all([
         fetchJson('data/asset-wiring.json'),
-        fetchJson('data/sliced-assets.json')
+        fetchJson('data/sliced-assets.json'),
+        fetchJson('data/mob-manifest.json')
       ]);
       runtime.assetWiring = assetWiring || {};
       runtime.slicedAssets = slicedAssets || {sheets: {}, frames: []};
@@ -75,6 +76,10 @@
       Object.entries(runtime.assetWiring?.battleBackgrounds || {}).forEach(([key, file]) => {
         list[`bg_${key}`] = file;
       });
+      // Distinct sliced creature/NPC sprites, loaded under their manifest name.
+      if (mobManifest?.sprites) {
+        mobManifest.sprites.forEach(name => { list[name] = `${mobManifest.base}${name}.png`; });
+      }
       await this.preloadImages(list);
     },
     preloadImages(list) {
@@ -340,34 +345,7 @@
   };
 
   /* ---------------- state ---------------- */
-  const defaultState = () => ({
-    version: SAVE_VERSION,
-    scene: 'title',
-    mapId: 'village',
-    player: {x: 11 * TILE, y: 10 * TILE, speed: 3.1, dir: 'down', frameTimer: 0, frame: 0},
-    party: ['sean'],
-    unlocked: {meadow: true, cave: false, petro: false, ruushwood: false, moon: false, ruins: false, tower: false, homestead: false},
-    hero: {level: 1, xp: 0, xpNext: 30, hp: 120, maxHp: 120, mp: 32, maxMp: 32, attack: 15, defense: 8, coins: 40, friendship: 0},
-    items: {'Berry Juice': 3, 'Crystal Candy': 1, 'Wood': 4, 'Stone': 2},
-    equipment: {weapon: null, armor: null, charm: null},
-    flags: {},
-    quest: {id: 'awakening', title: 'The Birthday Crystal', objective: 'Talk to Elder Brightbeard in Birthday Village.', progress: 0},
-    sideQuests: {},
-    gems: [],
-    chestsOpened: {},
-    defeatedBosses: {},
-    nodeTimers: {},
-    crops: {},
-    homestead: {claimed: false, level: 1, tiles: {}, blueprintsBuilt: [], perksSeen: [], lastGiftAt: 0},
-    stats: {gathered: 0, battlesWon: 0, fishCaught: 0, treasuresDug: 0, dailiesDone: 0, cropsHarvested: 0},
-    achievements: {},
-    daily: null,
-    treasure: null,
-    ngPlus: 0,
-    playMinutes: 0,
-    savedAt: 0,
-    lastAdReward: 0
-  });
+  const defaultState = SSG.defaultState;
 
   let state = defaultState();
   let maps = {};
@@ -376,26 +354,7 @@
   let toastTimer = 0;
   let lastTime = 0;
 
-  function migrate(raw) {
-    const base = defaultState();
-    const merged = {...base, ...raw};
-    ['player', 'unlocked', 'hero', 'equipment', 'quest', 'homestead'].forEach(key => {
-      merged[key] = {...base[key], ...(raw[key] || {})};
-    });
-    ['items', 'flags', 'sideQuests', 'chestsOpened', 'defeatedBosses', 'nodeTimers', 'crops', 'achievements'].forEach(key => {
-      merged[key] = {...(raw[key] || {})};
-    });
-    merged.stats = {...base.stats, ...(raw.stats || {})};
-    merged.gems = Array.isArray(raw.gems) ? raw.gems : [];
-    merged.party = Array.isArray(raw.party) && raw.party.length ? raw.party : base.party;
-    if (!SSG.MAIN_QUESTS.some(q => q.id === merged.quest.id)) merged.quest = base.quest;
-    else {
-      const def = SSG.MAIN_QUESTS.find(q => q.id === merged.quest.id);
-      merged.quest = {id: def.id, title: def.title, objective: merged.quest.objective || def.objective, progress: merged.quest.progress || 0};
-    }
-    merged.version = SAVE_VERSION;
-    return merged;
-  }
+  const migrate = SSG.migrateSave;
 
   function save() {
     state.savedAt = Date.now();
@@ -1146,6 +1105,10 @@
     const loader = document.getElementById('gameLoader');
     if (loader) loader.classList.add('hidden');
     requestAnimationFrame(loop);
+    // Lazy-load the heavy title art after boot; drawTitle falls back to a gradient meanwhile.
+    const keyArt = new Image();
+    keyArt.onload = () => { img.keyArtMain = keyArt; };
+    keyArt.src = 'assets/key-art-main.png';
   }
 
   bootstrap();

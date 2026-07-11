@@ -36,6 +36,13 @@ img{max-width:100%;display:block}.container{width:min(1180px,calc(100% - 32px));
 .mobile-controls button:active{transform:scale(.94);background:#ffe9cf}
 @media (pointer:coarse){.mobile-controls{display:flex}}
 
+/* CSS-maximize fullscreen fallback (iOS Safari) */
+body.ssg-maximize{overflow:hidden}
+body.ssg-maximize #gameFrame{position:fixed;inset:0;z-index:1300;margin:0;border-radius:0;padding:6px;background:#0e2744;display:flex;flex-direction:column;justify-content:center}
+body.ssg-maximize #gameFrame .game-canvas-wrap{display:flex;align-items:center;justify-content:center;flex:1;min-height:0}
+body.ssg-maximize #gameFrame #gameCanvas{max-height:100%;width:auto;max-width:100%}
+body.ssg-maximize .mobile-controls{display:flex}
+
 /* Game canvas loader */
 .game-canvas-wrap{position:relative}
 .game-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0e2744;border-radius:22px;color:#d9f6ff;font-weight:800;transition:opacity .4s ease}

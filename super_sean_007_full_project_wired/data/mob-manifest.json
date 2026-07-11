@@ -1,0 +1,21 @@
+{
+  "base": "assets/sliced/mobs/",
+  "sprites": [
+    "boss_sorceress",
+    "boss_cultleader",
+    "boss_bonedragon",
+    "boss_gemreaper",
+    "mob_crystal_golem",
+    "mob_moss_troll",
+    "mob_cave_spider",
+    "mob_thunder_wyvern",
+    "npc_village_boy",
+    "npc_village_girl",
+    "npc_farmer",
+    "npc_baker",
+    "npc_elder_man",
+    "npc_elder_woman",
+    "npc_innkeeper",
+    "npc_child"
+  ]
+}

@@ -208,9 +208,9 @@
           .filter(mo => !mo.defeated && !st.defeatedBosses[mo.id] &&
             (!mo.requiresDefeated || st.defeatedBosses[mo.requiresDefeated]) &&
             (!mo.requiresGems || st.gems.length >= mo.requiresGems))
-          .map(mo => ({id: mo.id, name: mo.name, kind: mo.kind, hue: mo.hue || 0, boss: Boolean(mo.boss), x: Math.round(mo.x), y: Math.round(mo.y)})),
+          .map(mo => ({id: mo.id, name: mo.name, kind: mo.kind, hue: mo.hue || 0, sprite: mo.sprite || null, boss: Boolean(mo.boss), x: Math.round(mo.x), y: Math.round(mo.y)})),
         battle: battle ? {
-          enemy: {name: battle.enemy.name, hp: battle.enemy.hp, maxHp: battle.enemy.maxHp, kind: battle.enemy.kind, hue: battle.enemy.hue || 0, boss: Boolean(battle.enemy.boss)},
+          enemy: {name: battle.enemy.name, hp: battle.enemy.hp, maxHp: battle.enemy.maxHp, kind: battle.enemy.kind, hue: battle.enemy.hue || 0, sprite: battle.enemy.sprite || null, boss: Boolean(battle.enemy.boss)},
           turn: battle.turn,
           log: battle.log.slice(0, 4),
           bg: battle.backgroundKey
