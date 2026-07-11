@@ -1,13 +1,18 @@
 {
+  "id": "/",
   "name": "Super Sean 007: Legend of the Seven Gems",
   "short_name": "Super Sean 007",
-  "description": "A free HTML5 browser JRPG with quests, treasures, turn-based battles and Xelar the Bald Wizard.",
-  "start_url": "./index.html",
+  "description": "A free HTML5 browser JRPG with quests, base building, crafting, co-op and Xelar the Bald Wizard.",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#eaf8ff",
+  "orientation": "any",
+  "categories": ["games", "entertainment"],
+  "background_color": "#0e2744",
   "theme_color": "#168ed0",
   "icons": [
-    {"src":"assets/icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"assets/icon-512.png","sizes":"512x512","type":"image/png"}
+    {"src":"assets/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"assets/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"assets/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
   ]
 }

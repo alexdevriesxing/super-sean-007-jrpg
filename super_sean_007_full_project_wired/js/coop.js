@@ -8,8 +8,19 @@
 
   const SKILL_BY_CHAR = {dave: 'gadget', petroman: 'ironguard', ruush: 'arrows', haraku: 'blessing'};
   const SKILL_LABELS = {gadget: 'Gadget Zap', ironguard: 'Iron Guard', arrows: 'Twin Arrows', blessing: 'Moon Blessing'};
-  const RTC_CONFIG = {iceServers: [{urls: 'stun:stun.l.google.com:19302'}]};
   const SPEED = 3.1;
+
+  // STUN is enough on most home networks; symmetric-NAT (some mobile carriers)
+  // needs a TURN relay. Provide credentials via window.SSG_TURN to enable it, e.g.
+  //   window.SSG_TURN = [{urls:'turn:turn.example.com:3478', username:'u', credential:'p'}];
+  function rtcConfig() {
+    const ice = [
+      {urls: 'stun:stun.l.google.com:19302'},
+      {urls: 'stun:stun1.l.google.com:19302'}
+    ];
+    if (Array.isArray(window.SSG_TURN)) ice.push(...window.SSG_TURN);
+    return {iceServers: ice};
+  }
 
   SSG.createCoop = (ctx) => {
     const T = SSG.TILE;
@@ -69,10 +80,23 @@
     async function hostStart() {
       if (coop.mode) leave();
       coop.mode = 'host';
-      coop.code = makeCode();
-      coop.status = 'waiting';
+      coop.status = 'opening';
       coop.error = '';
+      // Reserve a unique code (retry a few times on collision).
+      let code = '';
+      for (let attempt = 0; attempt < 4; attempt++) {
+        code = makeCode();
+        try {
+          const res = await fetch(`/api/party?code=${code}&action=host`, {method: 'POST', headers: {'content-type': 'application/json'}, body: '{}'});
+          if (res.ok) break;
+          if (res.status !== 409) { code = code; break; } // non-conflict error: use it anyway
+        } catch (e) { break; } // offline/local: proceed with the code
+      }
+      if (coop.mode !== 'host') return; // cancelled while awaiting
+      coop.code = code;
+      coop.status = 'waiting';
       pollTimer = setInterval(pollOffers, 2500);
+      if (ctx.stat) ctx.stat('party_host');
       ctx.showToast(`Party open! Share code ${coop.code} with friends.`);
     }
     async function pollOffers() {
@@ -90,7 +114,7 @@
     async function answerGuest(slot, offer) {
       const char = freeChar();
       if (!char) return;
-      const pc = new RTCPeerConnection(RTC_CONFIG);
+      const pc = new RTCPeerConnection(rtcConfig());
       const guest = {pc, dc: null, char, name: offer.name || 'Friend', actor: null};
       coop.guests[slot] = guest;
       pc.ondatachannel = event => {
@@ -201,10 +225,13 @@
       if (coop.mode) leave();
       coop.mode = 'guest';
       coop.code = code;
+      coop.lastName = name;
+      coop.intentionalLeave = false;
       coop.status = 'connecting';
       coop.error = '';
+      if (ctx.stat && !coop.reconnects) ctx.stat('party_join');
       try {
-        const pc = new RTCPeerConnection(RTC_CONFIG);
+        const pc = new RTCPeerConnection(rtcConfig());
         const dc = pc.createDataChannel('game');
         guestConn = {pc, dc};
         wireGuestChannel(dc);
@@ -230,13 +257,22 @@
     function wireGuestChannel(dc) {
       dc.onopen = () => {
         coop.status = 'playing';
+        coop.reconnects = 0;
         send(dc, {t: 'hello'});
         ctx.setScene('coopGuest');
         ctx.sfx('level_up');
       };
       dc.onclose = () => {
-        if (coop.mode === 'guest') {
-          coop.error = 'The host closed the party.';
+        if (coop.mode !== 'guest' || coop.intentionalLeave) return;
+        // Unexpected drop: try to rejoin the same party a couple of times.
+        if ((coop.reconnects || 0) < 2) {
+          coop.reconnects = (coop.reconnects || 0) + 1;
+          coop.status = 'reconnecting';
+          ctx.showToast(`Connection lost — reconnecting (${coop.reconnects}/2)...`);
+          const code = coop.code, name = coop.lastName || 'Friend';
+          setTimeout(() => { if (coop.mode === 'guest') guestJoin(code, name); }, 1500);
+        } else {
+          coop.error = 'Lost connection to the host.';
           leave();
         }
       };
@@ -274,6 +310,8 @@
     }
 
     function leave() {
+      coop.intentionalLeave = true;
+      coop.reconnects = 0;
       if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
       Object.values(coop.guests).forEach(g => { try { g.pc.close(); } catch (e) {} });
       coop.guests = {};

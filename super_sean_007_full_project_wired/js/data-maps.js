@@ -116,7 +116,7 @@
     ];
     m.chests = [
       {id:'village_chest', x:7*T, y:15*T, reward:{coins:25, item:'Berry Juice'}, label:'Village chest'},
-      {id:'ad_reward_chest', x:14*T, y:7*T, reward:{coins:25}, label:'Optional reward chest', ad:true}
+      {id:'ad_reward_chest', x:19*T, y:12*T, reward:{coins:25}, label:'Optional reward chest', ad:true}
     ];
     node(m, 'berry', 20, 3); node(m, 'berry', 27, 5); node(m, 'flower', 15, 12);
     m.board = {tx: 14, ty: 6}; // daily quest board (sign tile)

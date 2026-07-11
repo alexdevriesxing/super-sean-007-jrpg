@@ -268,9 +268,22 @@
       const d = ctx.dialogue();
       if (!d) return;
       panel(86, 356, 788, 150, 'rgba(255,255,255,.96)');
-      g.fillStyle = '#12365a'; g.font = 'bold 22px Nunito'; g.fillText(d.speaker, 112, 392);
-      g.font = '17px Nunito'; wrapText(d.lines[d.index], 112, 424, 720, 24);
-      g.font = 'bold 13px Nunito'; g.fillStyle = '#2471a3'; g.fillText('Click, Space or Enter to continue', 600, 486);
+      const portrait = d.portrait && ctx.img[`portrait_${d.portrait}`];
+      let textX = 112;
+      if (portrait && portrait.complete && portrait.naturalWidth) {
+        g.save();
+        g.fillStyle = '#eaf6ff';
+        g.beginPath(); g.roundRect(104, 366, 120, 120, 16); g.fill();
+        g.beginPath(); g.roundRect(104, 366, 120, 120, 16); g.clip();
+        g.drawImage(portrait, 104, 366, 120, 120);
+        g.restore();
+        g.strokeStyle = '#3fa7dc'; g.lineWidth = 2;
+        g.beginPath(); g.roundRect(104, 366, 120, 120, 16); g.stroke();
+        textX = 244;
+      }
+      g.fillStyle = '#12365a'; g.font = 'bold 22px Nunito'; g.fillText(d.speaker, textX, 396);
+      g.font = '17px Nunito'; wrapText(d.lines[d.index], textX, 428, 858 - textX, 24);
+      g.font = 'bold 13px Nunito'; g.fillStyle = '#2471a3'; g.fillText('Click, Space or Enter to continue', 620, 490);
       hotspot(0, 0, GAME_W, GAME_H, () => ctx.nextDialogue());
     }
 
@@ -616,8 +629,11 @@
         const guests = Object.values(coop.guests);
         g.font = '14px Nunito'; g.fillStyle = '#41576b';
         g.fillText(guests.length ? `In your party: ${guests.map(gu => `${gu.name} (${cap(gu.char)})`).join(', ')}` : 'Waiting for friends to join...', 268, 344);
-        button(268, 372, 160, 34, 'Close Party', () => ctx.coopApi().leave());
-        button(444, 372, 160, 34, 'Back to game', () => ctx.setScene('explore'));
+        button(268, 366, 132, 32, 'Share code', () => window.SSGShare && window.SSGShare('party', coop.code));
+        button(414, 366, 132, 32, 'Close Party', () => ctx.coopApi().leave());
+        button(560, 366, 130, 32, 'Back to game', () => ctx.setScene('explore'));
+        g.font = '11px Nunito'; g.fillStyle = '#7a90a5';
+        g.fillText('Friends: open the game, tap 👥 Party → Join, enter this code.', 268, 410);
       } else {
         g.font = 'bold 16px Nunito'; g.fillStyle = '#12365a';
         g.fillText(`Joining ${coop.code}... (${coop.status})`, 268, 280);
@@ -633,9 +649,15 @@
       g.fillStyle = '#0e2744'; g.fillRect(0, 0, GAME_W, GAME_H);
       if (!r || !coop.myChar) {
         g.fillStyle = '#fff'; g.font = 'bold 22px Nunito';
-        g.fillText('Connecting to the host\'s world...', 320, 270);
+        const msg = coop.status === 'reconnecting' ? 'Reconnecting to the host...' : 'Connecting to the host\'s world...';
+        g.fillText(msg, 300, 260);
+        g.font = '14px Nunito'; g.fillStyle = '#bcd6ea';
+        g.fillText(`Party code: ${coop.code}`, 300, 292);
+        button(300, 320, 160, 36, 'Cancel', () => ctx.coopApi().leave());
         return;
       }
+      // Stale-snapshot indicator: host may have paused or dropped.
+      const stale = performance.now() - coop.lastSnapshotAt > 3000;
       const m = ctx.maps()[r.mapId];
       const me = coop.smoothed[coop.myChar] || coop.smoothed.sean || {x: 0, y: 0};
       const cam = {
@@ -674,6 +696,7 @@
       bar(26, 44, 240, 11, r.hero.hp / r.hero.maxHp, '#ff5f7e', '#ffe6ea');
       g.font = '11px Nunito'; g.fillText(`${r.hero.hp}/${r.hero.maxHp} party HP · coins ${r.hero.coins}`, 274, 54);
       drawLabel('Move: WASD · E harvest · 1 battle skill · Esc leave party', 12, GAME_H - 30, '#d9f6ff');
+      if (stale) drawLabel('⚠ Waiting for host…', GAME_W - 210, 12, '#ffd76a');
       if (r.battle) {
         const bg = ctx.img[r.battle.bg];
         if (bg && bg.complete && bg.naturalWidth) { g.drawImage(bg, 0, 0, GAME_W, GAME_H); g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(0, 0, GAME_W, GAME_H); }

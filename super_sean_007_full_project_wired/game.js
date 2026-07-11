@@ -19,6 +19,12 @@
     haraku: 'assets/characters/haraku_strip.png',
     ruush: 'assets/characters/ruush_strip.png',
     xelar: 'assets/characters/xelar_portrait.png',
+    portrait_sean: 'assets/characters/sean_portrait.png',
+    portrait_dave: 'assets/characters/dave_portrait.png',
+    portrait_haraku: 'assets/characters/haraku_portrait.png',
+    portrait_ruush: 'assets/characters/ruush_portrait.png',
+    portrait_petroman: 'assets/characters/petroman_portrait.png',
+    portrait_xelar: 'assets/characters/xelar_portrait.png',
     slime: 'assets/characters/enemy_slime.png',
     mushroom: 'assets/characters/enemy_mushroom.png',
     bat: 'assets/characters/enemy_bat.png',
@@ -131,21 +137,33 @@
     manifest: null, music: {}, sfx: {}, currentMusic: null, pendingMusic: null, unlocked: false,
     musicMuted: readBool('super-sean-007-music-muted', false),
     sfxMuted: readBool('super-sean-007-sfx-muted', false),
+    musicVolume: readNumber('super-sean-007-music-vol', 0.28),
+    sfxVolume: readNumber('super-sean-007-sfx-vol', 0.45),
     async init() {
       this.manifest = await fetchJson('data/audio-manifest.json');
       Object.entries(this.manifest?.music || {}).forEach(([id, entry]) => {
         const audio = new Audio(entry.file);
         audio.loop = Boolean(entry.loop);
         audio.preload = 'auto';
-        audio.volume = 0.28;
+        audio.volume = this.musicVolume;
         this.music[id] = audio;
       });
       Object.entries(this.manifest?.sfx || {}).forEach(([id, entry]) => {
         const audio = new Audio(entry.file);
         audio.preload = 'auto';
-        audio.volume = 0.45;
+        audio.volume = this.sfxVolume;
         this.sfx[id] = audio;
       });
+    },
+    setMusicVolume(v) {
+      this.musicVolume = Math.max(0, Math.min(1, v));
+      writeNumber('super-sean-007-music-vol', this.musicVolume);
+      Object.values(this.music).forEach(a => { a.volume = this.musicVolume; });
+    },
+    setSfxVolume(v) {
+      this.sfxVolume = Math.max(0, Math.min(1, v));
+      writeNumber('super-sean-007-sfx-vol', this.sfxVolume);
+      Object.values(this.sfx).forEach(a => { a.volume = this.sfxVolume; });
     },
     unlock() {
       if (this.unlocked) return;
@@ -170,7 +188,7 @@
       const base = this.sfx[id];
       if (!base) return;
       const sound = base.cloneNode();
-      sound.volume = base.volume;
+      sound.volume = this.sfxVolume;
       sound.play().catch(() => {});
     },
     toggleMusic() {
@@ -212,16 +230,77 @@
       slot.hidden = true;
       return true;
     },
-    showInterstitial(reason) {
+    adsAvailable() {
+      // Third-party ads only run after the visitor accepted consent.
+      return Boolean(this.config?.enabled) && Boolean(window.__ssgAdsLoaded);
+    },
+    // Render a real 300x250 Adsterra unit inside an isolated iframe.
+    renderUnit(container) {
+      const unit = {key: this.config?.units?.banner300x250?.key, width: 300, height: 250};
+      if (!unit.key) return false;
+      try {
+        const frame = document.createElement('iframe');
+        frame.width = '300'; frame.height = '250'; frame.title = 'Advertisement';
+        frame.setAttribute('scrolling', 'no'); frame.style.border = '0';
+        container.appendChild(frame);
+        const doc = frame.contentWindow.document;
+        const options = JSON.stringify({key: unit.key, format: 'iframe', height: 250, width: 300, params: {}});
+        doc.open();
+        doc.write('<!doctype html><html><head><style>html,body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+          '<scr' + 'ipt>atOptions=' + options + ';</scr' + 'ipt>' +
+          '<scr' + 'ipt src="https://' + this.config.adHost + '/' + unit.key + '/invoke.js"></scr' + 'ipt>' +
+          '</body></html>');
+        doc.close();
+        return true;
+      } catch (e) { return false; }
+    },
+    showInterstitial(reason, onClose) {
       const safeReasons = this.config?.safeInterstitialReasons || [];
       const minimumMs = (this.config?.minimumInterstitialSeconds || 180) * 1000;
       const now = Date.now();
-      if (!safeReasons.includes(reason)) return false;
-      if (['battle', 'dialogue'].includes(state.scene)) return false;
-      if (now - this.lastInterstitialAt < minimumMs) return false;
+      const forced = reason === 'reward';
+      if (!forced) {
+        if (!safeReasons.includes(reason)) return false;
+        if (['battle', 'dialogue'].includes(state.scene)) return false;
+        if (now - this.lastInterstitialAt < minimumMs) return false;
+      }
+      if (!this.adsAvailable()) { if (onClose) onClose(); return false; }
       this.lastInterstitialAt = now;
-      console.info('[AdManager] interstitial placeholder:', reason);
+      ctx.stat('pageview'); // interstitial impression proxy
+      this.renderOverlay(reason === 'reward' ? 'Your reward is ready!' : 'Thanks for playing!', onClose);
       return true;
+    },
+    renderOverlay(headline, onClose) {
+      if (document.getElementById('adOverlay')) { if (onClose) onClose(); return; }
+      const wasScene = state.scene;
+      const overlay = document.createElement('div');
+      overlay.id = 'adOverlay';
+      overlay.innerHTML = '<div class="ad-overlay-card">' +
+        '<span class="ad-overlay-label">Advertisement</span>' +
+        '<div class="ad-overlay-unit" id="adOverlayUnit"></div>' +
+        '<p class="ad-overlay-headline">' + headline + '</p>' +
+        '<button id="adOverlayClose" class="ad-overlay-close" disabled>Continue in 4…</button></div>';
+      document.body.appendChild(overlay);
+      this.renderUnit(document.getElementById('adOverlayUnit'));
+      const btn = document.getElementById('adOverlayClose');
+      let left = 4;
+      const tick = setInterval(() => {
+        left -= 1;
+        if (left <= 0) {
+          clearInterval(tick);
+          btn.disabled = false;
+          btn.textContent = 'Continue';
+        } else {
+          btn.textContent = `Continue in ${left}…`;
+        }
+      }, 1000);
+      const close = () => {
+        clearInterval(tick);
+        overlay.remove();
+        if (state.scene === wasScene) { /* unchanged */ }
+        if (onClose) onClose();
+      };
+      btn.addEventListener('click', () => { if (!btn.disabled) close(); });
     },
     canShowRewardedAd(type) {
       const rewarded = this.config?.rewarded?.[type];
@@ -236,11 +315,23 @@
       }
       this.lastRewardByType[type] = Date.now();
       state.lastAdReward = Date.now();
-      AudioManager.playSfx('reward');
-      showToast('Rewarded ad placeholder completed.');
-      setTimeout(() => onSuccess && onSuccess(), 250);
-      save();
+      const grant = () => {
+        AudioManager.playSfx('reward');
+        if (onSuccess) onSuccess();
+        save();
+      };
+      // Show a real ad if the visitor opted in; otherwise grant directly (they chose no ads).
+      if (this.adsAvailable()) {
+        this.showInterstitial('reward', grant);
+      } else {
+        showToast('Reward granted!');
+        setTimeout(grant, 200);
+      }
       return true;
+    },
+    maybeInterstitial(reason) {
+      // Fire-and-forget interstitial on a safe story beat.
+      this.showInterstitial(reason, null);
     },
     findSlot(placement) {
       const selector = this.config?.placements?.[placement]?.selector || `[data-adsterra-placement="${placement}"]`;
@@ -403,17 +494,27 @@
       if (!force && now - this.lastPush < 45_000) return;
       this.lastPush = now;
       try {
-        const response = await fetch(`/api/save?id=${this.ensureId()}`, {
+        const response = await fetch(`/api/save?id=${this.ensureId()}${this.forceNext ? '&force=1' : ''}`, {
           method: 'PUT',
           headers: {'content-type': 'application/json'},
           body: JSON.stringify(state),
           keepalive: force
         });
-        this.status = response.ok ? 'synced' : 'error';
+        this.forceNext = false;
+        if (response.status === 409 && !this.conflictWarned) {
+          this.conflictWarned = true;
+          this.status = 'conflict';
+          showToast('Cloud has a newer save from another device. Use "Load Code" with your sync ID to pull it, or keep playing to overwrite.');
+          this.forceNext = true; // next push wins if they keep playing
+        } else {
+          this.status = response.ok ? 'synced' : 'error';
+        }
       } catch (e) {
         this.status = 'offline';
       }
     },
+    forceNext: false,
+    conflictWarned: false,
     async pull(id) {
       showToast('Fetching cloud save...');
       try {
@@ -463,6 +564,15 @@
   function writeBool(key, value) {
     try { localStorage.setItem(key, String(value)); } catch (e) {}
   }
+  function readNumber(key, fallback) {
+    try {
+      const v = parseFloat(localStorage.getItem(key));
+      return Number.isFinite(v) ? v : fallback;
+    } catch (e) { return fallback; }
+  }
+  function writeNumber(key, value) {
+    try { localStorage.setItem(key, String(value)); } catch (e) {}
+  }
 
   function showToast(text) { toast = text; toastTimer = 180; }
   function currentMap() { return maps[state.mapId]; }
@@ -501,13 +611,15 @@
     fx: addFx,
     sfx: id => AudioManager.playSfx(id),
     music: id => AudioManager.playMusic(id),
+    stat: (event, once) => { try { window.SSGStats && window.SSGStats.track(event, once); } catch (e) {} },
     setScene: scene => { state.scene = scene; },
-    showDialogue: (speaker, lines) => { dialogue = {speaker, lines: [].concat(lines), index: 0}; state.scene = 'dialogue'; },
+    showDialogue: (speaker, lines, portraitChar) => { dialogue = {speaker, lines: [].concat(lines), index: 0, portrait: portraitChar || null}; state.scene = 'dialogue'; },
     nextDialogue: () => nextDialogue(),
     startGame: () => startGame(),
     resetGame: () => resetGame(),
     exitBuild: () => { state.scene = 'explore'; AudioManager.playSfx('menu_open'); },
     adRevive: onSuccess => AdManager.showRewardedAd('revive', onSuccess),
+    interstitial: reason => AdManager.maybeInterstitial(reason),
     rebuildMaps: () => { maps = SSG.buildMaps(); },
     canMoveTo: (x, y) => canMoveTo(x, y),
     inputDir: () => {
@@ -558,6 +670,7 @@
     state.scene = 'explore';
     AudioManager.playMusic(MAP_MUSIC[state.mapId] || 'village');
     AudioManager.playSfx('ui_confirm');
+    ctx.stat('game_start');
     showToast('Welcome back to Asteria-007.');
   }
   function resetGame() {
@@ -567,7 +680,13 @@
     state.scene = 'explore';
     AudioManager.playMusic('village');
     AudioManager.playSfx('ui_confirm');
+    ctx.stat('game_start');
+    ctx.stat('new_game');
     showToast('New adventure started. Find Elder Brightbeard!');
+    if (!readBool('super-sean-007-onboarded', false)) {
+      writeBool('super-sean-007-onboarded', true);
+      if (window.SSGOnboard) window.SSGOnboard();
+    }
   }
 
   function nextDialogue() {
@@ -593,6 +712,7 @@
     AudioManager.playMusic(MAP_MUSIC[state.mapId] || 'village');
     showToast(`Entered ${maps[state.mapId].name}.`);
     save();
+    if (portal.target === 'village') setTimeout(() => AdManager.maybeInterstitial('return_to_village'), 600);
   }
 
   function openChest(chest) {
@@ -942,6 +1062,16 @@
     exportSave: exportSaveCode,
     importSave: importSaveFlow,
     cloudSync: () => CloudSync.toggle(),
+    settings: () => ({
+      music: AudioManager.musicVolume, sfx: AudioManager.sfxVolume,
+      musicMuted: AudioManager.musicMuted, sfxMuted: AudioManager.sfxMuted,
+      cloud: CloudSync.enabled, cloudId: CloudSync.id
+    }),
+    setMusicVolume: v => AudioManager.setMusicVolume(v),
+    setSfxVolume: v => AudioManager.setSfxVolume(v),
+    toggleMusicMute: () => AudioManager.toggleMusic(),
+    toggleSfxMute: () => AudioManager.toggleSfx(),
+    install: () => window.SuperSeanInstall && window.SuperSeanInstall(),
     toggleMusic: () => AudioManager.toggleMusic(),
     toggleSfx: () => AudioManager.toggleSfx(),
     renderState: renderGameToText,
@@ -988,12 +1118,33 @@
     if (state.scene !== 'title') { save(); CloudSync.push(true); }
   });
 
+  // PWA: register the service worker for installable / offline play.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+  // Capture the install prompt so a button can trigger it.
+  let deferredInstall = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredInstall = e;
+  });
+  window.addEventListener('appinstalled', () => { ctx.stat('install'); deferredInstall = null; });
+  window.SuperSeanInstall = () => {
+    if (!deferredInstall) { showToast('Add to Home Screen from your browser menu to install.'); return; }
+    deferredInstall.prompt();
+    deferredInstall.userChoice.finally(() => { deferredInstall = null; });
+  };
+
   async function bootstrap() {
     maps = SSG.buildMaps();
     await Promise.all([AssetManager.init(), AudioManager.init(), AdManager.init()]);
     load();
     state.scene = 'title';
     AudioManager.playMusic('title');
+    const loader = document.getElementById('gameLoader');
+    if (loader) loader.classList.add('hidden');
     requestAnimationFrame(loop);
   }
 

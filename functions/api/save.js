@@ -42,6 +42,22 @@ export async function onRequestPut({request, env}) {
   if (!parsed || typeof parsed !== 'object' || typeof parsed.version !== 'number' || !parsed.hero) {
     return json({error: 'not a valid save'}, 400);
   }
+  // Conflict guard: never let an older save clobber a newer one (multi-device safety).
+  const url = new URL(request.url);
+  const force = url.searchParams.get('force') === '1';
+  if (!force) {
+    const existingText = await env.SSG_SAVES.get(id);
+    if (existingText) {
+      try {
+        const existing = JSON.parse(existingText);
+        const existingAt = Number(existing.savedAt) || 0;
+        const incomingAt = Number(parsed.savedAt) || 0;
+        if (existingAt > incomingAt + 2000) {
+          return json({error: 'conflict', savedAt: existingAt, message: 'A newer save exists in the cloud.'}, 409);
+        }
+      } catch (e) { /* stored value unparseable — allow overwrite */ }
+    }
+  }
   await env.SSG_SAVES.put(id, text, {expirationTtl: SAVE_TTL_SECONDS});
-  return json({ok: true, savedAt: Date.now()});
+  return json({ok: true, savedAt: Number(parsed.savedAt) || Date.now()});
 }

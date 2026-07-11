@@ -272,6 +272,8 @@
         ctx.showToast(`Level up! Sean reached level ${h.level}.`);
       }
       sys().bumpStat('battlesWon');
+      ctx.stat('battle_win');
+      if (e.boss) ctx.stat('boss_win');
       const drops = rollDrops(e.kind);
       if (e.id === 'gemkin_avatar') {
         sys().addItem('Gemkin Crown', 1);
@@ -285,9 +287,11 @@
       sys().advanceMain('defeat', {id: e.id, kind: e.kind});
       ctx.music('victory');
       setTimeout(() => ctx.music('village'), 2400);
+      const wasBoss = e.boss;
       battle = null;
       ctx.setScene('explore');
       ctx.save();
+      if (wasBoss && ctx.interstitial) setTimeout(() => ctx.interstitial('boss_victory'), 900);
     }
 
     function reviveOrReturn(useAd) {

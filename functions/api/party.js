@@ -56,6 +56,15 @@ export async function onRequestGet({request, env}) {
 export async function onRequestPost({request, env}) {
   const {code, action, slot} = params(request);
   if (!CODE_PATTERN.test(code)) return json({error: 'invalid code'}, 400);
+
+  // Host reserves a code so two hosts can't collide on the same one.
+  if (action === 'host') {
+    const existing = await env.SSG_SAVES.get(`party:${code}:host`);
+    if (existing) return json({error: 'code taken'}, 409);
+    await env.SSG_SAVES.put(`party:${code}:host`, String(Date.now()), {expirationTtl: TTL_SECONDS});
+    return json({ok: true});
+  }
+
   const text = await request.text();
   if (!text || text.length > MAX_SDP_BYTES) return json({error: 'payload too large'}, 413);
   let payload;

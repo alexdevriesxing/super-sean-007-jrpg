@@ -175,11 +175,15 @@
               <span class="frame-title">🎮 Now playing — progress autosaves</span>
               <div class="frame-actions">
                 <button class="frame-btn" onclick="SuperSeanGame.menu('party')" title="Play with friends">👥 Party</button>
+                <button class="frame-btn" onclick="window.SSGSettings()" title="Settings">⚙ Settings</button>
                 <button class="frame-btn" id="theaterBtn" onclick="window.SSGTheater()" title="Wide theater layout">🖥 Theater</button>
                 <button class="frame-btn" onclick="window.SSGFullscreen()" title="Fullscreen">⛶ Full</button>
               </div>
             </div>
-            <canvas id="gameCanvas" width="960" height="540" aria-label="Super Sean 007 HTML5 game canvas"></canvas>
+            <div class="game-canvas-wrap">
+              <canvas id="gameCanvas" width="960" height="540" aria-label="Super Sean 007 HTML5 game canvas"></canvas>
+              <div id="gameLoader" class="game-loader"><div class="game-loader-spin"></div><p>Loading Asteria-007…</p></div>
+            </div>
             <div class="mobile-controls" aria-label="Touch controls">
               <div class="dpad">
                 <button aria-label="Move up" onpointerdown="SuperSeanGame.press('up',true)" onpointerup="SuperSeanGame.press('up',false)" onpointerleave="SuperSeanGame.press('up',false)" onpointercancel="SuperSeanGame.press('up',false)" oncontextmenu="return false">▲</button>
@@ -399,6 +403,27 @@
       </div>
     </section>
 
+    <section id="community" class="section-pad community-section" aria-labelledby="community-title">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Join the adventure</p>
+          <h2 id="community-title">Play together, share the fun</h2>
+          <p>Team up in co-op, show off your homestead, and help Super Sean 007 grow.</p>
+        </div>
+        <div class="community-cards">
+          <div class="community-card" role="button" tabindex="0" onclick="window.SSGShare &amp;&amp; window.SSGShare('game')" onkeypress="if(event.key==='Enter'){window.SSGShare&amp;&amp;window.SSGShare('game')}">
+            <div class="emoji">🔗</div><h3>Share the game</h3><p>Send Super Sean 007 to a friend — one tap to share the link anywhere.</p>
+          </div>
+          <div class="community-card" role="button" tabindex="0" onclick="document.getElementById('play').scrollIntoView();setTimeout(()=>SuperSeanGame&amp;&amp;SuperSeanGame.menu('party'),400)" onkeypress="if(event.key==='Enter'){document.getElementById('play').scrollIntoView()}">
+            <div class="emoji">👥</div><h3>Start a co-op party</h3><p>Host a game and give friends a 6-letter code to join as Dave, Ruush, Haraku or Petroman.</p>
+          </div>
+          <a class="community-card" href="https://discord.gg/" target="_blank" rel="noopener" style="text-decoration:none">
+            <div class="emoji">💬</div><h3>Community &amp; updates</h3><p>Follow development and swap homestead builds. (Add your Discord/community link here.)</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section id="faq" class="section-pad tinted" aria-labelledby="faq-title">
       <div class="container narrow">
         <p class="eyebrow">FAQ</p>
@@ -468,6 +493,7 @@
   <script src="js/render.js" defer></script>
   <script src="js/coop.js" defer></script>
   <script src="game.js" defer></script>
-  <script src="ads.js" defer></script>
+  <script src="ui-overlays.js" defer></script>
+  <script src="consent.js" defer></script>
 </body>
 </html>

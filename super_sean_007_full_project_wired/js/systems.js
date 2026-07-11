@@ -87,7 +87,7 @@
         ctx.showToast(`${cap(done.recruit)} joined the party!`);
         ctx.sfx('level_up');
       }
-      if (done.gem && !st.gems.includes(done.gem)) { st.gems.push(done.gem); ctx.showToast(`${done.gem} restored! (${st.gems.length}/7)`); }
+      if (done.gem && !st.gems.includes(done.gem)) { st.gems.push(done.gem); ctx.stat('gem'); ctx.showToast(`${done.gem} restored! (${st.gems.length}/7)`); }
       if (done.coins) st.hero.coins += done.coins;
       if (done.friendship) st.hero.friendship = Math.min(100, st.hero.friendship + done.friendship);
       Object.entries(done.items || {}).forEach(([item, qty]) => addItem(item, qty));
@@ -149,7 +149,7 @@
       if (ask.blueprint) fulfilled = (st.homestead.blueprintsBuilt || []).includes(ask.blueprint);
       if (!rec && !fulfilled) {
         st.sideQuests[sq.id] = 'active';
-        ctx.showDialogue(npc.name, [sq.lines[0]]);
+        ctx.showDialogue(npc.name, [sq.lines[0]], npc.char);
         ctx.save();
         return true;
       }
@@ -159,7 +159,7 @@
         Object.entries(sq.reward.items || {}).forEach(([item, qty]) => addItem(item, qty));
         st.sideQuests[sq.id] = sq.repeatable ? 'done_repeat' : 'done';
         ctx.sfx('reward');
-        ctx.showDialogue(npc.name, [sq.lines[1]]);
+        ctx.showDialogue(npc.name, [sq.lines[1]], npc.char);
         ctx.save();
         return true;
       }
@@ -336,6 +336,7 @@
       }
       const hs = homestead();
       hs.blueprintsBuilt = Array.from(new Set([...(hs.blueprintsBuilt || []), bp.id]));
+      ctx.stat('blueprint');
       ctx.sfx('level_up');
       ctx.showToast(`${bp.name} built!`);
       advanceMain('blueprint', {id: bp.id});
@@ -364,6 +365,7 @@
           return;
         }
         hs.claimed = true;
+        ctx.stat('homestead_claim');
         ctx.sfx('level_up');
         ctx.showDialogue('Homestead Crystal', [
           'The crystal flares with warm light — this land is yours!',
@@ -500,11 +502,11 @@
       // Main-story talk triggers take priority over side quests.
       if (q.trigger?.type === 'talk' && q.trigger.npc === npc.id) {
         advanceMain('talk', {npc: npc.id});
-        ctx.showDialogue(npc.name, lines);
+        ctx.showDialogue(npc.name, lines, npc.char);
         return;
       }
       if (handleSideQuest(npc)) return;
-      ctx.showDialogue(npc.name, lines);
+      ctx.showDialogue(npc.name, lines, npc.char);
     }
 
     function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' '); }
@@ -675,6 +677,7 @@
     function startNgPlus() {
       const st = S();
       st.ngPlus = (st.ngPlus || 0) + 1;
+      ctx.stat('ngplus');
       st.gems = [];
       st.defeatedBosses = {};
       st.chestsOpened = {};
