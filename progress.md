@@ -92,6 +92,30 @@ Built from the critical gap analysis (everything except SEO/GAIO, already done):
   Calls / Metered / Twilio).
 - **Community card** links to a placeholder `discord.gg/` — drop in the real invite.
 
+## 2026-07-11 — Gap-analysis batch (commit ba49547, deployed)
+
+Built and shipped the full gap-analysis follow-up:
+- **Distinct sprites**: sliced 16 real sprites (4 bosses, 4 monsters, 8 NPCs) from the
+  generated pack sheets (`scripts/slice-mobs.mjs`, flood-fill bg removal + largest-component
+  isolation); wired into overworld/battle/co-op, replacing hue-shifted reskins. Fixed a
+  pipeline bug where `slice:assets` wiped the mobs dir (now `slice:mobs` runs after it in
+  dev + build).
+- **KV write-quota fix**: analytics rewritten to one KV blob + client batching (was
+  2 writes/event). Verified in prod: 3 events → 1 write (`counted:3`).
+- **Error monitoring**: `functions/api/err.js` + throttled window.onerror; `/stats` dashboard.
+- **Automated tests + CI**: extracted `js/save-core.js`, added `node --test` suite (15 tests:
+  data integrity + save migration), GitHub Actions `ci.yml`.
+- **Legal**: real `privacy.html` + `terms.html`, linked in footer + consent banner.
+- **iOS/mobile**: CSS-maximize fullscreen fallback; lazy-load the 2.8MB title art off boot.
+- All verified in preview (no console errors, sprites render — 9294 green px confirms the
+  moss-troll boss draws) + production API checks pass. 15/15 tests green, build+validate pass.
+
+## Open items for the user
+- Flip the www→apex redirect (dashboard only; my token is 403 on rulesets).
+- Add a real Discord/community URL (placeholder in the community card).
+- Provision a TURN server (`window.SSG_TURN`) for co-op across mobile carrier NAT.
+- KV analytics blob is still non-atomic (approximate under heavy concurrency) — fine for now.
+
 ## Remaining manual notes
 
 - Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
