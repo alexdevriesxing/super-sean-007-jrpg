@@ -43,6 +43,24 @@ Original prompt: build this
 - All verified in preview via QA hooks; build + validation pass; deployed with
   Functions bundle via `npx wrangler pages deploy`.
 
+## 2026-07-10 — Real art, bigger game area, Party Link co-op (commit e01a7a3)
+
+- Real pack art: painted logo, hero-lineup og-image, Sean-face icons, parchment world
+  map cropped from actual key-art/map sheets (scripts/generate-brand-assets.mjs);
+  served as WebP (logo 46KB, map 139KB). Placeholders removed.
+- Bigger game area: wider container, sticky sidebar ads, Theater + Fullscreen via a
+  game frame bar; mobile full-bleed canvas; tighter section rhythm for ad viewability.
+- Input fix: arrows/space no longer scroll the page while the canvas is on screen
+  (viewport-guarded so normal page scroll still works elsewhere). Verified logic.
+- Party Link multiplayer: WebRTC data-channel co-op (js/coop.js + functions/api/party.js
+  + KV signaling). Host runs world; up to 3 friends join via 6-letter code as
+  Dave/Petroman/Ruush/Haraku. Verified via fake-channel loopback: guest movement (93px),
+  harvest (+2 berries), and Gadget Zap relayed into host battle (23 dmg + stun). Party
+  signaling API verified on pages.dev: offer→answer roundtrip all 200.
+- KNOWN INFRA ITEM: www 301-redirects to apex supersean007.com, but canonical/sitemap/
+  og:url point to www. Harmless for players (same-origin relative fetches on apex) but
+  SEO-inconsistent — reconcile the redirect direction or the canonical tags.
+
 ## Remaining manual notes
 
 - Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
