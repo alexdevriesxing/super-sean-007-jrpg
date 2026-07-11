@@ -61,6 +61,37 @@ Original prompt: build this
   og:url point to www. Harmless for players (same-origin relative fetches on apex) but
   SEO-inconsistent — reconcile the redirect direction or the canonical tags.
 
+## 2026-07-11 — Gap-analysis batch (commit af95f9c, deployed)
+
+Built from the critical gap analysis (everything except SEO/GAIO, already done):
+- **Analytics**: first-party cookieless counters — `functions/api/stat.js` + KV,
+  `consent.js` beacon client, `ctx.stat()` events (pageview/game_start/battle_win/
+  boss_win/gem/blueprint/homestead_claim/ngplus/party_*/install/share). Verified live.
+- **Consent**: `consent.js` gates all Adsterra scripts until Accept; Decline = no
+  third-party cookies. `ads.js` now injected dynamically post-consent.
+- **Real ads**: interstitial overlay (300x250 unit + countdown Continue) fires on
+  boss victory / village return, and the rewarded flow (revive, daily chest) shows
+  it then grants. Was a no-op placeholder. Verified overlay+reward in preview.
+- **Cloud-save conflict**: `save.js` rejects PUT older than stored (409), `?force=1`
+  overrides; client warns. Verified 200→409→force on production.
+- **PWA**: `sw.js` runtime caching (offline/installable), install prompt, manifest.
+- **Co-op robustness**: TURN hook `window.SSG_TURN`, host code-claim (`action=host`
+  409 on collision — verified), guest auto-reconnect, stale-host indicator, share code.
+- **Polish**: settings overlay (volume sliders/cloud/install/screenshot/share/ad
+  choices) via `ui-overlays.js`, first-run onboarding, canvas loader, dialogue now
+  shows character portraits. Moved ad reward chest off the quest-board tile (both
+  were within one interact radius so the chest was unreachable).
+
+### Open item for the user (needs dashboard, my token is 403 on rulesets)
+- **Redirect still www→apex** (the reverse of intended). Flip in Cloudflare dashboard:
+  the zone's Redirect Rules → edit the www rule to target apex→www, OR set www as the
+  Pages primary domain. Canonical/sitemap/og:url already say www, so once flipped
+  everything is consistent. A repo `_redirects` entry would loop against the edge rule.
+- **Multiplayer across mobile carriers** needs a TURN server (STUN-only today). Set
+  `window.SSG_TURN=[{urls,username,credential}]` once you have one (e.g. Cloudflare
+  Calls / Metered / Twilio).
+- **Community card** links to a placeholder `discord.gg/` — drop in the real invite.
+
 ## Remaining manual notes
 
 - Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
