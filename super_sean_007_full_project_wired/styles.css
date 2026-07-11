@@ -36,6 +36,41 @@ img{max-width:100%;display:block}.container{width:min(1180px,calc(100% - 32px));
 .mobile-controls button:active{transform:scale(.94);background:#ffe9cf}
 @media (pointer:coarse){.mobile-controls{display:flex}}
 
+/* Real painted brand art */
+.brand img{width:150px;border-radius:12px;box-shadow:0 4px 14px rgba(18,54,90,.25)}
+.footer-logo{border-radius:12px}
+@media (max-width:720px){.brand img{width:120px}}
+
+/* Bigger game area, theater/fullscreen, sticky ads, tighter rhythm */
+.section-pad{padding:64px 0}
+.hero{min-height:640px}
+.hero-grid,.split{gap:44px}
+.game-section>.container{width:min(1420px,calc(100% - 24px))}
+.game-layout{grid-template-columns:minmax(0,1fr) 320px;gap:20px}
+.game-sidebar{position:sticky;top:92px;align-self:start;max-height:calc(100vh - 104px);overflow-y:auto;scrollbar-width:thin}
+.game-frame-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 8px 10px}
+.frame-title{font-weight:800;font-size:.92rem;color:#2d5b80}
+.frame-actions{display:flex;gap:8px}
+.frame-btn{border:0;border-radius:999px;padding:7px 13px;background:#eaf6ff;color:#12365a;font-weight:800;font-size:.85rem;cursor:pointer;box-shadow:inset 0 -2px 0 rgba(18,54,90,.14);transition:background .15s ease,transform .15s ease}
+.frame-btn:hover{background:linear-gradient(135deg,#168ed0,#46d9db);color:#fff;transform:translateY(-1px)}
+body.theater .game-layout{grid-template-columns:1fr}
+body.theater .game-sidebar{position:static;max-height:none;overflow:visible;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start}
+body.theater .game-sidebar .ad-slot-sky{min-height:160px}
+.game-frame:fullscreen{display:flex;flex-direction:column;justify-content:center;background:#0e2744;border-radius:0;padding:0 12px}
+.game-frame:fullscreen .game-frame-bar{color:#d9f6ff}
+.game-frame:fullscreen .frame-title{color:#9fd3f2}
+.game-frame:fullscreen #gameCanvas{max-height:calc(100vh - 140px);width:auto;max-width:100%;margin:0 auto}
+.game-frame:fullscreen .mobile-controls{display:flex}
+@media (max-width:1060px){body.theater .game-sidebar{grid-template-columns:1fr 1fr}}
+@media (max-width:720px){
+  .game-section>.container{width:100%}
+  .game-frame{border-radius:0;border-left:0;border-right:0;padding:6px}
+  .game-frame-bar{padding:2px 6px 8px}
+  .frame-title{display:none}
+  .game-sidebar{position:static;max-height:none;overflow:visible}
+  .below-game-ad{margin-inline:12px}
+}
+
 /* Site beautification: living hero, reveals, nav state, guide steps */
 .hero-bg{background-size:220% 220%;animation:heroShift 26s ease-in-out infinite}
 @keyframes heroShift{0%,100%{background-position:0% 30%}50%{background-position:90% 70%}}

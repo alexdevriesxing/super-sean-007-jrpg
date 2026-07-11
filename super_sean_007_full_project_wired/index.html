@@ -111,7 +111,7 @@
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <a class="brand" href="#top" aria-label="Super Sean 007 home">
-        <img src="assets/ui/super_sean_logo.png" alt="Super Sean 007 logo">
+        <img src="assets/ui/super_sean_logo.webp" alt="Super Sean 007 logo" width="150" height="107">
       </a>
       <button class="nav-toggle" aria-label="Open navigation" onclick="document.body.classList.toggle('nav-open')">☰</button>
       <div class="nav-links">
@@ -169,8 +169,16 @@
           <h2 id="play-title">Enter Asteria-007</h2>
           <p>Explore villages, meadows, caves, forests, shrines and ruins. Talk, quest and fight — then harvest trees, mine crystals, cook stews, forge swords, plant berry gardens and raise your dream base at the Sunrise Homestead.</p>
         </div>
-        <div class="game-layout">
-          <div class="game-frame">
+        <div class="game-layout" id="gameLayout">
+          <div class="game-frame" id="gameFrame">
+            <div class="game-frame-bar">
+              <span class="frame-title">🎮 Now playing — progress autosaves</span>
+              <div class="frame-actions">
+                <button class="frame-btn" onclick="SuperSeanGame.menu('party')" title="Play with friends">👥 Party</button>
+                <button class="frame-btn" id="theaterBtn" onclick="window.SSGTheater()" title="Wide theater layout">🖥 Theater</button>
+                <button class="frame-btn" onclick="window.SSGFullscreen()" title="Fullscreen">⛶ Full</button>
+              </div>
+            </div>
             <canvas id="gameCanvas" width="960" height="540" aria-label="Super Sean 007 HTML5 game canvas"></canvas>
             <div class="mobile-controls" aria-label="Touch controls">
               <div class="dpad">
@@ -257,7 +265,7 @@
           <h2 id="world-title">The world of Asteria-007</h2>
           <p>Each region has its own monsters, boss, treasures and rare materials. What you gather out there becomes what you build back home.</p>
         </div>
-        <img class="region-preview" src="assets/ui/region_preview_strip.png" alt="Preview tiles for Birthday Village, Mushroom Meadow, Crystal Cave, Petro Plains and Moon Shrine">
+        <img class="region-preview" src="assets/ui/world_map_art.webp" alt="Painted parchment world map of Asteria-007 with castles, crystal isles, deserts and snowy peaks" loading="lazy" width="1280" height="797">
         <div class="region-grid">
           <article><h3>Birthday Village</h3><p>Your cozy hub: Elder Brightbeard’s quests, Grandma Berrybun’s bakery, Bobo’s trading post and the village crystal.</p></article>
           <article><h3>Sunrise Homestead</h3><p>Your claimable base south of the village. Build, garden, craft and expand the claim all the way to the valley edges.</p></article>
@@ -423,7 +431,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
-        <img src="assets/ui/super_sean_logo.png" alt="Super Sean 007 logo" class="footer-logo">
+        <img src="assets/ui/super_sean_logo.webp" alt="Super Sean 007 logo" class="footer-logo" width="220" height="157">
         <p>Super Sean 007: Legend of the Seven Gems — a free browser JRPG where you quest, battle, craft and build your own corner of Asteria-007.</p>
       </div>
       <div>
@@ -458,6 +466,7 @@
   <script src="js/systems.js" defer></script>
   <script src="js/battle.js" defer></script>
   <script src="js/render.js" defer></script>
+  <script src="js/coop.js" defer></script>
   <script src="game.js" defer></script>
   <script src="ads.js" defer></script>
 </body>

@@ -179,8 +179,20 @@
 
     function drawParty(cam) {
       const p = S().player;
+      const coopGuests = ctx.coopApi ? ctx.coopApi().state.guests : {};
+      const controlled = {};
+      Object.values(coopGuests).forEach(gu => { if (gu.actor) controlled[gu.char] = gu; });
       const companions = S().party.filter(c => c !== 'sean').slice(0, 4);
-      companions.forEach((c, i) => drawCharacter(c, p.x - cam.x - 26 * (i + 1), p.y - cam.y + 16 * (i + 1), 0, ''));
+      let trail = 0;
+      companions.forEach(c => {
+        const gu = controlled[c];
+        if (gu) {
+          drawCharacter(c, gu.actor.x - cam.x, gu.actor.y - cam.y, Math.floor(gu.actor.frame), gu.name);
+        } else {
+          trail += 1;
+          drawCharacter(c, p.x - cam.x - 26 * trail, p.y - cam.y + 16 * trail, 0, '');
+        }
+      });
       const frame = ctx.isMoving() ? (2 + p.frame % 2) : 0;
       drawCharacter('sean', p.x - cam.x, p.y - cam.y, frame, '');
     }
@@ -580,6 +592,108 @@
       g.font = '11px Nunito'; g.fillStyle = '#7a90a5'; g.fillText('Esc to put the rod away', 410, 354);
     }
 
+    /* ---------- party link (co-op) ---------- */
+    function drawPartyMenu() {
+      const coop = ctx.coopApi().state;
+      if (S().scene === 'party' && coop.mode !== 'guest') drawWorld();
+      else { g.fillStyle = '#0e2744'; g.fillRect(0, 0, GAME_W, GAME_H); }
+      panel(230, 90, 500, 360, 'rgba(255,255,255,.97)');
+      g.fillStyle = '#12365a'; g.font = 'bold 28px Nunito'; g.fillText('👥 Party Link', 268, 138);
+      g.font = '14px Nunito'; g.fillStyle = '#41576b';
+      wrapText('Play together online: the host shares a 6-letter code, friends join as Dave, Petroman, Ruush or Haraku. Friends walk, harvest and fight with their own skill. Progress saves with the host.', 268, 164, 430, 20);
+      if (!coop.mode) {
+        button(268, 268, 200, 42, 'Host a Party', () => ctx.coopApi().hostStart());
+        button(492, 268, 200, 42, 'Join a Party', () => {
+          const code = (window.prompt('Enter the 6-letter party code:') || '').trim().toUpperCase();
+          if (!/^[A-Z0-9]{6}$/.test(code)) { ctx.showToast('Codes are 6 letters/numbers, like MOON42.'); return; }
+          const name = (window.prompt('Your name?') || 'Friend').trim().slice(0, 16) || 'Friend';
+          ctx.coopApi().guestJoin(code, name);
+        });
+        if (coop.error) { g.fillStyle = '#a33d3d'; g.font = 'bold 13px Nunito'; wrapText(coop.error, 268, 336, 430, 18); }
+      } else if (coop.mode === 'host') {
+        g.fillStyle = '#0f6f31'; g.font = 'bold 16px Nunito'; g.fillText('Party is open — share this code:', 268, 262);
+        g.font = '900 44px Nunito'; g.fillStyle = '#12365a'; g.fillText(coop.code, 268, 310);
+        const guests = Object.values(coop.guests);
+        g.font = '14px Nunito'; g.fillStyle = '#41576b';
+        g.fillText(guests.length ? `In your party: ${guests.map(gu => `${gu.name} (${cap(gu.char)})`).join(', ')}` : 'Waiting for friends to join...', 268, 344);
+        button(268, 372, 160, 34, 'Close Party', () => ctx.coopApi().leave());
+        button(444, 372, 160, 34, 'Back to game', () => ctx.setScene('explore'));
+      } else {
+        g.font = 'bold 16px Nunito'; g.fillStyle = '#12365a';
+        g.fillText(`Joining ${coop.code}... (${coop.status})`, 268, 280);
+        button(268, 372, 160, 34, 'Cancel', () => ctx.coopApi().leave());
+      }
+      g.font = '12px Nunito'; g.fillStyle = '#7a90a5'; g.fillText('Esc closes this menu', 268, 432);
+    }
+
+    function drawCoopGuest() {
+      const api = ctx.coopApi();
+      const coop = api.state;
+      const r = coop.remote;
+      g.fillStyle = '#0e2744'; g.fillRect(0, 0, GAME_W, GAME_H);
+      if (!r || !coop.myChar) {
+        g.fillStyle = '#fff'; g.font = 'bold 22px Nunito';
+        g.fillText('Connecting to the host\'s world...', 320, 270);
+        return;
+      }
+      const m = ctx.maps()[r.mapId];
+      const me = coop.smoothed[coop.myChar] || coop.smoothed.sean || {x: 0, y: 0};
+      const cam = {
+        x: Math.max(0, Math.min(m.w * T - GAME_W, me.x - GAME_W / 2)),
+        y: Math.max(0, Math.min(m.h * T - GAME_H, me.y - GAME_H / 2))
+      };
+      const x0 = Math.floor(cam.x / T), y0 = Math.floor(cam.y / T);
+      for (let y = y0; y < Math.min(m.h, y0 + Math.ceil(GAME_H / T) + 2); y++) {
+        for (let x = x0; x < Math.min(m.w, x0 + Math.ceil(GAME_W / T) + 2); x++) {
+          ctx.drawTile(m.tileset, m.tiles[y][x], x * T - cam.x, y * T - cam.y);
+        }
+      }
+      const inactive = new Set(r.nodesInactive || []);
+      for (const node of m.nodes || []) {
+        const type = SSG.NODE_TYPES[node.kind];
+        g.save();
+        if (inactive.has(node.id)) g.globalAlpha = 0.22;
+        ctx.drawTile(type.sheet, type.tile, node.tx * T - cam.x, node.ty * T - cam.y);
+        g.restore();
+      }
+      for (const portal of m.portals) {
+        drawLabel(portal.label, portal.x - cam.x - 15, portal.y - cam.y - 10, '#ffffff');
+      }
+      (r.monsters || []).forEach(mon => drawMonster({...mon, maxHp: 1, hp: 1}, cam));
+      const seanPos = coop.smoothed.sean || r.sean;
+      drawCharacter('sean', seanPos.x - cam.x, seanPos.y - cam.y, r.sean.frame || 0, 'Sean (host)');
+      Object.entries(r.actors || {}).forEach(([char, actor]) => {
+        const pos = coop.smoothed[char] || actor;
+        drawCharacter(char, pos.x - cam.x, pos.y - cam.y, actor.frame || 0,
+          char === coop.myChar ? `${actor.name} (You)` : actor.name);
+      });
+      // guest HUD
+      panel(12, 12, 400, 58, 'rgba(255,255,255,.88)');
+      g.fillStyle = '#12365a'; g.font = 'bold 15px Nunito';
+      g.fillText(`You are ${cap(coop.myChar)} · Party Lv.${r.hero.level} · ${m.name}`, 26, 36);
+      bar(26, 44, 240, 11, r.hero.hp / r.hero.maxHp, '#ff5f7e', '#ffe6ea');
+      g.font = '11px Nunito'; g.fillText(`${r.hero.hp}/${r.hero.maxHp} party HP · coins ${r.hero.coins}`, 274, 54);
+      drawLabel('Move: WASD · E harvest · 1 battle skill · Esc leave party', 12, GAME_H - 30, '#d9f6ff');
+      if (r.battle) {
+        const bg = ctx.img[r.battle.bg];
+        if (bg && bg.complete && bg.naturalWidth) { g.drawImage(bg, 0, 0, GAME_W, GAME_H); g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(0, 0, GAME_W, GAME_H); }
+        else panel(60, 60, 840, 420, 'rgba(14,39,68,.92)');
+        const enemyImg = r.battle.enemy.kind === 'xelar' ? ctx.img.xelar : ctx.img[r.battle.enemy.kind];
+        if (enemyImg && enemyImg.complete) {
+          g.save();
+          if (r.battle.enemy.hue) g.filter = `hue-rotate(${r.battle.enemy.hue}deg)`;
+          g.drawImage(enemyImg, 620, 110, r.battle.enemy.boss ? 210 : 150, r.battle.enemy.boss ? 210 : 150);
+          g.restore();
+        }
+        g.fillStyle = '#fff'; g.font = 'bold 24px Nunito'; g.fillText(`⚔ ${r.battle.enemy.name}`, 96, 116);
+        bar(96, 130, 300, 18, r.battle.enemy.hp / r.battle.enemy.maxHp, '#ff5f7e', '#ffd3dc');
+        g.font = '13px Nunito';
+        r.battle.log.forEach((l, i) => { g.fillStyle = '#eafaff'; g.fillText(l, 96, 172 + i * 20); });
+        button(96, 380, 260, 44, `${api.mySkillLabel()} (1)`, () => api.guestBattleAction(), r.battle.turn === 'player');
+      }
+      if (r.toast) drawLabel(r.toast, 240, 90, '#fff4a9');
+    }
+
     /* ---------- main render ---------- */
     function render() {
       clickables.length = 0;
@@ -595,6 +709,8 @@
       else if (scene === 'shop') drawShop();
       else if (scene === 'build') drawBuild();
       else if (scene === 'fishing') drawFishing();
+      else if (scene === 'party') drawPartyMenu();
+      else if (scene === 'coopGuest') drawCoopGuest();
       else { drawWorld(); drawHud(); }
     }
 

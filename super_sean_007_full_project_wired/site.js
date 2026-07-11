@@ -48,4 +48,24 @@
   navLinks.forEach(link => {
     link.addEventListener('click', () => document.body.classList.remove('nav-open'));
   });
+
+  // Theater mode: game spans the full container, ads reflow below (still visible).
+  window.SSGTheater = () => {
+    const on = document.body.classList.toggle('theater');
+    const btn = document.getElementById('theaterBtn');
+    if (btn) btn.textContent = on ? '🖥 Normal' : '🖥 Theater';
+    const frame = document.getElementById('gameFrame');
+    if (frame) frame.scrollIntoView({behavior: 'smooth', block: on ? 'start' : 'center'});
+  };
+
+  // Fullscreen on the game frame (touch controls stay inside it).
+  window.SSGFullscreen = () => {
+    const frame = document.getElementById('gameFrame');
+    if (!frame) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      (frame.requestFullscreen || frame.webkitRequestFullscreen || (() => {})).call(frame);
+    }
+  };
 })();

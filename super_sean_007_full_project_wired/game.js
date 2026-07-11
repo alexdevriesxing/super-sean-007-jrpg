@@ -509,6 +509,16 @@
     exitBuild: () => { state.scene = 'explore'; AudioManager.playSfx('menu_open'); },
     adRevive: onSuccess => AdManager.showRewardedAd('revive', onSuccess),
     rebuildMaps: () => { maps = SSG.buildMaps(); },
+    canMoveTo: (x, y) => canMoveTo(x, y),
+    inputDir: () => {
+      let dx = 0, dy = 0;
+      if (keys.ArrowUp || keys.KeyW || activeTouches.up) dy -= 1;
+      if (keys.ArrowDown || keys.KeyS || activeTouches.down) dy += 1;
+      if (keys.ArrowLeft || keys.KeyA || activeTouches.left) dx -= 1;
+      if (keys.ArrowRight || keys.KeyD || activeTouches.right) dx += 1;
+      return {dx, dy};
+    },
+    coopApi: () => coop,
     saveSummary: () => saveSummary(),
     exportSave: () => exportSaveCode(),
     importSave: () => importSaveFlow(),
@@ -521,6 +531,7 @@
   const systems = SSG.createSystems(ctx);
   const battleApi = SSG.createBattle(ctx);
   const renderer = SSG.createRenderer(ctx);
+  const coop = SSG.createCoop(ctx);
 
   /* ---------------- world logic ---------------- */
   function blockedTile(map, tx, ty) {
@@ -635,6 +646,14 @@
   }
 
   function toggleScene(type) {
+    if (type === 'party') {
+      if (state.scene === 'party') { state.scene = coop.state.mode === 'guest' ? 'coopGuest' : 'explore'; return; }
+      if (['title', 'explore', 'coopGuest'].includes(state.scene)) {
+        state.scene = 'party';
+        AudioManager.playSfx('menu_open');
+      }
+      return;
+    }
     if (state.scene === type) { state.scene = 'explore'; return; }
     if (!['explore', 'inventory', 'quest', 'map', 'craft', 'shop', 'build'].includes(state.scene)) return;
     if (type === 'build') {
@@ -657,6 +676,8 @@
       if (f.life <= 0) fx.splice(i, 1);
     }
     if (state.scene !== 'title') state.playMinutes += dt / 60000;
+    coop.update(dt);
+    if (state.scene === 'coopGuest' || state.scene === 'party') return;
     if (state.scene === 'battle') { battleApi.update(); return; }
     if (state.scene === 'fishing') { systems.updateFishing(dt); return; }
     if (state.scene !== 'explore') return;
@@ -752,6 +773,11 @@
   window.addEventListener('keydown', e => {
     AudioManager.unlock();
     keys[e.code] = true;
+    // Stop arrows/space from scrolling the page while the game is on screen.
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.bottom > 60 && rect.top < window.innerHeight - 60) e.preventDefault();
+    }
     if (state.scene === 'title') {
       if (e.code === 'Enter') startGame();
       if (e.code === 'KeyN') resetGame();
@@ -764,6 +790,16 @@
     if (state.scene === 'fishing') {
       if (e.code === 'KeyE' || e.code === 'Enter' || e.code === 'Space') systems.castFishing();
       if (e.code === 'Escape') systems.cancelFishing();
+      return;
+    }
+    if (state.scene === 'coopGuest') {
+      if (e.code === 'KeyE') coop.guestInteract();
+      if (e.code === 'Digit1' || e.code === 'Space') coop.guestBattleAction();
+      if (e.code === 'Escape') coop.leave();
+      return;
+    }
+    if (state.scene === 'party') {
+      if (e.code === 'Escape') state.scene = coop.state.mode === 'guest' ? 'coopGuest' : 'explore';
       return;
     }
     if (state.scene === 'battle') {
@@ -873,6 +909,14 @@
       ngPlus: state.ngPlus || 0,
       fishing: state.scene === 'fishing' ? {pos: Number(systems.fishing.pos.toFixed(2))} : null,
       persistence: {savedAt: state.savedAt, playMinutes: Math.round(state.playMinutes), cloud: {enabled: CloudSync.enabled, status: CloudSync.status}},
+      coop: {
+        mode: coop.state.mode,
+        code: coop.state.code,
+        status: coop.state.status,
+        guests: Object.values(coop.state.guests).map(gu => ({char: gu.char, name: gu.name, connected: gu.dc?.readyState === 'open'})),
+        myChar: coop.state.myChar,
+        remoteMap: coop.state.remote?.mapId || null
+      },
       assets: {criticalImages: Object.keys(img).length, missingImages: runtime.assetWarnings, slicedFrames: runtime.slicedAssets?.frames?.length || 0},
       audio: AudioManager.status()
     };
@@ -919,7 +963,8 @@
         const q = SSG.MAIN_QUESTS.find(x => x.id === id);
         if (q) state.quest = {id: q.id, title: q.title, objective: q.objective, progress: 0};
       },
-      claimHomestead() { state.homestead.claimed = true; state.unlocked.homestead = true; }
+      claimHomestead() { state.homestead.claimed = true; state.unlocked.homestead = true; },
+      coop: () => coop
     }
   };
 

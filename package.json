@@ -8,9 +8,10 @@
     "dev": "npm run generate:audio && npm run slice:assets && vite --host 127.0.0.1",
     "build": "npm run generate:assets && vite build && node scripts/build-static.mjs && npm run validate",
     "preview": "vite preview --host 127.0.0.1",
-    "generate:assets": "npm run generate:audio && npm run slice:assets && npm run optimize:images",
+    "generate:assets": "npm run generate:audio && npm run slice:assets && npm run brand:assets && npm run optimize:images",
     "generate:audio": "node scripts/generate-audio.mjs",
     "slice:assets": "node scripts/slice-assets.mjs",
+    "brand:assets": "node scripts/generate-brand-assets.mjs",
     "optimize:images": "node scripts/optimize-web-images.mjs",
     "validate": "node scripts/validate-project.mjs"
   },
