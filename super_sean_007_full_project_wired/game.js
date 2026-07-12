@@ -65,10 +65,11 @@
   /* ---------------- managers ---------------- */
   const AssetManager = {
     async init() {
-      const [assetWiring, slicedAssets, mobManifest] = await Promise.all([
+      const [assetWiring, slicedAssets, mobManifest, objectManifest] = await Promise.all([
         fetchJson('data/asset-wiring.json'),
         fetchJson('data/sliced-assets.json'),
-        fetchJson('data/mob-manifest.json')
+        fetchJson('data/mob-manifest.json'),
+        fetchJson('data/object-manifest.json')
       ]);
       runtime.assetWiring = assetWiring || {};
       runtime.slicedAssets = slicedAssets || {sheets: {}, frames: []};
@@ -79,6 +80,10 @@
       // Distinct sliced creature/NPC sprites, loaded under their manifest name.
       if (mobManifest?.sprites) {
         mobManifest.sprites.forEach(name => { list[name] = `${mobManifest.base}${name}.png`; });
+      }
+      // Detailed building / landmark sprites for the homestead.
+      if (objectManifest?.sprites) {
+        objectManifest.sprites.forEach(name => { list[name] = `${objectManifest.base}${name}.png`; });
       }
       await this.preloadImages(list);
     },

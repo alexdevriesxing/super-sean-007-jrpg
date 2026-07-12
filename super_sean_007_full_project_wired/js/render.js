@@ -118,13 +118,30 @@
       drawParty(cam);
     }
 
+    // Draw a detailed building sprite bottom-anchored on a tile, taller than one tile.
+    function drawBillboard(sprite, tileX, tileY, size = 100) {
+      const im = ctx.img[sprite];
+      if (!im || !im.complete || !im.naturalWidth) return false;
+      g.save();
+      g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 8; g.shadowOffsetY = 4;
+      g.drawImage(im, tileX + T / 2 - size / 2, tileY + T - size + 6, size, size);
+      g.restore();
+      return true;
+    }
+
     function drawHomesteadOverlays(m, cam) {
       const hs = S().homestead;
+      // Draw flat tile pieces first, then billboards sorted by y so nearer ones overlap.
+      const billboards = [];
       Object.entries(hs.tiles).forEach(([key, pieceId]) => {
         const piece = SSG.BUILD_PIECES.find(p => p.id === pieceId);
         if (!piece) return;
         const [tx, ty] = key.split(',').map(Number);
+        if (piece.billboard) { billboards.push({piece, tx, ty}); return; }
         ctx.drawTile(piece.sheet, piece.tile, tx * T - cam.x, ty * T - cam.y);
+      });
+      billboards.sort((a, b) => a.ty - b.ty).forEach(({piece, tx, ty}) => {
+        drawBillboard(piece.sprite, tx * T - cam.x, ty * T - cam.y);
       });
       Object.entries(S().crops).forEach(([key, crop]) => {
         const [tx, ty] = key.split(',').map(Number);
@@ -536,7 +553,8 @@
       const cx = tx * T - cam.x, cy = ty * T - cam.y;
       if (!build.removeMode && piece) {
         g.save(); g.globalAlpha = 0.6;
-        ctx.drawTile(piece.sheet, piece.tile, cx, cy);
+        if (piece.billboard) drawBillboard(piece.sprite, cx, cy);
+        else ctx.drawTile(piece.sheet, piece.tile, cx, cy);
         g.restore();
       }
       g.save();
@@ -546,20 +564,34 @@
       // palette
       panel(8, 386, 944, 146, 'rgba(13,37,63,.92)');
       SSG.BUILD_CATEGORIES.forEach((catName, i) => {
-        const x = 22 + i * 128;
-        button(x, 396, 120, 24, catName, () => { build.cat = i; build.idx = 0; }, build.cat !== i);
+        const x = 18 + i * 116;
+        button(x, 396, 110, 24, catName, () => { build.cat = i; build.idx = 0; }, build.cat !== i);
       });
       const pieces = sys().piecesInCategory(SSG.BUILD_CATEGORIES[build.cat]);
-      pieces.forEach((p, i) => {
-        const x = 22 + i * 88, y = 428;
+      // Scrolling window of up to 10 tiles, centred on the selected piece.
+      const perPage = 10, y = 428;
+      const start = Math.max(0, Math.min(build.idx - 4, Math.max(0, pieces.length - perPage)));
+      const shown = pieces.slice(start, start + perPage);
+      if (start > 0) { g.fillStyle = '#7cecff'; g.font = 'bold 20px Nunito'; g.fillText('‹', 10, y + 38); }
+      if (start + perPage < pieces.length) { g.fillStyle = '#7cecff'; g.font = 'bold 20px Nunito'; g.fillText('›', 936, y + 38); }
+      shown.forEach((p, j) => {
+        const i = start + j;
+        const x = 26 + j * 90;
         g.fillStyle = i === build.idx ? 'rgba(124,236,255,.35)' : 'rgba(255,255,255,.10)';
         g.beginPath(); g.roundRect(x, y, 82, 58, 8); g.fill();
         if (i === build.idx) { g.strokeStyle = '#7cecff'; g.lineWidth = 2; g.stroke(); }
-        ctx.drawTileScaled(p.sheet, p.tile, x + 25, y + 4, 32, 32);
+        if (p.billboard) {
+          const im = ctx.img[p.sprite];
+          if (im && im.complete) g.drawImage(im, x + 18, y + 2, 46, 46);
+        } else {
+          ctx.drawTileScaled(p.sheet, p.tile, x + 25, y + 4, 32, 32);
+        }
         g.fillStyle = '#fff'; g.font = '10px Nunito';
-        g.fillText(p.name.slice(0, 14), x + 5, y + 50);
+        g.fillText(p.name.slice(0, 14), x + 5, y + 52);
         hotspot(x, y, 82, 58, () => { build.idx = i; build.removeMode = false; });
       });
+      g.fillStyle = '#9fc4dd'; g.font = '10px Nunito';
+      g.fillText(`${build.idx + 1}/${pieces.length}  ·  [ ] to scroll`, 400, 424);
       const info = piece ? `${piece.name} — ${sys().costText(piece.cost)} · Comfort +${piece.comfort}` : '';
       g.fillStyle = '#d9f6ff'; g.font = 'bold 12px Nunito';
       g.fillText(build.removeMode ? 'REMOVE MODE — click or Enter on a piece to refund it' : info, 22, 505);

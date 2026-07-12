@@ -15,7 +15,35 @@
   'use strict';
   window.SSG = window.SSG || {};
 
-  SSG.BUILD_CATEGORIES = ['Floors', 'Walls & Roofs', 'Fences', 'Garden', 'Water', 'Decor', 'Stations'];
+  SSG.BUILD_CATEGORIES = ['Floors', 'Walls & Roofs', 'Fences', 'Garden', 'Water', 'Decor', 'Stations', 'Landmarks'];
+
+  // Detailed building sprites placed as billboard decor (drawn larger than one tile,
+  // bottom-anchored). Rendered from data/object-manifest.json sprites via ctx.img.
+  SSG.LANDMARKS = [
+    {id:'lm_cottage',    name:'Cottage',      sprite:'obj_cottage',       cost:{'Plank':6,'Stone Brick':4}, comfort:8},
+    {id:'lm_cottage2',   name:'Green Cottage',sprite:'obj_cottage_green', cost:{'Plank':6,'Stone Brick':4}, comfort:8},
+    {id:'lm_inn',        name:'Inn',          sprite:'obj_inn',           cost:{'Plank':8,'Stone Brick':5}, comfort:10},
+    {id:'lm_tavern',     name:'Tavern',       sprite:'obj_tavern',        cost:{'Plank':8,'Stone Brick':5}, comfort:10},
+    {id:'lm_bakery',     name:'Bakery',       sprite:'obj_bakery',        cost:{'Plank':7,'Berry':4}, comfort:9},
+    {id:'lm_fishshop',   name:'Fish Shop',    sprite:'obj_fishshop',      cost:{'Plank':7,'Stone':4}, comfort:9},
+    {id:'lm_weaponshop', name:'Weapon Shop',  sprite:'obj_weaponshop',    cost:{'Plank':7,'Ore Chunk':3}, comfort:9},
+    {id:'lm_blacksmith', name:'Blacksmith',   sprite:'obj_blacksmith',    cost:{'Stone Brick':6,'Ore Chunk':4}, comfort:10},
+    {id:'lm_carpenter',  name:'Carpenter',    sprite:'obj_carpenter',     cost:{'Plank':8,'Wood':6}, comfort:9},
+    {id:'lm_barn',       name:'Barn',         sprite:'obj_barn',          cost:{'Wood':8,'Plank':4}, comfort:8},
+    {id:'lm_windmill',   name:'Windmill',     sprite:'obj_windmill',      cost:{'Plank':8,'Stone':5}, comfort:11},
+    {id:'lm_guild',      name:'Adventurer Guild', sprite:'obj_guild',     cost:{'Stone Brick':8,'Plank':6}, comfort:12},
+    {id:'lm_watchtower', name:'Watchtower',   sprite:'obj_watchtower',    cost:{'Stone Brick':7,'Ore Chunk':3}, comfort:10},
+    {id:'lm_castlegate', name:'Castle Gate',  sprite:'obj_castle_gate',   cost:{'Stone Brick':12,'Ore Chunk':4}, comfort:16},
+    {id:'lm_castlekeep', name:'Grand Keep',   sprite:'obj_castle_keep',   cost:{'Stone Brick':14,'Crystal Shard':4}, comfort:18},
+    {id:'lm_church',     name:'Chapel',       sprite:'obj_church',        cost:{'Stone Brick':9,'Flower':6}, comfort:12},
+    {id:'lm_wizardtower',name:'Wizard Tower', sprite:'obj_wizardtower',   cost:{'Stone Brick':10,'Moon Herb':5,'Crystal Shard':3}, comfort:15},
+    {id:'lm_treehouse',  name:'Treehouse',    sprite:'obj_treehouse',     cost:{'Wood':12,'Flower':4}, comfort:11},
+    {id:'lm_mushroomhut',name:'Mushroom Hut', sprite:'obj_mushroomhut',   cost:{'Mushroom Cap':8,'Wood':6}, comfort:11},
+    {id:'lm_snowlodge',  name:'Snow Lodge',   sprite:'obj_snowlodge',     cost:{'Plank':8,'Stone':5}, comfort:10},
+    {id:'lm_fountain',   name:'Fountain',     sprite:'obj_fountain',      cost:{'Stone Brick':6,'Crystal Shard':2}, comfort:12},
+    {id:'lm_gazebo',     name:'Gazebo',       sprite:'obj_gazebo',        cost:{'Plank':6,'Stone Brick':4}, comfort:10},
+    {id:'lm_well',       name:'Stone Well',   sprite:'obj_well',          cost:{'Stone Brick':5,'Wood':3}, comfort:7}
+  ].map(p => ({...p, cat:'Landmarks', billboard:true, solid:true}));
 
   // solid: blocks walking. comfort: homestead score. cost: materials per tile.
   SSG.BUILD_PIECES = [
@@ -69,6 +97,9 @@
     {id:'bed',       name:'Dream Bed',      cat:'Stations', sheet:'moon',     tile:4,  solid:true, cost:{'Plank':3,'Flower':2}, comfort:5, station:'bed'},
     {id:'storage',   name:'Storage Chest',  cat:'Stations', sheet:'birthday', tile:20, solid:true, cost:{'Plank':2,'Stone':1}, comfort:2, station:'storage'}
   ];
+
+  // Detailed billboard landmarks join the piece list so build/comfort systems find them.
+  SSG.BUILD_PIECES.push(...SSG.LANDMARKS);
 
   // Blueprint grids use piece ids; null = leave tile untouched.
   const C = 'cottagedoor', W = 'woodwall', R = 'redroof', P = 'plankfloor',

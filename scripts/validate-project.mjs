@@ -100,6 +100,13 @@ if (mobManifest?.sprites) {
   }
 }
 
+const objectManifest = await readJson('data/object-manifest.json');
+if (objectManifest?.sprites) {
+  for (const name of objectManifest.sprites) {
+    await expectFile(`${objectManifest.base}${name}.png`);
+  }
+}
+
 await expectFile('index.html', distRoot);
 await expectFile('js/systems.js', distRoot);
 await expectFile('js/coop.js', distRoot);
@@ -110,6 +117,8 @@ await expectFile('sw.js', distRoot);
 await expectFile('stats.html', distRoot);
 await expectFile('privacy.html', distRoot);
 await expectFile('assets/sliced/mobs/boss_sorceress.png', distRoot);
+await expectFile('assets/sliced/objects/obj_tavern.png', distRoot);
+await expectFile('data/object-manifest.json', distRoot);
 await expectFile('assets/audio/music/title-theme.wav', distRoot);
 await expectFile('assets/audio/music/boss-loop.wav', distRoot);
 await expectFile('assets/sliced/characters/sean/frame_00.png', distRoot);

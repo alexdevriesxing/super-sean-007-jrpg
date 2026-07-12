@@ -1,0 +1,28 @@
+{
+  "base": "assets/sliced/objects/",
+  "sprites": [
+    "obj_inn",
+    "obj_tavern",
+    "obj_bakery",
+    "obj_weaponshop",
+    "obj_fishshop",
+    "obj_cottage",
+    "obj_cottage_green",
+    "obj_blacksmith",
+    "obj_carpenter",
+    "obj_barn",
+    "obj_windmill",
+    "obj_guild",
+    "obj_watchtower",
+    "obj_castle_keep",
+    "obj_church",
+    "obj_wizardtower",
+    "obj_snowlodge",
+    "obj_treehouse",
+    "obj_mushroomhut",
+    "obj_fountain",
+    "obj_gazebo",
+    "obj_castle_gate",
+    "obj_well"
+  ]
+}

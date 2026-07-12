@@ -28,13 +28,24 @@ test('every recipe output and input references a real item', () => {
   }
 });
 
-test('every build piece cost references a real item and has a tile', () => {
+test('every build piece has a renderable source, valid category, and real costs', () => {
   for (const p of SSG.BUILD_PIECES) {
-    assert.ok(typeof p.tile === 'number', `piece ${p.id} has a tile index`);
+    // Tile pieces have a sheet+tile index; billboard landmarks have a sprite name.
+    const renderable = typeof p.tile === 'number' || (p.billboard && typeof p.sprite === 'string');
+    assert.ok(renderable, `piece ${p.id} has a tile index or billboard sprite`);
     assert.ok(SSG.BUILD_CATEGORIES.includes(p.cat), `piece ${p.id} category valid`);
     for (const item of Object.keys(p.cost)) {
       assert.ok(SSG.ITEMS[item], `piece ${p.id} cost item ${item} exists`);
     }
+  }
+});
+
+test('every landmark sprite is listed in the object manifest', async () => {
+  const fs = await import('node:fs/promises');
+  const manifest = JSON.parse(await fs.readFile('super_sean_007_full_project_wired/data/object-manifest.json', 'utf8'));
+  const known = new Set(manifest.sprites);
+  for (const p of SSG.BUILD_PIECES.filter(x => x.billboard)) {
+    assert.ok(known.has(p.sprite), `landmark ${p.id} sprite ${p.sprite} in manifest`);
   }
 });
 
