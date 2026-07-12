@@ -16,6 +16,25 @@
     "npc_elder_man",
     "npc_elder_woman",
     "npc_innkeeper",
-    "npc_child"
+    "npc_child",
+    "mob_cave_lizard",
+    "mob_bog_toad",
+    "mob_moss_crab",
+    "mob_glow_wormling",
+    "mob_thorn_boar",
+    "mob_acorn_sprite",
+    "mob_owlbear",
+    "mob_fox_spirit",
+    "mob_skeleton_pup",
+    "mob_ghost_wisp",
+    "mob_cursed_doll",
+    "mob_bone_beetle",
+    "mob_batling",
+    "mob_fairy_moth",
+    "mob_crow_imp",
+    "mob_griffin",
+    "mob_skull_knight",
+    "mob_goblin_brute",
+    "mob_lizard_guard"
   ]
 }

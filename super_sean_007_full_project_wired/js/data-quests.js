@@ -155,6 +155,18 @@
     pip: [
       'When I grow up I want a castle with nine spires and a mushroom moat!',
       'Race you to the fountain! ...Later. After snacks.'
+    ],
+    farmer_gil: [
+      'These fields feed the whole valley. Rain\'s been kind this season.',
+      'Build some Tilled Soil at your homestead — nothing beats homegrown berries!'
+    ],
+    baker_tom: [
+      'Grandma Berrybun\'s teaching me the seven-gem sponge cake. It\'s... structurally ambitious.',
+      'Bring mushrooms and I\'ll trade you a fresh loaf someday. Someday.'
+    ],
+    timmy: [
+      'Did you really fight a bald wizard? Was he SHINY?',
+      'I found a shortcut behind the pond. Probably. I got a bit lost.'
     ]
   };
 })();

@@ -105,7 +105,32 @@ const JOBS = [
   [NPCS, [126, 572, 145, 182], 'npc_elder_man'],
   [NPCS, [478, 572, 145, 182], 'npc_elder_woman'],
   [NPCS, [822, 566, 145, 188], 'npc_innkeeper'],
-  [NPCS, [1166, 582, 140, 172], 'npc_child']
+  [NPCS, [1166, 582, 140, 172], 'npc_child'],
+
+  // Cave & Swamp creatures (4-col template, idle row)
+  ['spritesheets/cave_en_moeras_wezens_sprite_sheet.png', [88, 150, 130, 122], 'mob_cave_lizard'],
+  ['spritesheets/cave_en_moeras_wezens_sprite_sheet.png', [430, 150, 130, 122], 'mob_bog_toad'],
+  ['spritesheets/cave_en_moeras_wezens_sprite_sheet.png', [772, 150, 132, 122], 'mob_moss_crab'],
+  ['spritesheets/cave_en_moeras_wezens_sprite_sheet.png', [1108, 150, 132, 122], 'mob_glow_wormling'],
+  // Forest Beasts & Critters
+  ['spritesheets/bosdieren_en_wezentjes_spriteblad.png', [88, 150, 132, 122], 'mob_thorn_boar'],
+  ['spritesheets/bosdieren_en_wezentjes_spriteblad.png', [430, 150, 128, 122], 'mob_acorn_sprite'],
+  ['spritesheets/bosdieren_en_wezentjes_spriteblad.png', [772, 150, 132, 122], 'mob_owlbear'],
+  ['spritesheets/bosdieren_en_wezentjes_spriteblad.png', [1108, 150, 134, 122], 'mob_fox_spirit'],
+  // Undead & Cursed creatures
+  ['spritesheets/ondode_en_vervloekte_wezens_overzicht.png', [88, 150, 128, 122], 'mob_skeleton_pup'],
+  ['spritesheets/ondode_en_vervloekte_wezens_overzicht.png', [430, 150, 126, 122], 'mob_ghost_wisp'],
+  ['spritesheets/ondode_en_vervloekte_wezens_overzicht.png', [772, 150, 128, 122], 'mob_cursed_doll'],
+  ['spritesheets/ondode_en_vervloekte_wezens_overzicht.png', [1108, 150, 140, 122], 'mob_bone_beetle'],
+  // Flying Creatures & Fae (subtitle line pushes idle row down ~35px)
+  ['spritesheets/vliegende_wezens_en_fae_spritesheet.png', [88, 186, 132, 120], 'mob_batling'],
+  ['spritesheets/vliegende_wezens_en_fae_spritesheet.png', [430, 186, 132, 120], 'mob_fairy_moth'],
+  ['spritesheets/vliegende_wezens_en_fae_spritesheet.png', [772, 186, 130, 120], 'mob_crow_imp'],
+  ['spritesheets/vliegende_wezens_en_fae_spritesheet.png', [1108, 186, 140, 120], 'mob_griffin'],
+  // Xelar Monster Soldiers (3-col layout, subtitle)
+  ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [90, 156, 150, 122], 'mob_skull_knight'],
+  ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [510, 156, 150, 122], 'mob_goblin_brute'],
+  ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [946, 156, 190, 122], 'mob_lizard_guard']
 ];
 
 for (const [sheet, box, name] of JOBS) {

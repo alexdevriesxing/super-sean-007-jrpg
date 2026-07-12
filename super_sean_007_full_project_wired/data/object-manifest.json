@@ -23,6 +23,18 @@
     "obj_fountain",
     "obj_gazebo",
     "obj_castle_gate",
-    "obj_well"
+    "obj_well",
+    "deco_deadtree",
+    "deco_crystalblue",
+    "deco_statue",
+    "deco_crystalpurple",
+    "deco_campfire",
+    "deco_tree",
+    "deco_rocks",
+    "deco_lamp",
+    "deco_flowerpot",
+    "deco_signpost",
+    "deco_marketstall",
+    "deco_bush"
   ]
 }

@@ -98,8 +98,24 @@
     {id:'storage',   name:'Storage Chest',  cat:'Stations', sheet:'birthday', tile:20, solid:true, cost:{'Plank':2,'Stone':1}, comfort:2, station:'storage'}
   ];
 
-  // Detailed billboard landmarks join the piece list so build/comfort systems find them.
-  SSG.BUILD_PIECES.push(...SSG.LANDMARKS);
+  // Detailed billboard decor props (smaller than landmarks; drawn at bsize).
+  SSG.DECOR = [
+    {id:'dc_tree',        name:'Shade Tree',    sprite:'deco_tree',         cost:{'Wood':3}, comfort:3},
+    {id:'dc_deadtree',    name:'Old Tree',      sprite:'deco_deadtree',     cost:{'Wood':2}, comfort:2},
+    {id:'dc_flowerpot',   name:'Flower Pot',    sprite:'deco_flowerpot',    cost:{'Flower':2,'Wood':1}, comfort:3},
+    {id:'dc_marketstall', name:'Market Stall',  sprite:'deco_marketstall',  cost:{'Plank':3,'Berry':2}, comfort:5},
+    {id:'dc_bush',        name:'Round Bush',    sprite:'deco_bush',         cost:{'Wood':1,'Flower':1}, comfort:2},
+    {id:'dc_lamp',        name:'Iron Lantern',  sprite:'deco_lamp',         cost:{'Ore Chunk':1,'Crystal Shard':1}, comfort:3},
+    {id:'dc_signpost',    name:'Signpost',      sprite:'deco_signpost',     cost:{'Plank':1}, comfort:1},
+    {id:'dc_statue',      name:'Hero Statue',   sprite:'deco_statue',       cost:{'Stone Brick':3}, comfort:5},
+    {id:'dc_campfire',    name:'Campfire',      sprite:'deco_campfire',     cost:{'Wood':2,'Stone':1}, comfort:3},
+    {id:'dc_crystalblue', name:'Blue Crystal',  sprite:'deco_crystalblue',  cost:{'Crystal Shard':2}, comfort:4},
+    {id:'dc_crystalpurple',name:'Moon Crystal', sprite:'deco_crystalpurple',cost:{'Crystal Shard':1,'Moon Herb':1}, comfort:4},
+    {id:'dc_rocks',       name:'Rock Pile',     sprite:'deco_rocks',        cost:{'Stone':2}, comfort:1}
+  ].map(p => ({...p, cat:'Decor', billboard:true, bsize:64, solid:true}));
+
+  // Detailed billboard landmarks + decor join the piece list so build/comfort systems find them.
+  SSG.BUILD_PIECES.push(...SSG.LANDMARKS, ...SSG.DECOR);
 
   // Blueprint grids use piece ids; null = leave tile untouched.
   const C = 'cottagedoor', W = 'woodwall', R = 'redroof', P = 'plankfloor',

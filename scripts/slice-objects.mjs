@@ -94,7 +94,20 @@ const JOBS = [
   [B, [1030, 590, 110, 116], 'obj_fountain'],
   [B, [1332, 590, 106, 120], 'obj_gazebo'],
   [B, [132, 928, 90, 100], 'obj_castle_gate'],
-  [B, [928, 930, 98, 100], 'obj_well']
+  [B, [928, 930, 98, 100], 'obj_well'],
+  // Small decorative props (bottom prop rows) — names match the sliced content
+  [B, [1382, 1024, 54, 62], 'deco_deadtree'],
+  [B, [348, 1026, 50, 60], 'deco_crystalblue'],
+  [B, [4, 1024, 58, 62], 'deco_statue'],
+  [B, [426, 1026, 50, 58], 'deco_crystalpurple'],
+  [B, [606, 1026, 56, 60], 'deco_campfire'],
+  [B, [754, 1028, 52, 56], 'deco_tree'],
+  [B, [1224, 1018, 58, 68], 'deco_rocks'],
+  [B, [1040, 1016, 62, 70], 'deco_lamp'],
+  [B, [868, 1016, 62, 70], 'deco_flowerpot'],
+  [B, [1382, 932, 52, 60], 'deco_signpost'],
+  [B, [1190, 996, 60, 54], 'deco_marketstall'],
+  [B, [1340, 998, 56, 52], 'deco_bush']
 ];
 
 for (const [sheet, box, name] of JOBS) {

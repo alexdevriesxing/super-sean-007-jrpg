@@ -112,7 +112,10 @@
       {id:'berrybun', name:'Grandma Berrybun', char:'haraku', sprite:'npc_elder_woman', x:17*T+20, y:7*T+10, role:'Baker of heroic cake'},
       {id:'bobo', name:'Bobo Merchant', char:'ruush', sprite:'npc_innkeeper', x:4*T+32, y:14*T+20, role:'Shopkeeper — press E to trade', shop:true},
       {id:'mila', name:'Mila', char:'haraku', sprite:'npc_village_girl', x:25*T, y:11*T, role:'Pond dreamer'},
-      {id:'pip', name:'Pip', char:'ruush', sprite:'npc_child', x:13*T, y:12*T+30, role:'Future castle owner'}
+      {id:'pip', name:'Pip', char:'ruush', sprite:'npc_child', x:13*T, y:12*T+30, role:'Future castle owner'},
+      {id:'farmer_gil', name:'Farmer Gil', char:'dave', sprite:'npc_farmer', x:20*T, y:16*T, role:'Grows the valley\'s vegetables'},
+      {id:'baker_tom', name:'Baker Tom', char:'dave', sprite:'npc_baker', x:18*T, y:6*T, role:'Apprentice baker'},
+      {id:'timmy', name:'Timmy', char:'ruush', sprite:'npc_village_boy', x:8*T, y:12*T, role:'Village kid'}
     ];
     m.chests = [
       {id:'village_chest', x:7*T, y:15*T, reward:{coins:25, item:'Berry Juice'}, label:'Village chest'},
@@ -169,8 +172,8 @@
     mon(m, {id:'slime1', kind:'slime', name:'Slime Sprout', x:11*T, y:8*T, hp:36, atk:7, xp:10, coins:5});
     mon(m, {id:'slime2', kind:'slime', name:'Slime Sprout', x:17*T, y:11*T, hp:36, atk:7, xp:10, coins:5});
     mon(m, {id:'slime3', kind:'slime', name:'Slime Sprout', x:9*T, y:15*T, hp:36, atk:7, xp:10, coins:5});
-    mon(m, {id:'mush1', kind:'mushroom', name:'Grumpy Mushroom', x:21*T, y:14*T, hp:58, atk:9, xp:18, coins:10});
-    mon(m, {id:'bat1', kind:'bat', name:'Leaf Bat', x:26*T, y:10*T, hp:42, atk:8, xp:14, coins:7});
+    mon(m, {id:'mush1', kind:'mushroom', name:'Grumpy Mushroom', x:21*T, y:14*T, hp:58, atk:9, xp:18, coins:10, sprite:'mob_acorn_sprite'});
+    mon(m, {id:'bat1', kind:'bat', name:'Leaf Bat', x:26*T, y:10*T, hp:42, atk:8, xp:14, coins:7, sprite:'mob_batling'});
     mon(m, {id:'moldor', kind:'mushroom', name:'Moldor the Mushroom Grump', x:30*T, y:4*T, hp:130, atk:13, xp:55, coins:35, boss:true, sprite:'mob_moss_troll'});
     m.chests = [
       {id:'meadow_chest_a', x:13*T, y:4*T, reward:{coins:35, item:'Crystal Candy'}, label:'Hidden meadow chest'},
@@ -198,8 +201,8 @@
     node(m, 'ore', 6, 13); node(m, 'ore', 15, 4); node(m, 'ore', 26, 11); node(m, 'ore', 11, 15);
     node(m, 'rock', 17, 12);
     mon(m, {id:'crystal1', kind:'crystal', name:'Crystal Spider', x:10*T, y:7*T, hp:86, atk:14, xp:32, coins:25, sprite:'mob_cave_spider'});
-    mon(m, {id:'rockslime', kind:'slime', name:'Rock Slime', x:14*T, y:11*T, hp:70, atk:12, xp:26, coins:18, hue:180});
-    mon(m, {id:'cavebat', kind:'bat', name:'Cave Bat', x:22*T, y:8*T, hp:64, atk:13, xp:28, coins:20, hue:220});
+    mon(m, {id:'rockslime', kind:'slime', name:'Rock Slime', x:14*T, y:11*T, hp:70, atk:12, xp:26, coins:18, hue:180, sprite:'mob_cave_lizard'});
+    mon(m, {id:'cavebat', kind:'bat', name:'Cave Bat', x:22*T, y:8*T, hp:64, atk:13, xp:28, coins:20, hue:220, sprite:'mob_glow_wormling'});
     mon(m, {id:'guardian', kind:'crystal', name:'Cracked Crystal Guardian', x:26*T, y:9*T, hp:190, atk:18, xp:85, coins:70, boss:true, sprite:'mob_crystal_golem'});
     m.chests = [{id:'cave_chest', x:20*T, y:3*T, reward:{coins:70, item:'Guardian Shard'}, label:'Glowing crystal chest'}];
     m.digSpots = [[5, 5], [22, 12], [14, 8]];
@@ -222,8 +225,8 @@
     node(m, 'gear', 4, 5); node(m, 'gear', 19, 12); node(m, 'gear', 29, 16); node(m, 'gear', 8, 15);
     node(m, 'scrap', 14, 6); node(m, 'scrap', 25, 4); node(m, 'scrap', 30, 10);
     node(m, 'rock', 20, 16); node(m, 'rock', 5, 11);
-    mon(m, {id:'oilslime', kind:'slime', name:'Oil Slime', x:12*T, y:11*T, hp:95, atk:16, xp:38, coins:26, hue:260});
-    mon(m, {id:'rustbat', kind:'bat', name:'Rust Bat', x:20*T, y:6*T, hp:88, atk:17, xp:40, coins:28, hue:30});
+    mon(m, {id:'oilslime', kind:'slime', name:'Oil Slime', x:12*T, y:11*T, hp:95, atk:16, xp:38, coins:26, hue:260, sprite:'mob_bog_toad'});
+    mon(m, {id:'rustbat', kind:'bat', name:'Rust Bat', x:20*T, y:6*T, hp:88, atk:17, xp:40, coins:28, hue:30, sprite:'mob_crow_imp'});
     mon(m, {id:'gearGolem', kind:'crystal', name:'Gear Golem', x:26*T, y:12*T, hp:120, atk:19, xp:48, coins:34, hue:60, sprite:'mob_crystal_golem'});
     mon(m, {id:'petro_titan', kind:'crystal', name:'Petro Titan', x:30*T, y:5*T, hp:260, atk:23, xp:120, coins:110, boss:true, hue:40, sprite:'mob_thunder_wyvern'});
     m.chests = [{id:'petro_chest', x:9*T, y:17*T, reward:{coins:60, item:'Crystal Candy'}, label:'Rusted supply chest'}];
@@ -246,9 +249,9 @@
     node(m, 'pine', 5, 5); node(m, 'pine', 9, 12); node(m, 'pine', 18, 7); node(m, 'pine', 24, 15); node(m, 'pine', 28, 5);
     node(m, 'logpile', 7, 16); node(m, 'logpile', 21, 11); node(m, 'logpile', 30, 12);
     node(m, 'mushroom', 16, 14); node(m, 'flower', 26, 9); node(m, 'berry', 10, 3);
-    mon(m, {id:'mossslime', kind:'slime', name:'Moss Slime', x:8*T, y:9*T, hp:120, atk:19, xp:50, coins:32, hue:90});
-    mon(m, {id:'woodshroom', kind:'mushroom', name:'Barkcap Bruiser', x:19*T, y:12*T, hp:150, atk:21, xp:58, coins:38, hue:40});
-    mon(m, {id:'forestbat', kind:'bat', name:'Forest Bat', x:25*T, y:7*T, hp:110, atk:20, xp:52, coins:34, hue:120});
+    mon(m, {id:'mossslime', kind:'slime', name:'Moss Slime', x:8*T, y:9*T, hp:120, atk:19, xp:50, coins:32, hue:90, sprite:'mob_thorn_boar'});
+    mon(m, {id:'woodshroom', kind:'mushroom', name:'Barkcap Bruiser', x:19*T, y:12*T, hp:150, atk:21, xp:58, coins:38, hue:40, sprite:'mob_owlbear'});
+    mon(m, {id:'forestbat', kind:'bat', name:'Forest Bat', x:25*T, y:7*T, hp:110, atk:20, xp:52, coins:34, hue:120, sprite:'mob_fox_spirit'});
     mon(m, {id:'treeguard', kind:'mushroom', name:'Elder Treeguard', x:30*T, y:16*T, hp:320, atk:26, xp:150, coins:130, boss:true, hue:100, sprite:'boss_bonedragon'});
     m.chests = [{id:'ruush_chest', x:15*T, y:17*T, reward:{coins:80, item:'Mushroom Stew'}, label:'Mossy chest'}];
     m.npcs = [
@@ -275,9 +278,9 @@
     scatter(m, rng, [4], 4);
     node(m, 'moonherb', 4, 4); node(m, 'moonherb', 22, 5); node(m, 'moonherb', 7, 13); node(m, 'moonherb', 19, 14); node(m, 'moonherb', 24, 11);
     node(m, 'rock', 9, 9);
-    mon(m, {id:'starslime', kind:'slime', name:'Star Slime', x:8*T, y:6*T, hp:150, atk:23, xp:65, coins:42, hue:300});
-    mon(m, {id:'moonbat', kind:'bat', name:'Moon Bat', x:20*T, y:9*T, hp:140, atk:24, xp:68, coins:44, hue:280});
-    mon(m, {id:'voidcrystal', kind:'crystal', name:'Void Crystal', x:12*T, y:12*T, hp:170, atk:26, xp:72, coins:48, hue:260});
+    mon(m, {id:'starslime', kind:'slime', name:'Star Slime', x:8*T, y:6*T, hp:150, atk:23, xp:65, coins:42, hue:300, sprite:'mob_fairy_moth'});
+    mon(m, {id:'moonbat', kind:'bat', name:'Moon Bat', x:20*T, y:9*T, hp:140, atk:24, xp:68, coins:44, hue:280, sprite:'mob_griffin'});
+    mon(m, {id:'voidcrystal', kind:'crystal', name:'Void Crystal', x:12*T, y:12*T, hp:170, atk:26, xp:72, coins:48, hue:260, sprite:'mob_ghost_wisp'});
     mon(m, {id:'lunar_shade', kind:'xelar', name:'The Lunar Shade', x:24*T, y:3*T, hp:380, atk:30, xp:180, coins:160, boss:true, hue:200, sprite:'boss_gemreaper'});
     m.chests = [{id:'moon_chest', x:3*T, y:15*T, reward:{coins:90, item:'Moonfruit Seed'}, label:'Starlit chest'}];
     m.npcs = [
@@ -304,9 +307,9 @@
     scatter(m, rng, [7], 5);
     node(m, 'relic', 4, 15); node(m, 'relic', 14, 5); node(m, 'relic', 26, 14); node(m, 'relic', 20, 12);
     node(m, 'rock', 9, 14); node(m, 'ore', 27, 4);
-    mon(m, {id:'relicgolem', kind:'crystal', name:'Relic Golem', x:9*T, y:6*T, hp:200, atk:28, xp:85, coins:56, hue:120});
-    mon(m, {id:'tombbat', kind:'bat', name:'Tomb Bat', x:17*T, y:12*T, hp:180, atk:27, xp:80, coins:52, hue:160});
-    mon(m, {id:'ancientshroom', kind:'mushroom', name:'Ancient Sporecap', x:24*T, y:8*T, hp:210, atk:29, xp:90, coins:60, hue:180});
+    mon(m, {id:'relicgolem', kind:'crystal', name:'Relic Golem', x:9*T, y:6*T, hp:200, atk:28, xp:85, coins:56, hue:120, sprite:'mob_skull_knight'});
+    mon(m, {id:'tombbat', kind:'bat', name:'Tomb Bat', x:17*T, y:12*T, hp:180, atk:27, xp:80, coins:52, hue:160, sprite:'mob_bone_beetle'});
+    mon(m, {id:'ancientshroom', kind:'mushroom', name:'Ancient Sporecap', x:24*T, y:8*T, hp:210, atk:29, xp:90, coins:60, hue:180, sprite:'mob_cursed_doll'});
     mon(m, {id:'guardian_prime', kind:'crystal', name:'Guardian Prime', x:14*T, y:4*T+30, hp:460, atk:34, xp:220, coins:200, boss:true, hue:150, sprite:'mob_crystal_golem'});
     mon(m, {id:'gemkin_avatar', kind:'xelar', name:'Gemkin Avatar', x:4*T, y:4*T, hp:900, atk:44, xp:500, coins:500, boss:true, hue:120, requiresGems:7, sprite:'boss_gemreaper'});
     m.chests = [{id:'ruins_chest', x:27*T, y:15*T, reward:{coins:120, item:'Courage Crumble'}, label:'Kingly chest'}];
@@ -328,9 +331,9 @@
     m.tiles[8][12] = 2; m.tiles[8][13] = 2;               // gate gaps
     m.tiles[2][3] = 3; m.tiles[13][22] = 3;               // banners
     scatter(m, rng, [5], 4); scatter(m, rng, [4], 3);
-    mon(m, {id:'shadowslime', kind:'slime', name:'Shadow Slime', x:6*T, y:5*T, hp:220, atk:30, xp:95, coins:62, hue:230});
-    mon(m, {id:'voidbat', kind:'bat', name:'Void Bat', x:8*T, y:12*T, hp:200, atk:31, xp:98, coins:64, hue:250});
-    mon(m, {id:'darkcrystal', kind:'crystal', name:'Dark Crystal', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, hue:290});
+    mon(m, {id:'shadowslime', kind:'slime', name:'Shadow Slime', x:6*T, y:5*T, hp:220, atk:30, xp:95, coins:62, hue:230, sprite:'mob_goblin_brute'});
+    mon(m, {id:'voidbat', kind:'bat', name:'Void Bat', x:8*T, y:12*T, hp:200, atk:31, xp:98, coins:64, hue:250, sprite:'mob_lizard_guard'});
+    mon(m, {id:'darkcrystal', kind:'crystal', name:'Dark Crystal', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, hue:290, sprite:'mob_skeleton_pup'});
     mon(m, {id:'xelar_echo', kind:'xelar', name:"Xelar's Echo", x:20*T, y:11*T, hp:420, atk:34, xp:200, coins:170, boss:true, hue:40, sprite:'boss_sorceress'});
     mon(m, {id:'xelar_final', kind:'xelar', name:'Xelar the Bald Wizard', x:23*T, y:3*T, hp:640, atk:40, xp:400, coins:400, boss:true, final:true, sprite:'boss_cultleader',
       requiresDefeated:'xelar_echo'});

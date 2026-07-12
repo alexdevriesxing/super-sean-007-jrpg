@@ -101,3 +101,18 @@ test('crops reference real seed items and ripe tiles', () => {
     assert.ok(crop.growMs > 0, `crop ${key} grows`);
   }
 });
+
+test('every monster and NPC sprite reference exists in the mob manifest', async () => {
+  const fs = await import('node:fs/promises');
+  const manifest = JSON.parse(await fs.readFile('super_sean_007_full_project_wired/data/mob-manifest.json', 'utf8'));
+  const known = new Set(manifest.sprites);
+  const maps = SSG.buildMaps();
+  for (const m of Object.values(maps)) {
+    for (const mon of m.monsters) {
+      if (mon.sprite) assert.ok(known.has(mon.sprite), `${m.id} monster ${mon.id} sprite ${mon.sprite} in manifest`);
+    }
+    for (const npc of m.npcs) {
+      if (npc.sprite) assert.ok(known.has(npc.sprite), `${m.id} npc ${npc.id} sprite ${npc.sprite} in manifest`);
+    }
+  }
+});

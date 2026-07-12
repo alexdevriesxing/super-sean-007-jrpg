@@ -141,7 +141,7 @@
         ctx.drawTile(piece.sheet, piece.tile, tx * T - cam.x, ty * T - cam.y);
       });
       billboards.sort((a, b) => a.ty - b.ty).forEach(({piece, tx, ty}) => {
-        drawBillboard(piece.sprite, tx * T - cam.x, ty * T - cam.y);
+        drawBillboard(piece.sprite, tx * T - cam.x, ty * T - cam.y, piece.bsize || 100);
       });
       Object.entries(S().crops).forEach(([key, crop]) => {
         const [tx, ty] = key.split(',').map(Number);
@@ -553,7 +553,7 @@
       const cx = tx * T - cam.x, cy = ty * T - cam.y;
       if (!build.removeMode && piece) {
         g.save(); g.globalAlpha = 0.6;
-        if (piece.billboard) drawBillboard(piece.sprite, cx, cy);
+        if (piece.billboard) drawBillboard(piece.sprite, cx, cy, piece.bsize || 100);
         else ctx.drawTile(piece.sheet, piece.tile, cx, cy);
         g.restore();
       }
