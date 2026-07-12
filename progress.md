@@ -121,3 +121,20 @@ Built and shipped the full gap-analysis follow-up:
 - Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
 - Production Adsterra units (Social Bar, Native Banner, 728x90/468x60/320x50/300x250/160x600/160x300) are live via `ads.js`; `_headers` CSP allows the network's rotating HTTPS domains.
 - Footer credits © 2026 Fire Dragon Interactive (www.firedragoninteractive.com).
+
+## 2026-07-11 (cont.) — Landmark buildings + tile/object audit
+- Answered "are tiles/objects sliced & wired": terrain tiles are drawn by INDEX
+  from the 8 regional tilesets (correct tilemap approach, no per-tile files);
+  game objects (nodes, build pieces, item icons) reference tileset indices.
+  Only characters (bosses/monsters/NPCs) previously got rich distinct art.
+- Added scripts/slice-objects.mjs: sliced 23 detailed buildings from
+  ui_vfx/gedetailleerde_rpg_bouwwerken_en_iconen.png (flood-fill bg removal +
+  largest-component + trim) -> assets/sliced/objects/ + data/object-manifest.json.
+- New "Landmarks" build category (SSG.LANDMARKS pushed into BUILD_PIECES):
+  place buildings as bottom-anchored billboard decor with high comfort.
+  render.js: drawBillboard helper, y-sorted overlay, scrolling/windowed palette
+  (8 categories now), billboard thumbnails + ghost. Preloaded via object-manifest.
+- slice:objects added to dev + generate:assets; validate + tests cover objects;
+  fixed data test to allow billboard pieces (16/16 pass). Deployed; assets 200 on prod.
+- NOTE: item/material icons still use tileset indices (rich icon sheets exist,
+  e.g. kleurrijke_rpg_ui_elementensheet.png — a future upgrade like the buildings).
