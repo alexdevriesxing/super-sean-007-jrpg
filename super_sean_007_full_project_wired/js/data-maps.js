@@ -149,7 +149,12 @@
     m.npcs = [
       {id:'dave_home', name:'Dave', char:'dave', x:23*T, y:7*T, role:'Homestead tinkerer', requiresClaimed:true, requiresParty:'dave'},
       {id:'mila_home', name:'Mila', char:'haraku', sprite:'npc_village_girl', x:28*T, y:16*T, role:'Homestead visitor', requiresClaimed:true, requiresComfort:60},
-      {id:'pip_home', name:'Pip', char:'ruush', sprite:'npc_child', x:10*T, y:16*T, role:'Homestead visitor', requiresClaimed:true, requiresComfort:100}
+      {id:'pip_home', name:'Pip', char:'ruush', sprite:'npc_child', x:10*T, y:16*T, role:'Homestead visitor', requiresClaimed:true, requiresComfort:100},
+      // Ambient wildlife — appear once a Barn is built. They wander gently and
+      // give a cheerful line when talked to (see NPC_LINES).
+      {id:'animal_deer', name:'Deerling', animal:true, sprite:'animal_deerling', wander:true, x:7*T, y:9*T, role:'Woodland friend', requiresClaimed:true, requiresPiece:'lm_barn'},
+      {id:'animal_turtle', name:'Turtle', animal:true, sprite:'animal_turtle', wander:true, x:26*T, y:10*T, role:'Slow strider', requiresClaimed:true, requiresPiece:'lm_barn'},
+      {id:'animal_goat', name:'Sky Goat', animal:true, sprite:'animal_skygoat', wander:true, x:15*T, y:18*T, role:'Cloud nibbler', requiresClaimed:true, requiresPiece:'lm_barn'}
     ];
     portal(m, 'home_to_village', 18, 0, 'village', 22, 16, 'Birthday Village');
     m.notes = [{x:18*T, y:8*T, text:'Rich soil, open sky, a crystal humming with welcome. This could be home.'}];
@@ -310,6 +315,7 @@
     mon(m, {id:'relicgolem', kind:'crystal', name:'Relic Golem', x:9*T, y:6*T, hp:200, atk:28, xp:85, coins:56, hue:120, sprite:'mob_skull_knight'});
     mon(m, {id:'tombbat', kind:'bat', name:'Tomb Bat', x:17*T, y:12*T, hp:180, atk:27, xp:80, coins:52, hue:160, sprite:'mob_bone_beetle'});
     mon(m, {id:'ancientshroom', kind:'mushroom', name:'Ancient Sporecap', x:24*T, y:8*T, hp:210, atk:29, xp:90, coins:60, hue:180, sprite:'mob_cursed_doll'});
+    mon(m, {id:'ruins_mimic', kind:'crystal', name:'Treasure Mimic', x:26*T, y:15*T, hp:240, atk:32, xp:110, coins:130, sprite:'mob_treasure_mimic'});
     mon(m, {id:'guardian_prime', kind:'crystal', name:'Guardian Prime', x:14*T, y:4*T+30, hp:460, atk:34, xp:220, coins:200, boss:true, hue:150, sprite:'mob_crystal_golem'});
     mon(m, {id:'gemkin_avatar', kind:'xelar', name:'Gemkin Avatar', x:4*T, y:4*T, hp:900, atk:44, xp:500, coins:500, boss:true, hue:120, requiresGems:7, sprite:'boss_gemreaper'});
     m.chests = [{id:'ruins_chest', x:27*T, y:15*T, reward:{coins:120, item:'Courage Crumble'}, label:'Kingly chest'}];
@@ -331,11 +337,11 @@
     m.tiles[8][12] = 2; m.tiles[8][13] = 2;               // gate gaps
     m.tiles[2][3] = 3; m.tiles[13][22] = 3;               // banners
     scatter(m, rng, [5], 4); scatter(m, rng, [4], 3);
-    mon(m, {id:'shadowslime', kind:'slime', name:'Shadow Slime', x:6*T, y:5*T, hp:220, atk:30, xp:95, coins:62, hue:230, sprite:'mob_goblin_brute'});
-    mon(m, {id:'voidbat', kind:'bat', name:'Void Bat', x:8*T, y:12*T, hp:200, atk:31, xp:98, coins:64, hue:250, sprite:'mob_lizard_guard'});
-    mon(m, {id:'darkcrystal', kind:'crystal', name:'Dark Crystal', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, hue:290, sprite:'mob_skeleton_pup'});
+    mon(m, {id:'shadowslime', kind:'slime', name:'Horned Imp', x:6*T, y:5*T, hp:220, atk:30, xp:95, coins:62, sprite:'mob_horned_imp'});
+    mon(m, {id:'voidbat', kind:'bat', name:'Hellhound', x:8*T, y:12*T, hp:200, atk:31, xp:98, coins:64, sprite:'mob_hellhound'});
+    mon(m, {id:'darkcrystal', kind:'crystal', name:'Void Succubus', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, sprite:'mob_void_succubus'});
     mon(m, {id:'xelar_echo', kind:'xelar', name:"Xelar's Echo", x:20*T, y:11*T, hp:420, atk:34, xp:200, coins:170, boss:true, hue:40, sprite:'boss_sorceress'});
-    mon(m, {id:'xelar_final', kind:'xelar', name:'Xelar the Bald Wizard', x:23*T, y:3*T, hp:640, atk:40, xp:400, coins:400, boss:true, final:true, sprite:'boss_cultleader',
+    mon(m, {id:'xelar_final', kind:'xelar', name:'Xelar the Bald Wizard', x:23*T, y:3*T, hp:640, atk:40, xp:400, coins:400, boss:true, final:true, sprite:'boss_xelar',
       requiresDefeated:'xelar_echo'});
     m.chests = [{id:'tower_chest', x:3*T, y:13*T, reward:{coins:150, item:'Moon Tea'}, label:'Wizard supply chest'}];
     portal(m, 'back_village_tower', 1, 8, 'village', 27, 2, 'Birthday Village');

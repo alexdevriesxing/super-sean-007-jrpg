@@ -69,3 +69,19 @@ const ARENAS = ['arena_mushroom', 'arena_crystal', 'arena_machine', 'arena_moon'
 }
 
 console.log('done — wrote', FULL.length + 12 + 6, 'battle backgrounds to assets/battle/');
+
+// Boot loading-screen backdrop: crop the bright sky-ruins hero (bottom-left
+// quarter) of the chibi loading sheet into a lean WebP the loader shows.
+{
+  const uiDir = 'super_sean_007_full_project_wired/assets/ui';
+  await mkdir(uiDir, { recursive: true });
+  const src = 'super_sean_007_full_project_wired/assets/generated/loading_event_screens/kleurrijke_rpg_laadschermen_met_chibi_helden.png';
+  const meta = await sharp(src).metadata();
+  const cw = Math.floor(meta.width / 2), ch = Math.floor(meta.height / 2);
+  await sharp(src)
+    .extract({ left: 0, top: ch, width: cw, height: ch })
+    .resize(960, 540, { fit: 'cover' })
+    .webp({ quality: 82 })
+    .toFile(path.join(uiDir, 'loading-screen.webp'));
+  console.log('bg loading-screen');
+}

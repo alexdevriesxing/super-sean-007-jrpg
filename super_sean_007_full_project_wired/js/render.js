@@ -105,11 +105,18 @@
       }
       for (const npc of m.npcs) {
         if (!sys().npcVisible(npc)) continue;
+        // Ambient animals bob and sway gently so the homestead feels alive.
+        let ox = 0, oy = 0;
+        if (npc.animal) {
+          const ph = (npc.x + npc.y) * 0.01;
+          oy = Math.sin(Date.now() / 380 + ph) * 4;
+          ox = Math.sin(Date.now() / 900 + ph) * 6;
+        }
         const spr = npc.sprite && ctx.img[npc.sprite];
         if (spr && spr.complete && spr.naturalWidth) {
-          drawSprite(spr, npc.x - cam.x, npc.y - cam.y, 72, npc.name);
+          drawSprite(spr, npc.x - cam.x + ox, npc.y - cam.y + oy, npc.animal ? 60 : 72, npc.name);
         } else {
-          drawCharacter(npc.char, npc.x - cam.x, npc.y - cam.y, 0, npc.name, npc.hue);
+          drawCharacter(npc.char, npc.x - cam.x + ox, npc.y - cam.y + oy, 0, npc.name, npc.hue);
         }
       }
       for (const mon of m.monsters) {
@@ -374,6 +381,38 @@
         button(326, 226, 145, 38, 'Reward Revive', () => ctx.battleApi().reviveOrReturn(true));
         button(492, 226, 145, 38, 'Return Home', () => ctx.battleApi().reviveOrReturn(false));
       }
+      if (battle.intro > 0) drawBossIntro(battle, e);
+    }
+
+    // Cinematic boss name-card: dark bands slide off as the intro timer runs out.
+    function drawBossIntro(battle, e) {
+      const t = battle.intro;
+      const max = battle.introFinal ? 150 : 100;
+      const p = t / max;                 // 1 → 0
+      const ease = p * p;                // bands retract, text fades near the end
+      g.save();
+      // letterbox bands
+      const band = 150 * ease + 60;
+      g.fillStyle = 'rgba(8,10,22,.82)';
+      g.fillRect(0, 0, GAME_W, band);
+      g.fillRect(0, GAME_H - band, GAME_W, band);
+      // enemy sprite rising in the upper band
+      const spr = e.sprite && ctx.img[e.sprite];
+      if (spr && spr.complete && spr.naturalWidth) {
+        const size = 150;
+        g.globalAlpha = Math.min(1, (1 - p) * 2 + 0.35);
+        g.drawImage(spr, GAME_W / 2 - size / 2, band - size - 6 + 20 * ease, size, size);
+      }
+      // name card
+      g.globalAlpha = Math.min(1, 1.4 - p);
+      g.textAlign = 'center';
+      g.fillStyle = battle.introFinal ? '#c07bff' : '#ffd76a';
+      g.font = 'bold 40px Nunito';
+      g.fillText(e.name, GAME_W / 2, GAME_H / 2 - 6);
+      g.fillStyle = '#eaf2ff'; g.font = 'bold 16px Nunito';
+      g.fillText(battle.introFinal ? 'THE DARK ARCHMAGE — FINAL BATTLE' : 'BOSS BATTLE', GAME_W / 2, GAME_H / 2 + 24);
+      g.textAlign = 'left';
+      g.restore();
     }
 
     /* ---------- inventory ---------- */

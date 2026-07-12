@@ -487,12 +487,16 @@
     }
 
     /* ---------------- NPC interaction ---------------- */
+    function hasPiece(id) {
+      return Object.values(S().homestead.tiles || {}).includes(id);
+    }
     function npcVisible(npc) {
       const st = S();
       if (npc.hideWhenParty && st.party.includes(npc.hideWhenParty)) return false;
       if (npc.requiresClaimed && !st.homestead.claimed) return false;
       if (npc.requiresParty && !st.party.includes(npc.requiresParty)) return false;
       if (npc.requiresComfort && comfort() < npc.requiresComfort) return false;
+      if (npc.requiresPiece && !hasPiece(npc.requiresPiece)) return false;
       return true;
     }
     function talk(npc) {

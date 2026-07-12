@@ -35,6 +35,20 @@
     "mob_griffin",
     "mob_skull_knight",
     "mob_goblin_brute",
-    "mob_lizard_guard"
+    "mob_lizard_guard",
+    "boss_xelar",
+    "mob_horned_imp",
+    "mob_flame_demon",
+    "mob_void_succubus",
+    "mob_hellhound",
+    "mob_shell_crab",
+    "mob_puffer_fishling",
+    "mob_water_spirit",
+    "mob_crystal_slime",
+    "mob_marsh_ooze",
+    "mob_treasure_mimic",
+    "animal_deerling",
+    "animal_turtle",
+    "animal_skygoat"
   ]
 }

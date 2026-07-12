@@ -65,7 +65,10 @@
         phase2: false,
         cooldowns: {},
         buttons: [],
-        backgroundKey: selectBackground(monster)
+        backgroundKey: selectBackground(monster),
+        // Cinematic name-card timer (frames) for boss encounters.
+        intro: monster.boss ? (monster.final ? 150 : 100) : 0,
+        introFinal: Boolean(monster.final)
       };
       ctx.setScene('battle');
       ctx.music(monster.boss ? 'boss' : 'battle');
@@ -346,6 +349,7 @@
     }
 
     function update() {
+      if (battle && battle.intro > 0) battle.intro -= 1;
       if (battle && battle.lock > 0) {
         battle.lock -= 1;
         if (battle.lock === 0 && battle.turn === 'enemy') enemyTurn();

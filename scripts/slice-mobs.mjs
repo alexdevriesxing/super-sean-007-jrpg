@@ -130,7 +130,29 @@ const JOBS = [
   // Xelar Monster Soldiers (3-col layout, subtitle)
   ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [90, 156, 150, 122], 'mob_skull_knight'],
   ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [510, 156, 150, 122], 'mob_goblin_brute'],
-  ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [946, 156, 190, 122], 'mob_lizard_guard']
+  ['spritesheets/xelar_monster_soldiers_sprite_sheet.png', [946, 156, 190, 122], 'mob_lizard_guard'],
+
+  // Xelar the Dark Archmage — final boss (staff-raised idle pose)
+  ['ui_vfx/xelar_de_duistere_hoge_magir.png', [303, 99, 107, 98], 'boss_xelar'],
+  // Demons & Dark Fiends (Frostpeak / postgame enemies, first idle column)
+  ['ui_vfx/demons_en_duistere_wezens_sprite_sheet.png', [88, 143, 88, 88], 'mob_horned_imp'],
+  ['ui_vfx/demons_en_duistere_wezens_sprite_sheet.png', [418, 140, 79, 93], 'mob_flame_demon'],
+  ['ui_vfx/demons_en_duistere_wezens_sprite_sheet.png', [754, 145, 92, 88], 'mob_void_succubus'],
+  ['ui_vfx/demons_en_duistere_wezens_sprite_sheet.png', [1089, 151, 93, 78], 'mob_hellhound'],
+  // Aquatic & Shore creatures (Sunsand Isle enemies)
+  ['spritesheets/aquatic_en_kustwezens_sprite_sheet.png', [426, 167, 80, 77], 'mob_shell_crab'],
+  ['spritesheets/aquatic_en_kustwezens_sprite_sheet.png', [757, 170, 81, 73], 'mob_puffer_fishling'],
+  ['spritesheets/aquatic_en_kustwezens_sprite_sheet.png', [1090, 160, 83, 90], 'mob_water_spirit'],
+  // Slimes, Oozes & the Treasure Mimic
+  ['spritesheets/slijmen_kristallen_en_schatkisten.png', [423, 170, 76, 79], 'mob_crystal_slime'],
+  ['spritesheets/slijmen_kristallen_en_schatkisten.png', [789, 178, 79, 74], 'mob_marsh_ooze'],
+  ['spritesheets/slijmen_kristallen_en_schatkisten.png', [1155, 183, 72, 64], 'mob_treasure_mimic'],
+  // Friendly wildlife — ambient homestead animals (white-bodied bunny/goat
+  // interiors get eaten by the light-bg flood-fill, so we use the strongly
+  // outlined deerling + turtle + horned goat)
+  ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [426, 225, 75, 77], 'animal_deerling'],
+  ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [759, 225, 91, 74], 'animal_turtle'],
+  ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [1090, 225, 83, 77], 'animal_skygoat']
 ];
 
 for (const [sheet, box, name] of JOBS) {

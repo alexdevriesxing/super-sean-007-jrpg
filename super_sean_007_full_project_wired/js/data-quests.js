@@ -127,6 +127,9 @@
   ];
 
   SSG.NPC_LINES = {
+    animal_deer: ['The deerling blinks up at you and nuzzles your hand. ✿'],
+    animal_turtle: ['The turtle slowly, contentedly, chews a leaf. All is well.'],
+    animal_goat: ['The sky goat bleats and its little wings give a hopeful flap!'],
     elder: [
       'Sean, the Village Crystal has dimmed. Xelar the Bald Wizard is draining the Seven Gems.',
       'Your crystal sword awoke the old Guardian promise. Gather friends, gather courage.',

@@ -45,9 +45,11 @@ body.ssg-maximize .mobile-controls{display:flex}
 
 /* Game canvas loader */
 .game-canvas-wrap{position:relative}
-.game-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0e2744;border-radius:22px;color:#d9f6ff;font-weight:800;transition:opacity .4s ease}
+.game-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;padding-bottom:52px;background:#0e2744 url('assets/ui/loading-screen.webp') center/cover no-repeat;border-radius:22px;color:#fff;font-weight:800;transition:opacity .4s ease}
+.game-loader::before{content:"";position:absolute;inset:0;border-radius:22px;background:linear-gradient(180deg,rgba(6,16,32,.15) 40%,rgba(6,16,32,.78) 100%)}
+.game-loader>*{position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,.7)}
 .game-loader.hidden{opacity:0;pointer-events:none}
-.game-loader-spin{width:46px;height:46px;border-radius:50%;border:5px solid rgba(255,255,255,.2);border-top-color:#ffb84d;animation:ssgspin .8s linear infinite}
+.game-loader-spin{width:46px;height:46px;border-radius:50%;border:5px solid rgba(255,255,255,.35);border-top-color:#ffb84d;animation:ssgspin .8s linear infinite}
 @keyframes ssgspin{to{transform:rotate(360deg)}}
 
 /* DOM overlays: settings, onboarding, share */
