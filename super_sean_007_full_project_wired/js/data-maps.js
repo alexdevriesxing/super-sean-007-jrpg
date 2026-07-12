@@ -342,10 +342,58 @@
     mon(m, {id:'darkcrystal', kind:'crystal', name:'Void Succubus', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, sprite:'mob_void_succubus'});
     mon(m, {id:'xelar_echo', kind:'xelar', name:"Xelar's Echo", x:20*T, y:11*T, hp:420, atk:34, xp:200, coins:170, boss:true, hue:40, sprite:'boss_sorceress'});
     mon(m, {id:'xelar_final', kind:'xelar', name:'Xelar the Bald Wizard', x:23*T, y:3*T, hp:640, atk:40, xp:400, coins:400, boss:true, final:true, sprite:'boss_xelar',
-      requiresDefeated:'xelar_echo'});
+      requiresDefeated:'xelar_echo', unlocks:'frostpeak'});
     m.chests = [{id:'tower_chest', x:3*T, y:13*T, reward:{coins:150, item:'Moon Tea'}, label:'Wizard supply chest'}];
     portal(m, 'back_village_tower', 1, 8, 'village', 27, 2, 'Birthday Village');
+    portal(m, 'tower_to_frostpeak', 24, 13, 'frostpeak', 2, 9, 'Frostpeak Reaches', 'frostpeak');
     m.notes = [{x:5*T, y:8*T, text:'Xelar\'s X sigils crackle. Somewhere above, a bald head gleams with menace.'}];
+    return m;
+  }
+
+  // Postgame region 1 — reuses the icy moon tileset, stocked with Xelar's demons.
+  function frostpeakMap() {
+    const m = blank('frostpeak', 'Frostpeak Reaches', 'moon', 30, 18, 0);
+    const rng = mulberry32(71);
+    grassVariants(m, rng, [1, 2]);
+    border(m, 5);
+    rect(m, 10, 3, 10, 14, 2); rect(m, 11, 8, 20, 8, 2);   // icy paths
+    scatter(m, rng, [3], 6);
+    node(m, 'moonherb', 5, 5); node(m, 'moonherb', 24, 12);
+    node(m, 'crystal', 8, 12); node(m, 'crystal', 22, 4);
+    node(m, 'ore', 26, 7); node(m, 'rock', 4, 10);
+    mon(m, {id:'fp_imp', kind:'bat', name:'Horned Imp', x:7*T, y:6*T, hp:260, atk:34, xp:120, coins:80, sprite:'mob_horned_imp'});
+    mon(m, {id:'fp_flame', kind:'crystal', name:'Flame Demon', x:20*T, y:5*T, hp:300, atk:37, xp:135, coins:90, sprite:'mob_flame_demon'});
+    mon(m, {id:'fp_hound', kind:'slime', name:'Hellhound', x:14*T, y:13*T, hp:280, atk:36, xp:130, coins:85, sprite:'mob_hellhound'});
+    mon(m, {id:'fp_boss', kind:'crystal', name:'Void Succubus Queen', x:26*T, y:3*T, hp:820, atk:46, xp:420, coins:420, boss:true, sprite:'mob_void_succubus', unlocks:'sunsand'});
+    m.chests = [{id:'fp_chest', x:4*T, y:14*T, reward:{coins:200, item:'Starfall Edge'}, label:'Frozen cache'}];
+    m.digSpots = [[8, 5], [22, 12], [15, 9]];
+    portal(m, 'fp_to_tower', 1, 9, 'tower', 24, 13, 'Bald Moon Tower');
+    portal(m, 'fp_to_sunsand', 28, 9, 'sunsand', 2, 9, 'Sunsand Isle', 'sunsand');
+    m.notes = [{x:5*T, y:8*T, text:'Beyond the tower lies an endless winter where Xelar\'s fiends still linger.'}];
+    return m;
+  }
+
+  // Postgame region 2 — reuses the golden ruins tileset as a sunlit shore.
+  function sunsandMap() {
+    const m = blank('sunsand', 'Sunsand Isle', 'ruins', 30, 18, 0);
+    const rng = mulberry32(83);
+    for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) {
+      const r = rng();
+      m.tiles[y][x] = r < 0.12 ? 1 : (r < 0.2 ? 2 : 0);
+    }
+    border(m, 6);
+    rect(m, 4, 9, 26, 9, 5);   // sunlit shore strip
+    scatter(m, rng, [7], 5);
+    node(m, 'relic', 6, 5); node(m, 'relic', 24, 13);
+    node(m, 'ore', 22, 5); node(m, 'rock', 8, 13); node(m, 'crystal', 14, 4);
+    mon(m, {id:'ss_crab', kind:'crystal', name:'Shell Crab', x:8*T, y:6*T, hp:300, atk:36, xp:130, coins:85, sprite:'mob_shell_crab'});
+    mon(m, {id:'ss_puffer', kind:'mushroom', name:'Puffer Fishling', x:18*T, y:12*T, hp:290, atk:35, xp:128, coins:82, sprite:'mob_puffer_fishling'});
+    mon(m, {id:'ss_slime', kind:'slime', name:'Crystal Slime', x:22*T, y:6*T, hp:280, atk:34, xp:125, coins:80, sprite:'mob_crystal_slime'});
+    mon(m, {id:'ss_boss', kind:'bat', name:'Tide Spirit Sovereign', x:26*T, y:14*T, hp:900, atk:48, xp:480, coins:500, boss:true, sprite:'mob_water_spirit'});
+    m.chests = [{id:'ss_chest', x:4*T, y:4*T, reward:{coins:260, item:'Relic Crown'}, label:'Sunken treasure'}];
+    m.digSpots = [[6, 13], [20, 4], [24, 12]];
+    portal(m, 'ss_to_frostpeak', 1, 9, 'frostpeak', 27, 9, 'Frostpeak Reaches');
+    m.notes = [{x:5*T, y:8*T, text:'A warm isle at the edge of the world. The tide hums with old magic.'}];
     return m;
   }
 
@@ -358,7 +406,9 @@
     ruushwood: ruushwoodMap(),
     moon: moonMap(),
     ruins: ruinsMap(),
-    tower: towerMap()
+    tower: towerMap(),
+    frostpeak: frostpeakMap(),
+    sunsand: sunsandMap()
   });
 
   SSG.WORLD_NODES = [
@@ -370,6 +420,8 @@
     ['ruushwood', 'Ruushwood', 620, 260],
     ['moon', 'Moon Shrine', 640, 140],
     ['ruins', 'Ancient Ruins', 500, 90],
-    ['tower', 'Bald Moon Tower', 730, 70]
+    ['tower', 'Bald Moon Tower', 730, 70],
+    ['frostpeak', 'Frostpeak Reaches', 760, 200],
+    ['sunsand', 'Sunsand Isle', 700, 320]
   ];
 })();

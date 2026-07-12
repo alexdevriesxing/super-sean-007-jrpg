@@ -221,6 +221,35 @@ Built and shipped the full gap-analysis follow-up:
 - Pipeline: slice:vfx + split:backgrounds added to dev + generate:assets; validate
   checks battle-background + vfx-manifest files; full `npm run build` green, 18/18
   tests pass.
-- STILL PENDING (this session's remaining plan): Xelar boss sprite+intro splash,
-  new enemies (demons/aquatic/mimic+chests), homestead animals, boot loading-screen
-  art, UI skin (dialogue box + HP/MP bar frames), two postgame regions (ice+desert).
+## 2026-07-12 (cont.) — Max-asset batch 2+3 (Xelar, enemies, animals, regions)
+- **Xelar final boss**: distinct sliced sprite `boss_xelar` (staff-raised idle from
+  xelar_de_duistere_hoge_magir.png); new cinematic boss name-card overlay
+  (`battle.intro` timer → `drawBossIntro`): letterbox bands retract, enemy sprite
+  rises, name + subtitle fade; extra-dramatic ("THE DARK ARCHMAGE — FINAL BATTLE")
+  for the final fight. Decrements in battleApi.update.
+- **15 new sprites** via slice-mobs (now 50): 4 demons (imp/flame/succubus/hellhound),
+  3 aquatic (crab/puffer/water-spirit), crystal-slime/marsh-ooze/treasure-mimic,
+  3 animals (deerling/turtle/skygoat). White-bodied bunny+goat interiors get eaten
+  by the light-bg flood-fill; goat survived (strong outline), bunny dropped.
+- **Enemy wiring**: tower shadow trio → real demon art (imp/hellhound/succubus,
+  hue hack dropped); Treasure Mimic guards the ruins chest.
+- **Homestead animals**: deerling/turtle/skygoat appear once a Barn is built
+  (new `requiresPiece` gate in npcVisible → checks homestead.tiles); they bob+sway
+  (render.js animal branch) and greet via NPC_LINES.
+- **Boot loading screen**: split-backgrounds crops a chibi-hero loading screen →
+  assets/ui/loading-screen.webp; styles.css sets it as the .game-loader backdrop
+  with a gradient scrim (vite hashes the url()).
+- **Two postgame regions** (robust approach — reuse clean existing tilesets since the
+  generated ice/desert sheets aren't 8×4 64px grids): Frostpeak Reaches (moon
+  tileset, demon enemies, Void Succubus Queen boss) and Sunsand Isle (ruins tileset,
+  aquatic enemies, Tide Spirit Sovereign boss). Unlock chain via new boss `unlocks`
+  field handled in battle win(): beat Xelar → Frostpeak; beat its boss → Sunsand.
+  Portals from tower→frostpeak→sunsand (gated); WORLD_NODES + REGION_MARKERS +
+  selectBackground (bg_winter / bg_desertruins+beach) all wired. Both verified
+  rendering in preview with their enemies.
+- Verified live in a battle: vfx_slash draws on hit, mushforest bg renders; both
+  new regions render with distinct enemies. Full build + validate green, 18/18 tests.
+- DEFERRED: UI skin (task #8) — the UI-sheet panel frames have cream-filled interiors
+  needing careful border-only 9-slice to avoid bleeding over panel content; risky to
+  land well without visual iteration, and the current programmatic panels look clean.
+  Left as a focused follow-up rather than rushing a regression risk.

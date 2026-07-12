@@ -316,6 +316,12 @@
       const monster = map.monsters.find(mo => mo.id === e.id);
       if (monster) monster.defeated = true;
       if (e.boss) st.defeatedBosses[e.id] = true;
+      // Defeating a gatekeeper boss opens the next postgame region.
+      if (e.unlocks && !st.unlocked[e.unlocks]) {
+        st.unlocked[e.unlocks] = true;
+        const region = ctx.maps()[e.unlocks];
+        ctx.showToast(`New region unlocked: ${region ? region.name : e.unlocks}!`);
+      }
       sys().advanceMain('defeat', {id: e.id, kind: e.kind});
       ctx.music('victory');
       setTimeout(() => ctx.music('village'), 2400);
