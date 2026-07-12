@@ -113,6 +113,9 @@ test('every item img and gem icon exists in the icon manifest', async () => {
     assert.ok(known.has(icon), `gem ${gem} icon ${icon} in icon manifest`);
     assert.ok(SSG.GEMS.includes(gem), `gem icon key ${gem} is a real gem`);
   }
+  for (const a of SSG.ACHIEVEMENTS) {
+    assert.ok(known.has(a.badge), `achievement ${a.id} badge ${a.badge} in icon manifest`);
+  }
 });
 
 test('every monster and NPC sprite reference exists in the mob manifest', async () => {

@@ -81,7 +81,10 @@
       }
       for (const chest of m.chests) {
         if (S().chestsOpened[chest.id] && !chest.ad) continue;
-        ctx.drawTile('birthday', 20, chest.x - cam.x, chest.y - cam.y);
+        const sprite = chest.ad ? 'chest_gold' : 'chest_wood';
+        if (!ctx.drawIcon(sprite, chest.x - cam.x + 8, chest.y - cam.y + 12, 48, 48)) {
+          ctx.drawTile('birthday', 20, chest.x - cam.x, chest.y - cam.y);
+        }
         if (chest.ad) drawLabel('Reward', chest.x - cam.x - 8, chest.y - cam.y - 14, '#fff4a9');
       }
       if (m.board) {
@@ -241,7 +244,11 @@
       g.font = '12px Nunito'; g.fillStyle = '#12365a'; g.fillText(`${h.hp}/${h.maxHp} HP`, 252, 57);
       bar(26, 64, 220, 11, h.mp / stats.maxMp, '#41b8ff', '#d8f3ff');
       g.fillText(`${h.mp}/${stats.maxMp} MP`, 252, 74);
-      bar(26, 81, 220, 9, h.friendship / 100, '#ffd76a', '#fdf3d4');
+      for (let i = 0; i < 5; i++) {
+        const filled = h.friendship >= (i + 1) * 20;
+        const partial = !filled && h.friendship > i * 20;
+        ctx.drawIcon(filled ? 'heart_full' : partial ? 'heart_spark' : 'heart_empty', 26 + i * 19, 76, 16, 16);
+      }
       g.fillText('Friendship', 252, 90);
       panel(640, 12, 308, 86, 'rgba(255,255,255,.88)');
       g.fillStyle = '#12365a'; g.font = 'bold 14px Nunito'; g.fillText(st.quest.title, 655, 34);
@@ -432,9 +439,13 @@
       g.fillText(`Achievements ${unlockedCount}/${SSG.ACHIEVEMENTS.length}`, 640, 126);
       SSG.ACHIEVEMENTS.forEach((a, i) => {
         const has = Boolean(st.achievements?.[a.id]);
+        const y = 148 + i * 18;
+        g.save(); if (!has) g.globalAlpha = 0.3;
+        ctx.drawIcon(a.badge, 640, y - 12, 15, 15);
+        g.restore();
         g.font = has ? 'bold 12px Nunito' : '12px Nunito';
         g.fillStyle = has ? '#0f8a3d' : '#93a6b8';
-        g.fillText(`${has ? '★' : '☆'} ${a.label}`, 640, 148 + i * 18);
+        g.fillText(a.label, 660, y);
       });
       g.font = 'bold 16px Nunito'; g.fillStyle = '#12365a'; g.fillText('Side Quests', 122, 330);
       let y = 352;
@@ -460,15 +471,25 @@
       g.moveTo(pts[0][0], pts[0][1]);
       for (const [x, y] of pts.slice(1)) g.lineTo(x, y);
       g.stroke();
+      const REGION_MARKERS = {
+        village: 'marker_home', meadow: 'marker_pin', cave: 'marker_gem', petro: 'marker_camp',
+        ruushwood: 'marker_quest', moon: 'marker_star', ruins: 'marker_gate', tower: 'marker_castle',
+        frostpeak: 'marker_flag', sunsand: 'marker_anchor'
+      };
       SSG.WORLD_NODES.forEach(([id, name, x, y]) => {
         const unlocked = id === 'village' || id === 'meadow' || st.unlocked[id];
         const here = st.mapId === id;
         g.fillStyle = here ? '#7cecff' : unlocked ? '#ffd76a' : '#cfd8e4';
         g.beginPath(); g.arc(x, y, 26, 0, Math.PI * 2); g.fill();
         g.strokeStyle = '#12365a'; g.lineWidth = 3; g.stroke();
+        if (unlocked) {
+          const bounce = here ? Math.sin(Date.now() / 250) * 3 : 0;
+          ctx.drawIcon(REGION_MARKERS[id] || 'marker_pin', x - 14, y - 16 + bounce, 28, 28);
+        } else {
+          ctx.drawIcon('icon_lock', x - 11, y - 13, 22, 26);
+        }
         g.fillStyle = '#12365a'; g.font = 'bold 12px Nunito';
         g.fillText(name, x - 48, y + 46);
-        if (!unlocked) g.fillText('🔒', x - 8, y + 5);
       });
       g.fillStyle = '#2471a3'; g.font = 'bold 13px Nunito';
       g.fillText('Walk between regions through the glowing portals. Press M/Esc to close.', 300, 476);

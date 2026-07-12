@@ -106,23 +106,24 @@
   ];
 
   // Achievements: checked event-driven by systems.checkAchievements().
+  // badge: distinct sliced icon from data/icon-manifest.json.
   SSG.ACHIEVEMENTS = [
-    {id:'first_win',      label:'First Victory',      desc:'Win your first battle.'},
-    {id:'gem_1',          label:'Gem Bearer',         desc:'Restore your first Gem.'},
-    {id:'home_claimed',   label:'Landowner',          desc:'Claim the Sunrise Homestead.'},
-    {id:'first_blueprint',label:'Master Builder',     desc:'Stamp your first blueprint.'},
-    {id:'castle',         label:'Castle Dreamer',     desc:'Build the Stone Keep.'},
-    {id:'comfort_100',    label:'Cozy Legend',        desc:'Reach 100 Comfort.'},
-    {id:'first_crop',     label:'Green Thumb',        desc:'Harvest your first crop.'},
-    {id:'first_fish',     label:'Gone Fishing',       desc:'Catch a Sunfish.'},
-    {id:'first_treasure', label:'X Marks the Spot',   desc:'Dig up a buried treasure.'},
-    {id:'daily_done',     label:'Helping Hand',       desc:'Complete a quest board request.'},
-    {id:'full_party',     label:'Friendship Five',    desc:'Recruit every friend.'},
-    {id:'level_10',       label:'Seasoned Hero',      desc:'Reach level 10.'},
-    {id:'gather_50',      label:'Forager',            desc:'Harvest 50 materials from nodes.'},
-    {id:'xelar_down',     label:'Bald No More',       desc:'Defeat Xelar the Bald Wizard.'},
-    {id:'all_gems',       label:'Legend of the Seven',desc:'Restore all Seven Gems.'},
-    {id:'ng_plus',        label:'Rebirth of Legends', desc:'Begin New Game+.'}
+    {id:'first_win',      label:'First Victory',      desc:'Win your first battle.',            badge:'badge_5'},
+    {id:'gem_1',          label:'Gem Bearer',         desc:'Restore your first Gem.',           badge:'icon_gem_blue'},
+    {id:'home_claimed',   label:'Landowner',          desc:'Claim the Sunrise Homestead.',      badge:'marker_home'},
+    {id:'first_blueprint',label:'Master Builder',     desc:'Stamp your first blueprint.',       badge:'badge_3'},
+    {id:'castle',         label:'Castle Dreamer',     desc:'Build the Stone Keep.',             badge:'marker_castle'},
+    {id:'comfort_100',    label:'Cozy Legend',        desc:'Reach 100 Comfort.',                badge:'heart_spark'},
+    {id:'first_crop',     label:'Green Thumb',        desc:'Harvest your first crop.',          badge:'icon_herb'},
+    {id:'first_fish',     label:'Gone Fishing',       desc:'Catch a Sunfish.',                  badge:'icon_water'},
+    {id:'first_treasure', label:'X Marks the Spot',   desc:'Dig up a buried treasure.',         badge:'chest_gold'},
+    {id:'daily_done',     label:'Helping Hand',       desc:'Complete a quest board request.',   badge:'badge_6'},
+    {id:'full_party',     label:'Friendship Five',    desc:'Recruit every friend.',             badge:'badge_11'},
+    {id:'level_10',       label:'Seasoned Hero',      desc:'Reach level 10.',                   badge:'badge_4'},
+    {id:'gather_50',      label:'Forager',            desc:'Harvest 50 materials from nodes.',  badge:'icon_leaf'},
+    {id:'xelar_down',     label:'Bald No More',       desc:'Defeat Xelar the Bald Wizard.',     badge:'badge_1'},
+    {id:'all_gems',       label:'Legend of the Seven',desc:'Restore all Seven Gems.',           badge:'icon_gem_rainbow'},
+    {id:'ng_plus',        label:'Rebirth of Legends', desc:'Begin New Game+.',                  badge:'badge_12'}
   ];
 
   SSG.NPC_LINES = {

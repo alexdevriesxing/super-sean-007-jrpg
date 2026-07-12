@@ -18,14 +18,22 @@
 
     function selectBackground(monster) {
       const map = S().mapId || 'village';
-      if (monster.final) return 'bg_sky';
-      if (monster.boss && monster.kind === 'xelar') return 'bg_winter';
-      if (monster.boss && map === 'cave') return 'bg_mountain';
-      if (monster.boss) return 'bg_village';
+      if (monster.final) return 'bg_arena_xelar';
+      if (monster.boss) {
+        if (monster.kind === 'xelar') return 'bg_darkcastle';
+        const arenas = {
+          meadow: 'bg_arena_mushroom', cave: 'bg_arena_crystal', petro: 'bg_arena_machine',
+          moon: 'bg_arena_moon', ruins: 'bg_arena_volcano', tower: 'bg_arena_xelar',
+          ruushwood: 'bg_glowswamp', homestead: 'bg_darkcastle',
+          frostpeak: 'bg_winter', sunsand: 'bg_desertruins'
+        };
+        return arenas[map] || 'bg_village';
+      }
       const table = {
-        village: 'bg_village', homestead: 'bg_farm', meadow: 'bg_meadow',
-        cave: 'bg_mountain', petro: 'bg_autumn', ruushwood: 'bg_river',
-        moon: 'bg_winter', ruins: 'bg_sky', tower: 'bg_sky'
+        village: 'bg_festival', homestead: 'bg_farm', meadow: 'bg_mushforest',
+        cave: 'bg_crystalcave', petro: 'bg_lava', ruushwood: 'bg_glowswamp',
+        moon: 'bg_moonshrine', ruins: 'bg_desertruins', tower: 'bg_skyruins',
+        frostpeak: 'bg_winter', sunsand: 'bg_beach'
       };
       return table[map] || 'bg_countryside';
     }
@@ -82,7 +90,7 @@
       return list;
     }
 
-    function dealDamage(amount, source) {
+    function dealDamage(amount, source, fxName) {
       const e = battle.enemy;
       if (battle.enemyGuard > 0) {
         amount = Math.max(1, Math.floor(amount * 0.5));
@@ -93,6 +101,20 @@
       e.hp = Math.max(0, e.hp - amount);
       battle.log.unshift(`${source} for ${amount} damage.`);
       ctx.fx(`-${amount}`, {screen: true, x: 690 + Math.random() * 60, y: 170 + Math.random() * 40, color: '#ffd76a', size: 22, life: 55});
+      hitFx(fxName || 'vfx_slash', 'enemy');
+      if (e.hp <= 0) hitFx('vfx_explosion', 'enemy', 150);
+    }
+
+    // Battle effect sprite: screen-space popup over a combatant.
+    const FX_ANCHORS = {enemy: [700, 185], player: [215, 285]};
+    function hitFx(img, target, size = 96) {
+      const [ax, ay] = FX_ANCHORS[target] || FX_ANCHORS.enemy;
+      ctx.fx('', {
+        img, screen: true, size,
+        x: ax + (Math.random() * 36 - 18),
+        y: ay + (Math.random() * 24 - 12),
+        vy: -0.12, life: 42
+      });
     }
 
     function healConsumableName() {
@@ -113,13 +135,13 @@
       } else if (id === 'slash') {
         if (h.mp < 6) { battle.log.unshift('Not enough MP for Crystal Slash.'); return; }
         h.mp -= 6;
-        dealDamage(Math.max(8, Math.floor(stats.attack * 1.8 + h.level * 3 + Math.random() * 12)), 'Crystal Slash shines');
+        dealDamage(Math.max(8, Math.floor(stats.attack * 1.8 + h.level * 3 + Math.random() * 12)), 'Crystal Slash shines', 'vfx_crit');
         h.friendship = Math.min(100, h.friendship + 4);
         ctx.sfx('slash');
       } else if (id === 'friendship') {
         if (h.friendship < 40) { battle.log.unshift('Friendship meter needs 40 power.'); return; }
         h.friendship -= 40;
-        dealDamage(Math.max(30, Math.floor(stats.attack * 2.7 + h.level * 8)), 'Friendship Burst hits');
+        dealDamage(Math.max(30, Math.floor(stats.attack * 2.7 + h.level * 8)), 'Friendship Burst hits', 'vfx_stars');
         ctx.sfx('level_up');
       } else if (id === 'item') {
         const name = healConsumableName();
@@ -144,7 +166,7 @@
         h.mp -= 8;
         battle.cooldowns.gadget = 3;
         battle.stunned = 1;
-        dealDamage(Math.max(10, Math.floor(stats.attack * 1.4 + Math.random() * 10)), 'Dave\'s Gadget Zap crackles');
+        dealDamage(Math.max(10, Math.floor(stats.attack * 1.4 + Math.random() * 10)), 'Dave\'s Gadget Zap crackles', 'vfx_zap');
         battle.log.unshift(`${e.name} is stunned!`);
         ctx.sfx('slash');
       } else if (id === 'ironguard') {
@@ -152,14 +174,15 @@
         battle.cooldowns.ironguard = 4;
         battle.ironGuard = 2;
         battle.log.unshift('Petroman plants his shield — damage halved for 2 turns.');
+        hitFx('vfx_shield', 'player', 110);
         ctx.sfx('menu_open');
       } else if (id === 'arrows') {
         if ((battle.cooldowns.arrows || 0) > 0) { battle.log.unshift('Ruush is repositioning.'); return; }
         if (h.mp < 6) { battle.log.unshift('Not enough MP for Twin Arrows.'); return; }
         h.mp -= 6;
         battle.cooldowns.arrows = 2;
-        dealDamage(Math.max(6, Math.floor(stats.attack * 0.9 + Math.random() * 6)), 'Ruush\'s first arrow strikes');
-        if (battle.enemy.hp > 0) dealDamage(Math.max(6, Math.floor(stats.attack * 0.9 + Math.random() * 6)), 'The second arrow strikes');
+        dealDamage(Math.max(6, Math.floor(stats.attack * 0.9 + Math.random() * 6)), 'Ruush\'s first arrow strikes', 'vfx_arrows');
+        if (battle.enemy.hp > 0) dealDamage(Math.max(6, Math.floor(stats.attack * 0.9 + Math.random() * 6)), 'The second arrow strikes', 'vfx_arrows');
         ctx.sfx('slash');
       } else if (id === 'blessing') {
         if ((battle.cooldowns.blessing || 0) > 0) { battle.log.unshift('Moon Blessing recharging.'); return; }
@@ -169,6 +192,7 @@
         const heal = Math.floor(h.maxHp * 0.35);
         h.hp = Math.min(h.maxHp, h.hp + heal);
         battle.log.unshift(`Haraku's Moon Blessing restores ${heal} HP.`);
+        hitFx('vfx_heal', 'player', 120);
         ctx.sfx('reward');
       } else {
         acted = false;
@@ -204,6 +228,7 @@
         e.atk = Math.floor(e.atk * 1.3);
         e.hp = Math.min(e.maxHp, e.hp + Math.floor(e.maxHp * 0.15));
         battle.log.unshift(`${e.name} gleams with true bald power — stronger and partly restored!`);
+        hitFx('vfx_spirit', 'enemy', 210);
         ctx.sfx('portal');
         battle.turn = 'player';
         return;
@@ -212,6 +237,7 @@
       if (e.kind === 'mushroom' && Math.random() < 0.25) {
         battle.poison = 3;
         battle.log.unshift(`${e.name} bursts with toxic spores — Sean is poisoned!`);
+        hitFx('vfx_poison', 'player');
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -219,6 +245,7 @@
       if (e.kind === 'bat' && Math.random() < 0.25) {
         battle.weakened = 2;
         battle.log.unshift(`${e.name} screeches — Sean's attack drops for 2 turns!`);
+        hitFx('vfx_daze', 'player');
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -226,6 +253,7 @@
       if (e.kind === 'crystal' && Math.random() < 0.25 && battle.enemyGuard === 0) {
         battle.enemyGuard = 2;
         battle.log.unshift(`${e.name} hardens — your next 2 hits are halved!`);
+        hitFx('vfx_ice', 'enemy');
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -240,6 +268,7 @@
       h.hp = Math.max(0, h.hp - dmg);
       battle.log.unshift(`${e.name} hits for ${dmg} damage.`);
       ctx.fx(`-${dmg}`, {screen: true, x: 180 + Math.random() * 50, y: 230 + Math.random() * 30, color: '#ff8ba0', size: 20, life: 55});
+      hitFx(e.kind === 'xelar' ? 'vfx_zap' : 'vfx_claw', 'player');
       ctx.sfx('hit');
       battle.turn = h.hp <= 0 ? 'defeat' : 'player';
       if (battle.turn === 'defeat') battle.log.unshift('Sean falls! Choose: reward revive or return home.');

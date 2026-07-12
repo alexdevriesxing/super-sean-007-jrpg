@@ -65,51 +65,80 @@
   /* ---------------- managers ---------------- */
   const AssetManager = {
     async init() {
-      const [assetWiring, slicedAssets, mobManifest, objectManifest, iconManifest] = await Promise.all([
+      const [assetWiring, slicedAssets, mobManifest, objectManifest, iconManifest, vfxManifest] = await Promise.all([
         fetchJson('data/asset-wiring.json'),
         fetchJson('data/sliced-assets.json'),
         fetchJson('data/mob-manifest.json'),
         fetchJson('data/object-manifest.json'),
-        fetchJson('data/icon-manifest.json')
+        fetchJson('data/icon-manifest.json'),
+        fetchJson('data/vfx-manifest.json')
       ]);
       runtime.assetWiring = assetWiring || {};
       runtime.slicedAssets = slicedAssets || {sheets: {}, frames: []};
-      const list = {...criticalImageList};
+
+      // Everything beyond the small critical set streams in AFTER boot so a
+      // slow or stalled asset on mobile can never hold the loader open.
+      const deferred = {};
       Object.entries(runtime.assetWiring?.battleBackgrounds || {}).forEach(([key, file]) => {
-        list[`bg_${key}`] = file;
+        deferred[`bg_${key}`] = file; // only shown once a battle starts
       });
       // Distinct sliced creature/NPC sprites, loaded under their manifest name.
       if (mobManifest?.sprites) {
-        mobManifest.sprites.forEach(name => { list[name] = `${mobManifest.base}${name}.png`; });
+        mobManifest.sprites.forEach(name => { deferred[name] = `${mobManifest.base}${name}.png`; });
       }
       // Detailed building / landmark sprites for the homestead.
       if (objectManifest?.sprites) {
-        objectManifest.sprites.forEach(name => { list[name] = `${objectManifest.base}${name}.png`; });
+        objectManifest.sprites.forEach(name => { deferred[name] = `${objectManifest.base}${name}.png`; });
       }
       // Distinct item/gem icons for bag, crafting, shop and quest-log UI.
       if (iconManifest?.sprites) {
-        iconManifest.sprites.forEach(name => { list[name] = `${iconManifest.base}${name}.png`; });
+        iconManifest.sprites.forEach(name => { deferred[name] = `${iconManifest.base}${name}.png`; });
       }
-      await this.preloadImages(list);
+      // Battle effect sprites (slashes, zaps, heals, ...).
+      if (vfxManifest?.sprites) {
+        vfxManifest.sprites.forEach(name => { deferred[name] = `${vfxManifest.base}${name}.png`; });
+      }
+
+      // Block boot only on the handful of images the first frame truly needs;
+      // draw helpers all guard on `img.complete && naturalWidth`, so the rest
+      // can pop in as they arrive.
+      await this.preloadImages(criticalImageList, {timeout: 12000});
+      // Fire-and-forget: batched to avoid a memory spike from ~400 decodes at
+      // once, and never awaited so it cannot delay or wedge the game.
+      this.streamImages(deferred, 24);
     },
-    preloadImages(list) {
+    // Load one image, resolving on load, error, OR timeout so a single stalled
+    // request can never leave the boot promise pending forever.
+    loadImage(key, src, timeout) {
+      return new Promise(resolve => {
+        const im = new Image();
+        let settled = false;
+        const settle = ok => {
+          if (settled) return;
+          settled = true;
+          if (!ok) runtime.assetWarnings.push(src);
+          resolve();
+        };
+        im.onload = () => settle(true);
+        im.onerror = () => settle(false);
+        im.src = src;
+        img[key] = im;
+        if (timeout) setTimeout(() => settle(false), timeout);
+      });
+    },
+    preloadImages(list, {timeout = 12000} = {}) {
       const entries = Object.entries(list);
       if (!entries.length) return Promise.resolve();
-      let loaded = 0;
-      return new Promise(resolve => {
-        entries.forEach(([k, src]) => {
-          const im = new Image();
-          im.onload = () => { loaded++; if (loaded === entries.length) resolve(); };
-          im.onerror = () => {
-            runtime.assetWarnings.push(src);
-            console.warn('[AssetManager] Missing image', src);
-            loaded++;
-            if (loaded === entries.length) resolve();
-          };
-          im.src = src;
-          img[k] = im;
-        });
-      });
+      return Promise.all(entries.map(([k, src]) => this.loadImage(k, src, timeout)));
+    },
+    // Background loader: work through the list in small batches so mobile
+    // browsers aren't asked to decode hundreds of images simultaneously.
+    async streamImages(list, batchSize = 24) {
+      const entries = Object.entries(list);
+      for (let i = 0; i < entries.length; i += batchSize) {
+        const batch = entries.slice(i, i + batchSize);
+        await Promise.all(batch.map(([k, src]) => this.loadImage(k, src, 15000)));
+      }
     },
     sheetFor(tileset) {
       return runtime.slicedAssets?.sheets?.[TILESET_SHEETS[tileset]] || null;
@@ -564,6 +593,7 @@
   function addFx(text, opts = {}) {
     fx.push({
       text,
+      img: opts.img || null,
       x: opts.x ?? state.player.x,
       y: opts.y ?? state.player.y - 40,
       vy: opts.vy ?? -0.6,
@@ -572,6 +602,15 @@
       screen: Boolean(opts.screen),
       size: opts.size ?? 15
     });
+  }
+
+  // Sean face reactions popped above the player on key moments.
+  const EMOTES = {
+    happy: 'emote_1', smile: 'emote_2', angry: 'emote_3', worried: 'emote_4',
+    cry: 'emote_5', calm: 'emote_6', neutral: 'emote_7', love: 'emote_8'
+  };
+  function showEmote(mood, opts = {}) {
+    addFx('', {img: EMOTES[mood] || EMOTES.happy, y: state.player.y - 62, vy: -0.22, life: 95, size: 40, ...opts});
   }
 
   /* ---------------- module wiring ---------------- */
@@ -589,6 +628,7 @@
     save,
     showToast,
     fx: addFx,
+    emote: showEmote,
     sfx: id => AudioManager.playSfx(id),
     music: id => AudioManager.playMusic(id),
     stat: (event, once) => { try { window.SSGStats && window.SSGStats.track(event, once); } catch (e) {} },
@@ -817,6 +857,11 @@
       const x = f.screen ? f.x : f.x - cam.x;
       const y = f.screen ? f.y : f.y - cam.y;
       g.globalAlpha = Math.max(0, Math.min(1, f.life / 40));
+      const im = f.img && img[f.img];
+      if (im && im.complete && im.naturalWidth) {
+        g.drawImage(im, x - f.size / 2, y - f.size / 2, f.size, f.size);
+        continue;
+      }
       g.font = `bold ${f.size}px Nunito, Arial`;
       g.strokeStyle = 'rgba(10,30,50,.8)'; g.lineWidth = 3;
       g.strokeText(f.text, x, y);
@@ -1121,10 +1166,16 @@
 
   async function bootstrap() {
     maps = SSG.buildMaps();
-    await Promise.all([AssetManager.init(), AudioManager.init(), AdManager.init()]);
-    load();
+    // Never let a failing/slow init step hold the loader open — the game is
+    // playable with assets still streaming, so start regardless.
+    try {
+      await Promise.all([AssetManager.init(), AudioManager.init(), AdManager.init()]);
+    } catch (e) {
+      console.error('[boot] initialization error, starting anyway', e);
+    }
+    try { load(); } catch (e) { console.error('[boot] save load failed', e); }
     state.scene = 'title';
-    AudioManager.playMusic('title');
+    try { AudioManager.playMusic('title'); } catch (e) {}
     const loader = document.getElementById('gameLoader');
     if (loader) loader.classList.add('hidden');
     requestAnimationFrame(loop);

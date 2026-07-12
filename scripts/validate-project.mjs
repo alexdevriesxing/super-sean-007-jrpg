@@ -107,10 +107,22 @@ if (objectManifest?.sprites) {
   }
 }
 
+const wiring = await readJson('data/asset-wiring.json');
+for (const file of Object.values(wiring?.battleBackgrounds || {})) {
+  await expectFile(file);
+}
+
 const iconManifest = await readJson('data/icon-manifest.json');
 if (iconManifest?.sprites) {
   for (const name of iconManifest.sprites) {
     await expectFile(`${iconManifest.base}${name}.png`);
+  }
+}
+
+const vfxManifest = await readJson('data/vfx-manifest.json');
+if (vfxManifest?.sprites) {
+  for (const name of vfxManifest.sprites) {
+    await expectFile(`${vfxManifest.base}${name}.png`);
   }
 }
 

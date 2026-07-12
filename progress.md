@@ -172,3 +172,55 @@ Built and shipped the full gap-analysis follow-up:
 - Verified in preview via advanceTime + canvas capture (rAF is paused headless):
   bag/crafting/quest-log all draw the distinct icons; zero console errors;
   all 42 icon PNGs + manifest 200 in network log.
+
+## 2026-07-12 (cont.) — Mobile boot-hang fix + max-asset batch 1
+
+### CRITICAL FIX: game would not load on mobile
+- Root cause: `AssetManager.preloadImages` loaded ALL ~450 images (363 sliced
+  frames + mobs + objects + icons + vfx + backgrounds) concurrently and only
+  resolved when `loaded === entries.length`. On mobile Safari under memory
+  pressure a single image can be evicted and fire neither onload nor onerror,
+  so the promise never resolved, `bootstrap()` hung on its await, and the
+  "Loading Asteria-007…" overlay stayed up forever.
+- Fix (game.js): split into critical vs deferred. Boot now awaits only the ~28
+  `criticalImageList` images (tilesets/characters/portraits/base enemies) with a
+  12s per-image timeout; everything else streams AFTER boot via `streamImages`
+  (batched 24 at a time to avoid a mobile decode-memory spike). New `loadImage`
+  helper settles on load OR error OR timeout so a stalled request can never wedge
+  boot. All draw helpers already guard on `img.complete && naturalWidth`, so
+  deferred art simply pops in. `bootstrap()` wrapped in try/catch so the loader
+  always hides and the loop always starts even if an init step throws.
+- Fix (sw.js): bumped VERSION ssg-v1 → ssg-v2 so `activate` purges the old cache
+  holding the buggy game.js. Also made same-origin `.js` NETWORK-FIRST (was
+  stale-while-revalidate) with cache fallback for offline — app code is now always
+  fresh so a cached broken script can never hold the game hostage again.
+- Verified: after clearing SW+caches (returning-user sim) the loader hides,
+  scene reaches title, caches rebuild as ssg-v2-*; deferred assets confirmed
+  streaming; zero console errors.
+
+### Task batch (all verified in a live battle, zero console errors)
+- **Icon sheet leftovers** (slice-icons.mjs now 86 icons): map markers, 8 Sean
+  emotion emotes, treasure chests + lock/key, 12 achievement badges, friendship
+  hearts. Wired: achievements show distinct badges (dim until earned) + a happy
+  emote pop; HUD friendship is now 5 heart pips; world-map region pins use markers
+  (bounce on current region, lock icon when locked); map chests draw chest_wood /
+  chest_gold sprites; `ctx.emote(mood)` pops a Sean face on quest/fish/treasure.
+- **Battle backgrounds** (split-backgrounds.mjs → 28 lean 960×540 WebP, 2.3MB
+  total vs ~24MB of source PNG): 10 originals converted + three 2×2 grid sheets
+  split into 12 + six labelled boss arenas cropped below their banners.
+  asset-wiring.json rewired; battle.js `selectBackground` gives every region a
+  themed field + a distinct boss arena (mushroom/crystal/machine/moon/volcano/
+  xelar), final boss uses arena_xelar. Confirmed mushforest bg renders in combat.
+- **Battle VFX** (slice-vfx.mjs → 17 effects from the 2 VFX sheets, largest-
+  connected-component per labelled cluster): slash/crit/zap/heal/claw/daze/spirit
+  etc. New `hitFx(img,target)` overlays a sprite over a combatant via the existing
+  fx system (drawFx now handles `f.img`). Wired into attack (slash), Crystal Slash
+  (crit), Gadget Zap (zap), Moon Blessing (heal), enemy hits (claw), bat screech
+  (daze), Xelar phase-2 rally (spirit), enemy defeat (explosion). Confirmed the
+  vfx_slash arc draws on the enemy during a real attack.
+- Pipeline: slice:vfx + split:backgrounds added to dev + generate:assets; validate
+  checks battle-background + vfx-manifest files; full `npm run build` green, 18/18
+  tests pass.
+- STILL PENDING (this session's remaining plan): Xelar boss sprite+intro splash,
+  new enemies (demons/aquatic/mimic+chests), homestead animals, boot loading-screen
+  art, UI skin (dialogue box + HP/MP bar frames), two postgame regions (ice+desert).

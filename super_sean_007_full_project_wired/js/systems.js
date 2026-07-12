@@ -114,6 +114,7 @@
       const next = SSG.MAIN_QUESTS[Math.min(idx + 1, SSG.MAIN_QUESTS.length - 1)];
       setQuest(next);
       ctx.sfx('ui_confirm');
+      ctx.emote('happy');
       ctx.showToast(`Quest: ${next.title}`);
       ctx.save();
     }
@@ -547,6 +548,7 @@
         if (met[def.id] && !st.achievements[def.id]) {
           st.achievements[def.id] = Date.now();
           ctx.showToast(`Achievement unlocked: ${def.label}!`);
+          ctx.emote('happy');
           ctx.sfx('level_up');
         }
       });
@@ -589,6 +591,7 @@
         bumpStat('fishCaught', qty);
         ctx.sfx('chest');
         ctx.fx(`+${qty} Sunfish`, {color: '#9be8ff'});
+        ctx.emote('smile');
         ctx.showToast(`Splash! Caught ${qty} Sunfish.`);
       } else {
         ctx.sfx('menu_open');
@@ -668,6 +671,7 @@
       bumpStat('treasuresDug');
       ctx.sfx('chest');
       ctx.fx(`+${coins} coins  +2 ${loot}`, {color: '#ffe98a'});
+      ctx.emote('love');
       ctx.showToast(`Treasure dug up: ${coins} coins and 2 × ${loot}!`);
       ctx.save();
       return true;

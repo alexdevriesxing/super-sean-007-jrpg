@@ -1,0 +1,22 @@
+{
+  "base": "assets/sliced/vfx2/",
+  "sprites": [
+    "vfx_slash",
+    "vfx_crit",
+    "vfx_stars",
+    "vfx_ice",
+    "vfx_fire",
+    "vfx_poison",
+    "vfx_daze",
+    "vfx_claw",
+    "vfx_zap",
+    "vfx_arrows",
+    "vfx_explosion",
+    "vfx_heal",
+    "vfx_shield",
+    "vfx_spirit",
+    "vfx_teleport",
+    "vfx_water",
+    "vfx_nature"
+  ]
+}

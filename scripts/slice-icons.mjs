@@ -94,7 +94,56 @@ const JOBS = [
   [[816, 171, 23, 28], 'icon_gem_red'],
   [[856, 171, 22, 28], 'icon_gem_rainbow'],
   [[893, 172, 25, 26], 'icon_pearl'],
-  [[931, 171, 28, 27], 'icon_star_gold']
+  [[931, 171, 28, 27], 'icon_star_gold'],
+  // Map markers (3 rows of 5)
+  [[1251, 45, 27, 35], 'marker_alert'],
+  [[1289, 46, 27, 34], 'marker_pin'],
+  [[1326, 46, 27, 34], 'marker_quest'],
+  [[1364, 46, 26, 34], 'marker_star'],
+  [[1402, 44, 26, 36], 'marker_gem'],
+  [[1250, 94, 26, 27], 'marker_home'],
+  [[1289, 94, 27, 27], 'marker_shop'],
+  [[1327, 95, 25, 26], 'marker_battle'],
+  [[1363, 94, 29, 27], 'marker_camp'],
+  [[1403, 94, 26, 28], 'marker_anchor'],
+  [[1253, 135, 20, 25], 'marker_castle'],
+  [[1293, 135, 18, 26], 'marker_lock'],
+  [[1329, 135, 22, 26], 'marker_gate'],
+  [[1366, 135, 23, 25], 'marker_tower'],
+  [[1404, 135, 25, 26], 'marker_flag'],
+  // Sean emotion faces (social emotes, 2 rows of 4)
+  [[1218, 608, 49, 53], 'emote_1'],
+  [[1273, 608, 49, 53], 'emote_2'],
+  [[1327, 608, 49, 53], 'emote_3'],
+  [[1381, 608, 49, 53], 'emote_4'],
+  [[1218, 670, 49, 56], 'emote_5'],
+  [[1273, 671, 48, 55], 'emote_6'],
+  [[1327, 670, 49, 56], 'emote_7'],
+  [[1381, 671, 49, 55], 'emote_8'],
+  // Treasure chests, lock & key
+  [[879, 790, 40, 34], 'chest_wood'],
+  [[926, 791, 39, 33], 'chest_purple'],
+  [[975, 788, 44, 37], 'chest_gold'],
+  [[1030, 788, 46, 37], 'chest_gem'],
+  [[1100, 787, 25, 36], 'icon_lock'],
+  [[1141, 788, 26, 35], 'icon_key'],
+  // Achievement badges & medals (2 rows of 6)
+  [[21, 911, 28, 30], 'badge_1'],
+  [[66, 911, 30, 30], 'badge_2'],
+  [[115, 911, 26, 30], 'badge_3'],
+  [[159, 910, 30, 32], 'badge_4'],
+  [[205, 910, 31, 34], 'badge_5'],
+  [[250, 910, 31, 35], 'badge_6'],
+  [[20, 951, 29, 27], 'badge_7'],
+  [[66, 950, 30, 28], 'badge_8'],
+  [[113, 951, 30, 27], 'badge_9'],
+  [[159, 951, 30, 27], 'badge_10'],
+  [[206, 954, 28, 23], 'badge_11'],
+  [[253, 952, 24, 26], 'badge_12'],
+  // Friendship hearts
+  [[1263, 1036, 29, 27], 'heart_full'],
+  [[1298, 1036, 29, 26], 'heart_spark'],
+  [[1334, 1038, 24, 23], 'heart_empty']
 ];
 
 for (const [box, name] of JOBS) {

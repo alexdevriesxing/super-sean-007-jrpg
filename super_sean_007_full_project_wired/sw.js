@@ -1,7 +1,9 @@
 /* Super Sean 007 — service worker for installable, offline-capable play.
    Navigation: network-first with cached shell fallback.
-   Static assets (hashed by the build): stale-while-revalidate runtime cache. */
-const VERSION = 'ssg-v1';
+   App code (same-origin .js): network-first so a fix is never blocked by a
+   stale cached script; falls back to cache when offline.
+   Other static assets: stale-while-revalidate runtime cache. */
+const VERSION = 'ssg-v2';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -43,6 +45,22 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => caches.match('/').then(cached => cached || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // App code must always be fresh — a cached, broken script must never be able
+  // to hold the game hostage. Network-first, falling back to cache offline.
+  if (url.pathname.endsWith('.js')) {
+    event.respondWith(
+      caches.open(RUNTIME).then(cache =>
+        fetch(request)
+          .then(response => {
+            if (response.ok) cache.put(request, response.clone());
+            return response;
+          })
+          .catch(() => cache.match(request))
+      )
     );
     return;
   }
