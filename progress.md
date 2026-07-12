@@ -138,3 +138,18 @@ Built and shipped the full gap-analysis follow-up:
   fixed data test to allow billboard pieces (16/16 pass). Deployed; assets 200 on prod.
 - NOTE: item/material icons still use tileset indices (rich icon sheets exist,
   e.g. kleurrijke_rpg_ui_elementensheet.png — a future upgrade like the buildings).
+
+## 2026-07-11 (cont.) — Max asset extraction (commit ec64af8, deployed)
+- 19 more distinct enemies sliced from cave/swamp, forest, undead, flying-fae,
+  and Xelar-soldier sheets → mob-manifest now 35 sprites. All 18 previously
+  hue-shifted region monsters now have unique art (cave lizard, bog toad,
+  thorn boar, owlbear, fox spirit, skeleton pup, ghost wisp, cursed doll,
+  bone beetle, batling, griffin, skull knight, goblin brute, lizard guard, ...).
+- 3 ambient villagers (Farmer Gil/Baker Tom/Timmy) using spare townsfolk sprites,
+  with NPC_LINES dialogue.
+- 12 decorative billboard props (trees, crystals, statue, campfire, lamp, flowerpot,
+  market stall, bush, rocks, signpost) → Decor build category (bsize-scaled).
+- New test: every monster/NPC sprite ref must exist in mob-manifest (17 tests pass).
+- REMAINING (documented, not done): item/material ICONS still use tileset indices —
+  the UI icon sheet (kleurrijke_rpg_ui_elementensheet.png) has clean icon rows but
+  they're tiny/dense (risky crops); left as a future upgrade.
