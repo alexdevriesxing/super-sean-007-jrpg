@@ -70,6 +70,17 @@
 
   SSG.GEMS = ['Meadow Gem', 'Cave Gem', 'Plains Gem', 'Forest Gem', 'Moon Gem', 'Ruin Gem', 'Seventh Gem'];
 
+  // Distinct sliced gem icons (data/icon-manifest.json), one per gem.
+  SSG.GEM_ICONS = {
+    'Meadow Gem': 'icon_gem_green',
+    'Cave Gem': 'icon_gem_blue',
+    'Plains Gem': 'icon_gem_red',
+    'Forest Gem': 'icon_gem_purple',
+    'Moon Gem': 'icon_pearl',
+    'Ruin Gem': 'icon_star_gold',
+    'Seventh Gem': 'icon_gem_rainbow'
+  };
+
   // Side quests: give item counts to an NPC for a reward. Repeatable ones re-arm.
   SSG.SIDE_QUESTS = [
     {id:'soup', npc:'berrybun', title:'Grandma\'s Soup Pot',

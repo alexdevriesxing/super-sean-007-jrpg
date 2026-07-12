@@ -102,6 +102,19 @@ test('crops reference real seed items and ripe tiles', () => {
   }
 });
 
+test('every item img and gem icon exists in the icon manifest', async () => {
+  const fs = await import('node:fs/promises');
+  const manifest = JSON.parse(await fs.readFile('super_sean_007_full_project_wired/data/icon-manifest.json', 'utf8'));
+  const known = new Set(manifest.sprites);
+  for (const [name, def] of Object.entries(SSG.ITEMS)) {
+    if (def.img) assert.ok(known.has(def.img), `item ${name} img ${def.img} in icon manifest`);
+  }
+  for (const [gem, icon] of Object.entries(SSG.GEM_ICONS)) {
+    assert.ok(known.has(icon), `gem ${gem} icon ${icon} in icon manifest`);
+    assert.ok(SSG.GEMS.includes(gem), `gem icon key ${gem} is a real gem`);
+  }
+});
+
 test('every monster and NPC sprite reference exists in the mob manifest', async () => {
   const fs = await import('node:fs/promises');
   const manifest = JSON.parse(await fs.readFile('super_sean_007_full_project_wired/data/mob-manifest.json', 'utf8'));

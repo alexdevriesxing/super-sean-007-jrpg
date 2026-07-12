@@ -382,7 +382,7 @@
         const col = i % 2, row = Math.floor(i / 2);
         const x = 118 + col * 290, y = 132 + row * 27;
         const def = SSG.ITEMS[name];
-        if (def?.icon) ctx.drawTileScaled(def.icon.sheet, def.icon.tile, x, y - 6, 22, 22);
+        ctx.drawItemIcon(def, x, y - 6, 22, 22);
         const equipped = def?.type === 'equipment' && Object.values(st.equipment).includes(name);
         g.fillStyle = equipped ? '#0f8a3d' : '#12365a';
         g.font = equipped ? 'bold 15px Nunito' : '15px Nunito';
@@ -405,7 +405,8 @@
       g.font = '14px Nunito';
       st.party.forEach((c, i) => g.fillText(`· ${cap(c)}`, 710, 275 + i * 22));
       g.font = '15px Nunito';
-      g.fillText(`Coins: ${st.hero.coins}`, 710, 420);
+      ctx.drawIcon('icon_coin_gold', 710, 406, 18, 18);
+      g.fillText(`${st.hero.coins}`, 733, 420);
     }
 
     /* ---------- quest log ---------- */
@@ -421,7 +422,7 @@
         const has = st.gems.includes(gem);
         const x = 122 + i * 68;
         g.save(); if (!has) g.globalAlpha = 0.25;
-        ctx.drawTileScaled('birthday', 21, x, 244, 30, 30);
+        if (!ctx.drawIcon(SSG.GEM_ICONS?.[gem], x, 244, 30, 30)) ctx.drawTileScaled('birthday', 21, x, 244, 30, 30);
         g.restore();
         g.font = '9px Nunito'; g.fillStyle = has ? '#0f8a3d' : '#93a6b8';
         g.fillText(gem.replace(' Gem', ''), x + 2, 290);
@@ -491,7 +492,7 @@
         g.beginPath(); g.roundRect(x, y, 396, 31, 8); g.fill();
         g.strokeStyle = ok ? '#0f8a3d' : '#c8d4de'; g.lineWidth = 1.5; g.stroke();
         const def = SSG.ITEMS[r.out.item];
-        if (def?.icon) ctx.drawTileScaled(def.icon.sheet, def.icon.tile, x + 5, y + 4, 23, 23);
+        ctx.drawItemIcon(def, x + 5, y + 4, 23, 23);
         g.fillStyle = ok ? '#0f6f31' : '#12365a'; g.font = 'bold 13px Nunito';
         g.fillText(r.name, x + 34, y + 14);
         g.font = '11px Nunito'; g.fillStyle = '#41576b';
@@ -515,7 +516,7 @@
           const y = 140 + i * 38;
           g.fillStyle = '#f4f7fa'; g.beginPath(); g.roundRect(150, y, 560, 32, 8); g.fill();
           const def = SSG.ITEMS[entry.item];
-          if (def?.icon) ctx.drawTileScaled(def.icon.sheet, def.icon.tile, 156, y + 4, 24, 24);
+          ctx.drawItemIcon(def, 156, y + 4, 24, 24);
           g.fillStyle = '#12365a'; g.font = 'bold 14px Nunito';
           g.fillText(`${entry.item} — ${entry.price} coins`, 190, y + 21);
           button(620, y + 3, 80, 26, 'Buy', () => sys().buy(i));
@@ -527,7 +528,7 @@
           const y = 140 + i * 38;
           g.fillStyle = '#f4f7fa'; g.beginPath(); g.roundRect(150, y, 560, 32, 8); g.fill();
           const def = SSG.ITEMS[entry.item];
-          if (def?.icon) ctx.drawTileScaled(def.icon.sheet, def.icon.tile, 156, y + 4, 24, 24);
+          ctx.drawItemIcon(def, 156, y + 4, 24, 24);
           g.fillStyle = '#12365a'; g.font = 'bold 14px Nunito';
           g.fillText(`${entry.item} × ${entry.count} — ${entry.price} coins each`, 190, y + 21);
           button(620, y + 3, 80, 26, 'Sell', () => sys().sell(i));

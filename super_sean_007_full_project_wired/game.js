@@ -65,11 +65,12 @@
   /* ---------------- managers ---------------- */
   const AssetManager = {
     async init() {
-      const [assetWiring, slicedAssets, mobManifest, objectManifest] = await Promise.all([
+      const [assetWiring, slicedAssets, mobManifest, objectManifest, iconManifest] = await Promise.all([
         fetchJson('data/asset-wiring.json'),
         fetchJson('data/sliced-assets.json'),
         fetchJson('data/mob-manifest.json'),
-        fetchJson('data/object-manifest.json')
+        fetchJson('data/object-manifest.json'),
+        fetchJson('data/icon-manifest.json')
       ]);
       runtime.assetWiring = assetWiring || {};
       runtime.slicedAssets = slicedAssets || {sheets: {}, frames: []};
@@ -84,6 +85,10 @@
       // Detailed building / landmark sprites for the homestead.
       if (objectManifest?.sprites) {
         objectManifest.sprites.forEach(name => { list[name] = `${objectManifest.base}${name}.png`; });
+      }
+      // Distinct item/gem icons for bag, crafting, shop and quest-log UI.
+      if (iconManifest?.sprites) {
+        iconManifest.sprites.forEach(name => { list[name] = `${iconManifest.base}${name}.png`; });
       }
       await this.preloadImages(list);
     },
@@ -126,6 +131,17 @@
       const fh = sheet?.frameHeight || TILE;
       const cols = Math.max(1, Math.floor((sheet?.sourceWidth || source.naturalWidth) / fw));
       g.drawImage(source, (id % cols) * fw, Math.floor(id / cols) * fh, fw, fh, sx, sy, w, h);
+    },
+    drawIcon(name, sx, sy, w, h) {
+      const source = img[name];
+      if (!source || !source.complete || !source.naturalWidth) return false;
+      g.drawImage(source, sx, sy, w, h);
+      return true;
+    },
+    // Prefer an item's distinct sliced icon; fall back to its tileset tile.
+    drawItemIcon(def, sx, sy, w, h) {
+      if (def?.img && this.drawIcon(def.img, sx, sy, w, h)) return;
+      if (def?.icon) this.drawTileScaled(def.icon.sheet, def.icon.tile, sx, sy, w, h);
     },
     drawCharacterFrame(char, frame, x, y, width, height) {
       const sheet = runtime.slicedAssets?.sheets?.[char];
@@ -601,6 +617,8 @@
     cloud: () => ({enabled: CloudSync.enabled, id: CloudSync.id, status: CloudSync.status, toggle: () => CloudSync.toggle()}),
     drawTile: (tileset, id, sx, sy) => AssetManager.drawTile(tileset, id, sx, sy),
     drawTileScaled: (tileset, id, sx, sy, w, h) => AssetManager.drawTileScaled(tileset, id, sx, sy, w, h),
+    drawIcon: (name, sx, sy, w, h) => AssetManager.drawIcon(name, sx, sy, w, h),
+    drawItemIcon: (def, sx, sy, w, h) => AssetManager.drawItemIcon(def, sx, sy, w, h),
     drawCharacterFrame: (char, frame, x, y, w, h) => AssetManager.drawCharacterFrame(char, frame, x, y, w, h)
   };
 

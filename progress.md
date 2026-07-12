@@ -152,4 +152,23 @@ Built and shipped the full gap-analysis follow-up:
 - New test: every monster/NPC sprite ref must exist in mob-manifest (17 tests pass).
 - REMAINING (documented, not done): item/material ICONS still use tileset indices —
   the UI icon sheet (kleurrijke_rpg_ui_elementensheet.png) has clean icon rows but
-  they're tiny/dense (risky crops); left as a future upgrade.
+  they're tiny/dense (risky crops); left as a future upgrade. [DONE 2026-07-12, see below]
+
+## 2026-07-12 — Distinct item & gem icons (icon sheet sliced)
+- scripts/slice-icons.mjs: sliced 42 icons from the 4 top rows of
+  kleurrijke_rpg_ui_elementensheet.png (crops found by connected-component
+  detection, flood-fill bg removal, keeps detached sparkle details) →
+  assets/sliced/icons/ + data/icon-manifest.json. Wired into dev + generate:assets.
+- Items: 19 ITEMS gained `img` (distinct icon) with the old tileset `icon` kept
+  as fallback — potions, sword/shield/crown, scroll (Treasure Map), jar (Mushroom
+  Stew), cake, meat, mushroom, leaf/herb, crystal, medal, bolt, crescent, gems, star.
+- Gems: SSG.GEM_ICONS maps the Seven Gems to 7 distinct gem sprites (green, blue,
+  red, purple, pearl, gold star, rainbow); quest log renders them (dim when unowned).
+- game.js: AssetManager preloads icon manifest; new drawIcon(name) +
+  drawItemIcon(def) (img → tileset fallback), exposed on ctx. render.js uses them
+  in bag, crafting, shop buy/sell, quest-log gems; bag coin count got the gold coin.
+- validate checks all manifest icons + dist copies; new test guards every ITEMS.img
+  and GEM_ICONS ref against the manifest (18/18 pass). Build + validation green.
+- Verified in preview via advanceTime + canvas capture (rAF is paused headless):
+  bag/crafting/quest-log all draw the distinct icons; zero console errors;
+  all 42 icon PNGs + manifest 200 in network log.
