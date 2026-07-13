@@ -1,20 +1,15 @@
 {
   "baseline": {
     "measuredAt": "2026-07-13",
-    "release": "1.2.0",
-    "totalDistBytes": 203123887,
-    "javascriptBytes": 281435,
-    "cssBytes": 55585,
-    "criticalBytes": 480379,
-    "filesOverTwoMb": 64,
-    "policy": "Total size receives approximately one percent release headroom. The count of files over two megabytes may not increase. Critical first-play, JavaScript and CSS limits remain substantially below their ceilings."
+    "release": "1.2.1",
+    "policy": "Production excludes development-only generated source art and internal asset-integration documentation. Total distribution size has limited release headroom, only the title key art may exceed two megabytes, and first-play code/assets remain tightly bounded."
   },
-  "totalDistBytes": 205500000,
-  "maxSingleAssetBytes": 6500000,
-  "maxJavaScriptBytes": 1800000,
-  "maxCssBytes": 450000,
-  "maxInitialCriticalBytes": 42000000,
-  "maxFilesOverTwoMb": 64,
+  "totalDistBytes": 30000000,
+  "maxSingleAssetBytes": 4000000,
+  "maxJavaScriptBytes": 1900000,
+  "maxCssBytes": 500000,
+  "maxInitialCriticalBytes": 2000000,
+  "maxFilesOverTwoMb": 1,
   "criticalPaths": [
     "index.html",
     "styles.css",
