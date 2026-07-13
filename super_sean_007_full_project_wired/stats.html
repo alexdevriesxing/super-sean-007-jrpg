@@ -6,133 +6,31 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="referrer" content="no-referrer">
   <title>Super Sean 007 — Protected Diagnostics</title>
-  <style>
-    body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:#0e2744;color:#eafaff;padding:24px;line-height:1.5}h1{font-size:1.6rem;margin:0 0 4px}.sub{color:#9fd3f2;margin:0 0 24px;font-size:.9rem}.auth{max-width:620px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:18px;border-radius:14px;margin-bottom:24px}.auth form{display:flex;gap:8px;flex-wrap:wrap}.auth input{min-width:260px;flex:1;padding:10px;border:1px solid #527796;border-radius:8px;background:#081b31;color:#fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px}.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px}.card .n{font-size:2rem;font-weight:800;color:#ffd76a}.card .l{font-size:.8rem;color:#bcd6ea;text-transform:capitalize}h2{font-size:1.1rem;margin:24px 0 10px;color:#7cecff}.bars{display:flex;flex-direction:column;gap:6px}.barrow{display:grid;grid-template-columns:90px 1fr 50px;align-items:center;gap:8px;font-size:.8rem}.bar{height:16px;background:linear-gradient(90deg,#168ed0,#46d9db);border-radius:8px;min-width:2px}table{width:100%;border-collapse:collapse;font-size:.82rem}td,th{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:top}.err{color:#ff9b9b}.muted{color:#7fa8c4}button{background:#168ed0;border:0;color:#fff;padding:9px 14px;border-radius:8px;font-weight:700;cursor:pointer}.danger{background:#8c3750}.status{min-height:1.5em;color:#ffd76a}
-  </style>
+  <link rel="stylesheet" href="stats.css">
 </head>
 <body>
-  <h1>Super Sean 007 — Protected Diagnostics</h1>
-  <p class="sub">First-party aggregate metrics and recent client errors. API reads require the Cloudflare ADMIN_TOKEN.</p>
-  <section class="auth">
-    <form id="loginForm">
-      <label for="token" style="width:100%">Admin token</label>
-      <input id="token" type="password" autocomplete="current-password" required>
-      <button type="submit">Load dashboard</button>
-      <button type="button" class="danger" id="logout">Forget token</button>
-    </form>
-    <p class="status" id="status"></p>
-  </section>
-  <div id="dashboard" hidden>
-    <div class="grid" id="totals"></div>
-    <h2>Last 14 days — pageviews &amp; new games</h2>
-    <div class="bars" id="daily"></div>
-    <h2>Recent errors</h2>
-    <table><tbody id="errors"><tr><td class="muted">Loading…</td></tr></tbody></table>
-  </div>
-
-  <script>
-    const tokenInput = document.getElementById('token');
-    const status = document.getElementById('status');
-    const dashboard = document.getElementById('dashboard');
-    const saved = sessionStorage.getItem('ssg-admin-token') || '';
-    tokenInput.value = saved;
-
-    function element(tag, className, text) {
-      const node = document.createElement(tag);
-      if (className) node.className = className;
-      if (text != null) node.textContent = text;
-      return node;
-    }
-
-    async function api(path, token) {
-      const response = await fetch(path, {
-        headers: {authorization: `Bearer ${token}`},
-        credentials: 'same-origin',
-        cache: 'no-store'
-      });
-      const body = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(body.error || `Request failed (${response.status})`);
-      return body;
-    }
-
-    function renderTotals(totals) {
-      const target = document.getElementById('totals');
-      target.replaceChildren();
-      const keys = Object.keys(totals || {}).sort((a, b) => totals[b] - totals[a]);
-      if (!keys.length) target.append(element('p', 'muted', 'No data yet.'));
-      for (const key of keys) {
-        const card = element('div', 'card');
-        card.append(element('div', 'n', String(totals[key] || 0)));
-        card.append(element('div', 'l', key.replace(/_/g, ' ')));
-        target.append(card);
-      }
-    }
-
-    function renderDays(days) {
-      const target = document.getElementById('daily');
-      target.replaceChildren();
-      const keys = Object.keys(days || {}).sort().slice(-14);
-      const max = Math.max(1, ...keys.map(day => days[day].pageview || 0));
-      if (!keys.length) target.append(element('p', 'muted', 'No daily data yet.'));
-      for (const day of keys) {
-        const pageviews = days[day].pageview || 0;
-        const newGames = days[day].new_game || 0;
-        const row = element('div', 'barrow');
-        row.append(element('span', 'muted', day.slice(5)));
-        const bar = element('div', 'bar');
-        bar.style.width = `${Math.round(pageviews / max * 100)}%`;
-        row.append(bar);
-        row.append(element('span', '', `${pageviews}/${newGames}`));
-        target.append(row);
-      }
-    }
-
-    function renderErrors(errors) {
-      const target = document.getElementById('errors');
-      target.replaceChildren();
-      if (!errors?.length) {
-        const row = document.createElement('tr');
-        const cell = element('td', 'muted', 'No errors logged.');
-        cell.colSpan = 3;
-        row.append(cell);
-        target.append(row);
-        return;
-      }
-      for (const entry of errors) {
-        const row = document.createElement('tr');
-        row.append(element('td', 'muted', new Date(entry.at).toLocaleString()));
-        row.append(element('td', 'err', entry.msg || ''));
-        row.append(element('td', 'muted', `${entry.url || ''}:${entry.line || 0}`));
-        target.append(row);
-      }
-    }
-
-    async function load(token) {
-      status.textContent = 'Loading protected diagnostics…';
-      dashboard.hidden = true;
-      const [stats, errors] = await Promise.all([api('/api/stat', token), api('/api/err', token)]);
-      renderTotals(stats.totals);
-      renderDays(stats.days);
-      renderErrors(errors.errors);
-      sessionStorage.setItem('ssg-admin-token', token);
-      dashboard.hidden = false;
-      status.textContent = `Loaded ${new Date().toLocaleTimeString()}.`;
-    }
-
-    document.getElementById('loginForm').addEventListener('submit', event => {
-      event.preventDefault();
-      load(tokenInput.value.trim()).catch(error => {
-        dashboard.hidden = true;
-        status.textContent = error.message;
-      });
-    });
-    document.getElementById('logout').addEventListener('click', () => {
-      sessionStorage.removeItem('ssg-admin-token');
-      tokenInput.value = '';
-      dashboard.hidden = true;
-      status.textContent = 'Token removed from this tab.';
-    });
-    if (saved) load(saved).catch(error => { status.textContent = error.message; });
-  </script>
+  <main>
+    <h1>Super Sean 007 — Protected Diagnostics</h1>
+    <p class="sub">Approximate first-party metrics and recent client errors. Reads require the Cloudflare admin secret.</p>
+    <section class="auth" aria-labelledby="authTitle">
+      <h2 id="authTitle">Administrator access</h2>
+      <form id="loginForm">
+        <label for="token">Admin token</label>
+        <input id="token" type="password" autocomplete="off" required>
+        <button type="submit">Load dashboard</button>
+        <button type="button" class="danger" id="logout">Clear token</button>
+      </form>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="muted">The token is held only in this page's memory. It is never written to localStorage or sessionStorage.</p>
+    </section>
+    <div id="dashboard" hidden>
+      <div class="grid" id="totals"></div>
+      <h2>Last 14 days — pageviews and new games</h2>
+      <div class="bars" id="daily"></div>
+      <h2>Recent errors</h2>
+      <div class="table-wrap"><table><tbody id="errors"><tr><td class="muted">Loading…</td></tr></tbody></table></div>
+    </div>
+  </main>
+  <script src="stats.js" defer></script>
 </body>
 </html>

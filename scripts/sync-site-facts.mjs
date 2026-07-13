@@ -2,9 +2,13 @@ import {readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 
 const projectRoot = path.resolve('super_sean_007_full_project_wired');
+const distOnly = process.argv.includes('--dist');
+const outputRoot = distOnly ? path.resolve('dist') : projectRoot;
 const facts = JSON.parse(await readFile(path.join(projectRoot, 'data/site-facts.json'), 'utf8'));
+const checkOnly = process.argv.includes('--check');
 const numberWord = facts.regionCount === 11 ? 'eleven' : String(facts.regionCount);
 const numberWordTitle = numberWord[0].toUpperCase() + numberWord.slice(1);
+const stale = [];
 
 function replaceAllKnown(html) {
   return html
@@ -21,43 +25,36 @@ function replaceAllKnown(html) {
     .replace(/<body(?: data-site-version="[^"]+")?>/, `<body data-site-version="${facts.version}">`);
 }
 
-async function syncIndex() {
-  const file = path.join(projectRoot, 'index.html');
-  let html = replaceAllKnown(await readFile(file, 'utf8'));
-
+function renderIndex(source) {
+  let html = replaceAllKnown(source);
   if (!html.includes('"softwareVersion"')) {
     html = html.replace(
       '        "isAccessibleForFree": true,\n        "inLanguage": "en",',
       `        "isAccessibleForFree": true,\n        "softwareVersion": "${facts.version}",\n        "inLanguage": "en",`
     );
+  } else {
+    html = html.replace(/"softwareVersion": "[^"]+"/, `"softwareVersion": "${facts.version}"`);
   }
-
   if (!html.includes('<h3>Frostpeak Reaches</h3>')) {
     const anchor = '          <article><h3>Ancient Ruins &amp; Bald Moon Tower</h3><p>The collapsed capital of the Gem Guardians — and above it, Xelar’s fortress, where the final battle awaits.</p></article>';
-    const additions = `${anchor}\n          <article><h3>Frostpeak Reaches</h3><p>An icy postgame route beyond Xelar’s tower, filled with elite demons, rare ore and the Void Succubus Queen.</p></article>\n          <article><h3>Sunsand Isle</h3><p>A warm postgame shore of relics and sea creatures, ending with the Tide Spirit Sovereign.</p></article>`;
-    html = html.replace(anchor, additions);
+    html = html.replace(anchor, `${anchor}\n          <article><h3>Frostpeak Reaches</h3><p>An icy postgame route beyond Xelar’s tower, filled with elite demons, rare ore and the Void Succubus Queen.</p></article>\n          <article><h3>Sunsand Isle</h3><p>A warm postgame shore of relics and sea creatures, ending with the Tide Spirit Sovereign.</p></article>`);
   }
-
   if (!html.includes('href="updates.html"')) {
     html = html.replace('        <a href="#faq">FAQ</a>', '        <a href="#faq">FAQ</a>\n        <a href="updates.html">Updates</a>');
   }
-
   if (!html.includes('href="guides.html">Full Guides')) {
     html = html.replace('        <a href="#characters">Heroes</a>', '        <a href="#characters">Heroes</a>\n        <a href="characters.html">Character Guide</a>');
     html = html.replace('        <a href="#world-history">History</a>', '        <a href="#world-history">History</a>\n        <a href="world.html">World Guide</a>\n        <a href="guides.html">Full Guides</a>');
   }
-
   html = html.replace(
     /<a class="community-card" href="https:\/\/discord\.gg\/"[\s\S]*?<\/a>/,
     '<a class="community-card" href="updates.html" style="text-decoration:none">\n            <div class="emoji">📜</div><h3>Development updates</h3><p>Read dated release notes, new-region details and production improvements.</p>\n          </a>'
   );
-
   html = html.replace(
     'Ad partners may use cookies or similar technologies to measure and serve ads. By playing, you agree to the display of these ads. Game progress is saved only in your own browser via localStorage and is never uploaded.',
     'Ad partners may use cookies or similar technologies only after you accept advertising. Progress is stored locally in your browser by default and is uploaded to Cloudflare only when you voluntarily enable Cloud Sync.'
   );
-
-  await writeFile(file, html);
+  return html;
 }
 
 function llmsText() {
@@ -82,36 +79,48 @@ function aiSummary() {
     world: {name: 'Asteria-007', region_count: facts.regionCount, regions: facts.regions},
     campaign: {main_chapters: facts.mainChapters, campaign_bosses: facts.mainBosses, postgame_bosses: facts.postgameBosses, gems_to_restore: 7},
     features: facts.features,
-    privacy: 'Progress is local by default. Cloud Sync is optional. Third-party ads load only after consent. Aggregate analytics are cookieless and diagnostics reads are admin-protected.',
+    privacy: 'Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.',
     key_pages: {
-      play: `${facts.officialUrl}#play`,
-      guides: `${facts.officialUrl}guides.html`,
-      characters: `${facts.officialUrl}characters.html`,
-      world: `${facts.officialUrl}world.html`,
-      updates: `${facts.officialUrl}updates.html`,
-      privacy: `${facts.officialUrl}privacy.html`
+      play: `${facts.officialUrl}#play`, guides: `${facts.officialUrl}guides.html`,
+      characters: `${facts.officialUrl}characters.html`, world: `${facts.officialUrl}world.html`,
+      updates: `${facts.officialUrl}updates.html`, privacy: `${facts.officialUrl}privacy.html`,
+      security: `${facts.officialUrl}security-policy.html`
     }
   };
 }
 
 function sitemap() {
   const pages = [
-    ['', '1.0', 'weekly'],
-    ['guides.html', '0.9', 'monthly'],
-    ['characters.html', '0.8', 'monthly'],
-    ['world.html', '0.8', 'monthly'],
-    ['updates.html', '0.8', 'weekly'],
-    ['privacy.html', '0.3', 'yearly'],
-    ['terms.html', '0.3', 'yearly']
+    ['', '1.0', 'weekly'], ['guides.html', '0.9', 'monthly'], ['characters.html', '0.8', 'monthly'],
+    ['world.html', '0.8', 'monthly'], ['updates.html', '0.8', 'weekly'],
+    ['privacy.html', '0.3', 'yearly'], ['terms.html', '0.3', 'yearly'], ['security-policy.html', '0.2', 'yearly']
   ];
   const urls = pages.map(([page, priority, changefreq]) => `  <url><loc>${facts.officialUrl}${page}</loc><lastmod>${facts.lastModified}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
 
-await syncIndex();
+async function writeOrCheck(relative, expected) {
+  const file = path.join(outputRoot, relative);
+  if (checkOnly) {
+    if (relative === 'index.html') return; // production HTML is rendered in dist without mutating the checkout
+    const actual = await readFile(file, 'utf8').catch(() => '');
+    if (actual !== expected) stale.push(relative);
+    return;
+  }
+  await writeFile(file, expected);
+}
+
+const indexSource = await readFile(path.join(outputRoot, 'index.html'), 'utf8');
 await Promise.all([
-  writeFile(path.join(projectRoot, 'llms.txt'), llmsText()),
-  writeFile(path.join(projectRoot, 'ai-summary.json'), `${JSON.stringify(aiSummary(), null, 2)}\n`),
-  writeFile(path.join(projectRoot, 'sitemap.xml'), sitemap())
+  writeOrCheck('index.html', renderIndex(indexSource)),
+  writeOrCheck('llms.txt', llmsText()),
+  writeOrCheck('ai-summary.json', `${JSON.stringify(aiSummary(), null, 2)}\n`),
+  writeOrCheck('sitemap.xml', sitemap())
 ]);
-console.log(`Synced public facts for ${facts.shortName} ${facts.version} (${facts.regionCount} regions).`);
+
+if (checkOnly && stale.length) {
+  console.error(`Generated public content is stale: ${stale.join(', ')}. Run npm run sync:site and commit the result.`);
+  process.exit(1);
+}
+const target = distOnly ? 'production dist' : 'source';
+console.log(`${checkOnly ? 'Verified' : 'Synced'} ${target} public facts for ${facts.shortName} ${facts.version} (${facts.regionCount} regions).`);

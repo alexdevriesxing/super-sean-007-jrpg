@@ -53,13 +53,14 @@
     "optional one-to-four-player Party Link co-op",
     "desktop, tablet and mobile controls"
   ],
-  "privacy": "Progress is local by default. Cloud Sync is optional. Third-party ads load only after consent. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
+  "privacy": "Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
   "key_pages": {
     "play": "https://www.supersean007.com/#play",
     "guides": "https://www.supersean007.com/guides.html",
     "characters": "https://www.supersean007.com/characters.html",
     "world": "https://www.supersean007.com/world.html",
     "updates": "https://www.supersean007.com/updates.html",
-    "privacy": "https://www.supersean007.com/privacy.html"
+    "privacy": "https://www.supersean007.com/privacy.html",
+    "security": "https://www.supersean007.com/security-policy.html"
   }
 }

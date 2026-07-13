@@ -1,20 +1,37 @@
-/* Super Sean 007 — homepage motion: scroll-reveal sections and nav highlighting.
-   Progressive enhancement only; the page is fully usable without it. */
+/* Super Sean 007 — progressive homepage behavior and runtime module loading. */
 (() => {
   'use strict';
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Reveal-on-scroll for section content.
+  if (!document.querySelector('link[data-ssg-accessibility]')) {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = 'accessibility.css';
+    stylesheet.dataset.ssgAccessibility = 'true';
+    document.head.appendChild(stylesheet);
+  }
+
+  function loadRuntime(src) {
+    if (document.querySelector(`script[data-ssg-runtime="${src}"]`)) return;
+    const script = document.createElement('script');
+    script.src = src;
+    script.defer = true;
+    script.dataset.ssgRuntime = src;
+    document.body.appendChild(script);
+  }
+
+  ['turn-config.js', 'cloud-controls.js', 'accessibility.js', 'runtime-hardening.js'].forEach(loadRuntime);
+
   if (!reduceMotion && 'IntersectionObserver' in window) {
     const targets = document.querySelectorAll(
       '.section-heading, .split > *, .character-card, .region-grid article, ' +
       '.mechanic-grid article, .guide-step, .gallery-grid figure, .lore-panel, ' +
       '.quest-card, details'
     );
-    targets.forEach((el, i) => {
-      el.classList.add('reveal');
-      el.style.transitionDelay = `${(i % 4) * 70}ms`;
+    targets.forEach((element, index) => {
+      element.classList.add('reveal');
+      element.style.transitionDelay = `${(index % 4) * 70}ms`;
     });
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -24,10 +41,9 @@
         }
       });
     }, {rootMargin: '0px 0px -8% 0px', threshold: 0.08});
-    targets.forEach(el => observer.observe(el));
+    targets.forEach(element => observer.observe(element));
   }
 
-  // Highlight the nav link of the section in view.
   const navLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
   const sections = navLinks
     .map(link => document.querySelector(link.getAttribute('href')))
@@ -37,48 +53,62 @@
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
         navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+          const active = link.getAttribute('href') === `#${entry.target.id}`;
+          link.classList.toggle('active', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
         });
       });
     }, {rootMargin: '-30% 0px -60% 0px'});
     sections.forEach(section => sectionObserver.observe(section));
   }
 
-  // Close the mobile nav after choosing a link.
+  const navToggle = document.querySelector('.nav-toggle');
+  const navPanel = document.querySelector('.nav-links');
+  if (navToggle && navPanel) {
+    if (!navPanel.id) navPanel.id = 'mainNavLinks';
+    navToggle.setAttribute('aria-controls', navPanel.id);
+    navToggle.setAttribute('aria-expanded', String(document.body.classList.contains('nav-open')));
+    navToggle.addEventListener('click', () => {
+      requestAnimationFrame(() => navToggle.setAttribute('aria-expanded', String(document.body.classList.contains('nav-open'))));
+    });
+  }
+
   navLinks.forEach(link => {
-    link.addEventListener('click', () => document.body.classList.remove('nav-open'));
+    link.addEventListener('click', () => {
+      document.body.classList.remove('nav-open');
+      navToggle?.setAttribute('aria-expanded', 'false');
+    });
   });
 
-  // Theater mode: game spans the full container, ads reflow below (still visible).
   window.SSGTheater = () => {
     const on = document.body.classList.toggle('theater');
-    const btn = document.getElementById('theaterBtn');
-    if (btn) btn.textContent = on ? '🖥 Normal' : '🖥 Theater';
+    const button = document.getElementById('theaterBtn');
+    if (button) {
+      button.textContent = on ? '🖥 Normal' : '🖥 Theater';
+      button.setAttribute('aria-pressed', String(on));
+    }
     const frame = document.getElementById('gameFrame');
-    if (frame) frame.scrollIntoView({behavior: 'smooth', block: on ? 'start' : 'center'});
+    if (frame) frame.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: on ? 'start' : 'center'});
   };
 
-  // Fullscreen on the game frame. iOS Safari has no element fullscreen, so we
-  // fall back to a CSS "maximize" that pins the frame over the viewport.
-  const supportsNativeFs = () => document.fullscreenEnabled ||
-    document.documentElement.webkitRequestFullscreen;
+  const supportsNativeFullscreen = () => document.fullscreenEnabled || document.documentElement.webkitRequestFullscreen;
   window.SSGFullscreen = () => {
     const frame = document.getElementById('gameFrame');
     if (!frame) return;
-    if (supportsNativeFs()) {
+    if (supportsNativeFullscreen()) {
       if (document.fullscreenElement || document.webkitFullscreenElement) {
         (document.exitFullscreen || document.webkitExitFullscreen).call(document);
       } else {
-        const req = frame.requestFullscreen || frame.webkitRequestFullscreen;
-        if (req) { req.call(frame); return; }
+        const request = frame.requestFullscreen || frame.webkitRequestFullscreen;
+        if (request) { request.call(frame); return; }
       }
     }
-    // CSS fallback (iPhone and anywhere native FS is blocked).
     document.body.classList.toggle('ssg-maximize');
     frame.scrollIntoView({block: 'start'});
   };
-  // Esc leaves the CSS-maximize fallback.
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') document.body.classList.remove('ssg-maximize');
+
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape') document.body.classList.remove('ssg-maximize');
   });
 })();

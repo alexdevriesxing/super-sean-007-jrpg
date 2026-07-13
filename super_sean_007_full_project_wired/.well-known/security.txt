@@ -1,0 +1,6 @@
+Contact: https://github.com/alexdevriesxing/super-sean-007-jrpg/security/advisories/new
+Contact: https://www.firedragoninteractive.com/
+Preferred-Languages: en
+Canonical: https://www.supersean007.com/.well-known/security.txt
+Policy: https://www.supersean007.com/security-policy.html
+Expires: 2027-07-13T00:00:00Z
