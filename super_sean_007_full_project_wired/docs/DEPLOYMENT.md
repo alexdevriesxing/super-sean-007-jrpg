@@ -11,7 +11,29 @@ Use these production settings:
 - Output directory: `dist`
 - Node.js: 22 or newer
 
-The build runs semantic release checks and Node tests, generates and optimizes assets, builds with Vite, copies static and Cloudflare files, renders canonical public facts into `dist`, stamps the service worker with the deployment commit, validates commercial security and SEO invariants, enforces performance budgets, and produces a deployable artifact in GitHub Actions. CI also starts the production preview in real headless Chrome and verifies the game shell, title-screen start, remappable controls, accessibility preferences, performance report, Settings dialog and guide page.
+The build runs semantic release checks and Node tests, generates and optimizes assets, builds with Vite, creates a clean production-only `dist`, renders canonical public facts, stamps the service worker with the deployment commit, validates commercial security and SEO invariants, enforces performance budgets and runs a real Chrome gameplay smoke test.
+
+Development-only source art under `assets/generated`, the original friends foundation sheet, internal asset manifests and repository documentation are intentionally excluded from `dist`. The deployed game uses optimized tiles, sliced sprites, WebP battle backgrounds and runtime files only.
+
+## GitHub deployment automation
+
+`.github/workflows/cloudflare-deploy.yml` runs on `main` and on manual dispatch. It remains a safe no-op until both encrypted repository secrets exist:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+The token must be restricted to the relevant Cloudflare account with **Account → Cloudflare Pages → Edit**. Never use or store a Global API Key.
+
+When authorized, the workflow:
+
+1. installs locked dependencies;
+2. builds, validates and browser-tests the exact commit;
+3. deploys `dist` with `cloudflare/wrangler-action@v3`;
+4. waits for the custom domain to report version `1.2.1` and the exact commit;
+5. runs `scripts/live-smoke.mjs` against production;
+6. uploads deployment, browser, performance and live-smoke evidence for 30 days.
+
+A deployment is not considered successful merely because Wrangler uploaded files. The custom-domain smoke test must pass.
 
 ## Required Cloudflare bindings and secrets
 
@@ -19,7 +41,7 @@ The existing KV binding must remain available:
 
 - `SSG_SAVES` — cloud saves and backward-compatible fallback storage.
 
-Create an encrypted secret named `ADMIN_TOKEN` in Cloudflare Pages → Settings → Variables and Secrets. Use at least 32 random characters. It protects reads from `/api/stat` and `/api/err`. Never commit it to GitHub or store it in a password-free browser profile.
+Create an encrypted `ADMIN_TOKEN` secret with at least 32 random characters. It protects reads from `/api/stat` and `/api/err`. Without it, diagnostics intentionally return HTTP 503 and the strict production smoke test fails.
 
 Recommended isolated KV bindings:
 
@@ -28,29 +50,27 @@ Recommended isolated KV bindings:
 - `SSG_PARTY`
 - `SSG_RATE_LIMIT`
 
-When an optional binding is absent, namespaced keys fall back to `SSG_SAVES`, so the release remains backward compatible. Preview deployments must use preview-specific namespaces and must never share production player saves.
-
-`ALLOWED_ORIGINS` is declared in `wrangler.toml` for the apex and `www` production domains. Add preview origins only when a preview genuinely needs to exercise write APIs.
+Preview deployments must use preview-specific namespaces and must never share production player saves. `ALLOWED_ORIGINS` should contain only approved production and explicitly tested preview origins.
 
 ## TURN relay for reliable Party Link
 
-STUN-only WebRTC will fail on some mobile carriers and symmetric-NAT networks. Provision a coturn-compatible TURN service, then add these production variables:
+Provision a coturn-compatible TURN service and add:
 
-- `TURN_URLS` — comma-separated relay URLs, for example `turn:relay.example.com:3478,turns:relay.example.com:5349`
-- `TURN_SHARED_SECRET` — an encrypted secret shared with the TURN server’s REST authentication configuration
-- `TURN_TTL_SECONDS` — optional credential lifetime; defaults to 3600 seconds and is constrained between 600 and 86400
+- `TURN_URLS`
+- `TURN_SHARED_SECRET`
+- optional `TURN_TTL_SECONDS`
 
-`/api/turn` issues short-lived HMAC credentials. Permanent TURN usernames and passwords must never be embedded in JavaScript. Test Wi-Fi-to-mobile and mobile-to-mobile sessions after configuration.
+`/api/turn` issues short-lived HMAC credentials. Permanent TURN usernames or passwords must never be embedded in JavaScript. Test Wi-Fi-to-mobile and mobile-to-mobile sessions after configuration.
 
 ## Protected diagnostics
 
-Open `/stats.html` and enter `ADMIN_TOKEN`. The page retains the token only in JavaScript memory and clears it when the page is left; it is not written to localStorage or sessionStorage. The route has a separate restrictive Content Security Policy.
+Open `/stats.html` and enter `ADMIN_TOKEN`. The page keeps the token only in JavaScript memory and never writes it to localStorage or sessionStorage.
 
-Place `/stats.html`, `/api/stat` GET and `/api/err` GET behind Cloudflare Access as a second layer. The application bearer-token check must remain enabled even when Access is configured.
+Place `/stats.html`, `/api/stat` GET and `/api/err` GET behind Cloudflare Access as a second layer. Retain the application bearer-token check even after Access is configured.
 
 ## Rate limiting and analytics accuracy
 
-Application limits use a short-lived SHA-256 fingerprint and store no raw address. KV read-modify-write operations are not atomic, so these application counters are defence-in-depth rather than authoritative enforcement. Configure Cloudflare edge rate-limiting rules for:
+Application limits use short-lived SHA-256 fingerprints and store no raw address. KV counters are not atomic, so configure Cloudflare edge rate limiting for:
 
 - `/api/save*`
 - `/api/party*`
@@ -58,87 +78,60 @@ Application limits use a short-lived SHA-256 fingerprint and store no raw addres
 - `/api/stat`
 - `/api/err`
 
-Challenge or block abnormal bursts without disrupting normal play. Do not cache `/api/*` responses. Treat the fallback analytics dashboard as approximate under concurrent traffic; use Cloudflare Analytics Engine, D1/Durable Objects or another atomic analytics service before relying on metrics for financial reporting.
+Do not cache `/api/*`. Move business-critical metrics to Analytics Engine, D1, Durable Objects or another concurrency-safe store before relying on them for revenue reporting.
 
 ## Cloud-save operations
 
-Cloud saves are schema-sanitized and limited to 150 KB. The player can download a JSON backup, restore the cloud copy, explicitly replace it, rotate the sync ID, or delete the cloud record from Settings.
+Cloud saves are schema-sanitized and limited to 150 KB. Players can download a backup, restore or replace the cloud copy, rotate the sync ID and delete the cloud record from Settings.
 
-Before a production launch, test:
-
-- A normal upload and restore.
-- A newer-cloud conflict.
-- An explicit overwrite requiring the confirmation header.
-- Sync-ID rotation and revocation of the old ID.
-- Cloud deletion while retaining the local browser save.
-- Version 1 and 2 save migration into the version 3 epilogue schema.
+Before launch, test normal upload/restore, newer-cloud conflicts, explicit overwrite confirmation, ID rotation, deletion and version 1/2 migration into the version 3 epilogue schema.
 
 ## Player controls and accessibility
 
-Version 1.2 stores keyboard and visual preferences locally and independently from the game save. Verify:
-
-- Every listed keyboard action can be rebound and duplicate keys are swapped rather than silently duplicated.
-- Arrow keys remain available as a movement fallback.
-- Standard gamepad D-pad, left stick, A/B, menu shortcuts and Start-to-Settings work.
-- Text scaling does not clip Settings or accessible controls at 130%.
-- High-contrast mode remains readable in the website, overlays and canvas.
-- Reduced-motion mode suppresses nonessential animation.
-- Disabling screen effects does not alter gameplay state.
-- Clearing local site data resets preferences without damaging a separately stored cloud save.
+Verify every keyboard action can be rebound, duplicate keys swap safely, arrow-key movement remains available, gamepad movement and menu buttons work, text scaling does not clip, high contrast remains readable, reduced motion suppresses nonessential effects and preferences persist after reload.
 
 ## Performance budgets
 
-`data/performance-budget.json` defines the release ceilings for total `dist` size, JavaScript, CSS, initial critical assets, individual files and the number of files larger than two megabytes. `npm run budget:performance` writes `dist/performance-report.json` and fails the build when a ceiling is exceeded.
+`data/performance-budget.json` defines release ceilings. `npm run budget:performance` writes `dist/performance-report.json` and fails when the commercial package exceeds approved limits.
 
-Treat budget changes as reviewed product decisions. Do not simply raise a threshold to make CI green. A threshold increase must explain the new asset, expected player benefit, mobile impact and why regional or lower-resolution loading is not suitable.
+Version 1.2.1 limits the complete production package to 30 MB, permits only the title key art to exceed 2 MB and excludes generated source packs. Do not raise a threshold merely to make CI green.
 
-## Domains and canonical redirect
+## Domains and security headers
 
 Attach both:
 
 - `www.supersean007.com`
 - `supersean007.com`
 
-Use a Cloudflare Redirect Rule or Bulk Redirect to send the apex hostname permanently to `https://www.supersean007.com/`. Canonicals and the sitemap use the `www` hostname.
+Permanently redirect the apex domain to `https://www.supersean007.com/`. Production headers include HSTS, CSP, content-type protection, referrer policy, permissions policy and dedicated restrictions for diagnostics.
 
-The `_redirects` file only normalizes `/index.html` to `/`. There is no catch-all rewrite, so Cloudflare Pages should serve `404.html` with a genuine 404 status for unknown paths.
+The `_redirects` file only normalizes `/index.html` to `/`. There is no catch-all 200 rewrite; unknown paths must return the branded page with HTTP 404.
 
-## Cache strategy
+## Automated production monitoring
 
-- Vite content-hashed files in `/assets/build/*`: one year, immutable.
-- Mutable game art in `/assets/*`: one hour with revalidation.
-- Data manifests: five minutes with revalidation.
-- JavaScript: five minutes with revalidation.
-- Service worker: no cache.
+`.github/workflows/production-monitor.yml` runs every hour at minute 17 and can be run manually. It checks the current `main` commit against production.
 
-Every deployment replaces `__BUILD_VERSION__` in `sw.js` with the Cloudflare or GitHub commit SHA and removes old cache namespaces during activation.
+On failure it opens or updates one issue named **Production smoke test failed** and attaches workflow evidence. After a later successful run it comments with the recovery time and closes the incident automatically.
 
-## Deployment status and rollback
+The public `/status.html` page shows only public health, release and performance information. It never reads analytics, error reports, saves or administrator credentials.
 
-Configure Cloudflare’s GitHub integration so the production deployment status is reported on the exact commit. Keep the GitHub Actions `dist` artifact for 14 days. Document who can promote or roll back a deployment and test one rollback before public promotion.
+## Post-deployment verification
 
-## Post-deployment smoke checks
+The strict live smoke test verifies:
 
-After Cloudflare reports a successful deployment, verify:
+1. `/api/health` reports `ok: true`, version `1.2.1` and the exact commit;
+2. `/build-meta.json` reports the same version and commit;
+3. the homepage has HSTS, CSP and `nosniff`;
+4. an unknown path returns HTTP 404;
+5. the apex redirects to canonical `www`;
+6. `robots.txt`, sitemap, `llms.txt` and `ai-summary.json` are current;
+7. security contact, support and status pages are available;
+8. `/performance-report.json` passes;
+9. unauthenticated diagnostics return HTTP 401;
+10. invalid save IDs are rejected.
 
-1. `/api/health` returns `ok: true`, version `1.2.0` and the expected commit SHA.
-2. `/this-path-must-not-exist` returns the branded page with HTTP 404.
-3. `/stats.html` cannot read data without `ADMIN_TOKEN` and is protected by Cloudflare Access.
-4. A new game starts on desktop and mobile.
-5. Local save/load works after refresh.
-6. Cloud upload, restore, conflict, rotation and deletion work with a disposable save.
-7. A completed version 1 or 2 save enters the Frostpeak/Sunsand epilogue at the correct stage.
-8. Remapped keyboard input and a standard gamepad work in exploration, dialogue, battle and menus.
-9. Text scaling, high contrast, reduced motion and screen-effect settings persist after reload.
-10. Party Link reserves a code, consumes offers/answers and connects across separate networks through TURN where required.
-11. The browser console contains no uncaught errors.
-12. `robots.txt`, `sitemap.xml`, `llms.txt` and `ai-summary.json` show version 1.2.0 and eleven regions.
-13. `/.well-known/security.txt` and `/security-policy.html` are available.
-14. Third-party ad units appear only after consent and remain sandboxed.
-15. Returning users receive the current service-worker cache version.
-16. Production `SuperSeanGame.debug` is absent while the safe New Game+ action remains available after the epilogue.
-17. `/performance-report.json` reports `passed: true`.
+The complete player smoke checklist still includes desktop/mobile startup, local and cloud saves, old-save migration, remapped controls, gamepad, accessibility preferences, TURN-backed Party Link, consented ads, service-worker updates and New Game+.
 
 ## Search and discovery
 
-Submit `https://www.supersean007.com/sitemap.xml` to Google Search Console and Bing Webmaster Tools. Inspect the homepage plus `guides.html`, `characters.html`, `world.html`, `updates.html` and `security-policy.html` after deployment. Production HTML and machine-readable summaries are rendered from `data/site-facts.json` into `dist` to prevent release-fact drift.
+Submit `https://www.supersean007.com/sitemap.xml` to Google Search Console and Bing Webmaster Tools after the deployment passes. Inspect the homepage, guides, characters, world, updates, support and security pages. Production facts are rendered from `data/site-facts.json` to prevent release drift.
