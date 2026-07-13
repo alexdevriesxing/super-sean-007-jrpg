@@ -1,0 +1,71 @@
+name: Player bug report
+description: Report a reproducible gameplay, save, controller or browser problem.
+title: "[Bug] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Super Sean 007. Never include a Cloud Sync ID, save code, API token or other secret.
+  - type: input
+    id: version
+    attributes:
+      label: Game version
+      description: Copy the version shown on https://www.supersean007.com/status.html
+      placeholder: 1.2.1
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Device and browser
+      placeholder: Windows 11, Chrome 150 / iPhone 15, Safari
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Game startup or loading
+        - Gameplay or battle
+        - Quest or progression
+        - Local save
+        - Cloud Sync
+        - Party Link co-op
+        - Keyboard or gamepad
+        - Audio
+        - Advertising or consent
+        - Accessibility
+        - Website or guides
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the exact actions that trigger the problem.
+      placeholder: |
+        1. Start a new game
+        2. Enter Mushroom Meadow
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: extras
+    attributes:
+      label: Additional context
+      description: Add screenshots or console errors after removing private information.
