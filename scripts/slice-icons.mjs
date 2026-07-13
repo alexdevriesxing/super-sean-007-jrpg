@@ -67,6 +67,7 @@ const JOBS = [
   [[653, 70, 31, 33], 'icon_wind'],
   [[695, 69, 26, 33], 'icon_water'],
   [[733, 69, 30, 34], 'icon_ice'],
+  [[733, 69, 30, 34], 'icon_snowflake'],
   [[776, 69, 25, 34], 'icon_bolt'],
   [[812, 69, 32, 34], 'icon_light'],
   [[854, 71, 28, 31], 'icon_moon'],
