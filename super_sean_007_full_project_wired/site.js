@@ -4,6 +4,14 @@
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  if (!document.querySelector('link[data-ssg-accessibility]')) {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = 'accessibility.css';
+    stylesheet.dataset.ssgAccessibility = 'true';
+    document.head.appendChild(stylesheet);
+  }
+
   function loadRuntime(src) {
     if (document.querySelector(`script[data-ssg-runtime="${src}"]`)) return;
     const script = document.createElement('script');
