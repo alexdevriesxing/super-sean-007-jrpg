@@ -15,7 +15,7 @@ const SSG = loadSSG([
 ]);
 
 test('postgame epilogue follows the campaign finale in order', () => {
-  const ids = SSG.MAIN_QUESTS.map(quest => quest.id);
+  const ids = Array.from(SSG.MAIN_QUESTS, quest => quest.id);
   const finale = ids.indexOf('xelar_final');
   assert.deepEqual(ids.slice(finale + 1), [
     'postgame_frostpeak',
