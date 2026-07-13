@@ -11,6 +11,15 @@ async function required(relative, base = distRoot) {
   catch (error) { errors.push(`Missing ${path.relative(process.cwd(), path.join(base, relative))}`); }
 }
 
+async function forbidden(relative, base = distRoot) {
+  try {
+    await access(path.join(base, relative));
+    errors.push(`Development-only path leaked into production: ${relative}`);
+  } catch (error) {
+    if (error.code !== 'ENOENT') errors.push(`Cannot verify forbidden path ${relative}: ${error.message}`);
+  }
+}
+
 async function text(relative, base = distRoot) {
   try { return await readFile(path.join(base, relative), 'utf8'); }
   catch (error) { errors.push(`Cannot read ${relative}: ${error.message}`); return ''; }
@@ -18,35 +27,47 @@ async function text(relative, base = distRoot) {
 
 await Promise.all([
   required('404.html'), required('guides.html'), required('characters.html'), required('world.html'),
-  required('updates.html'), required('security-policy.html'), required('.well-known/security.txt'),
+  required('updates.html'), required('support.html'), required('status.html'), required('status.js'), required('status.css'),
+  required('security-policy.html'), required('.well-known/security.txt'),
   required('content.css'), required('accessibility.css'), required('accessibility.js'),
   required('player-preferences.css'), required('player-preferences.js'), required('js/postgame-systems.js'),
   required('cloud-controls.js'), required('runtime-hardening.js'), required('turn-config.js'),
   required('stats.js'), required('stats.css'), required('build-meta.json'), required('data/site-facts.json'),
   required('data/performance-budget.json'),
   required('api/health.js', functionRoot), required('api/turn.js', functionRoot),
-  required('_lib/security.js', functionRoot), required('_lib/save-schema.js', functionRoot)
+  required('_lib/security.js', functionRoot), required('_lib/save-schema.js', functionRoot),
+  required('scripts/live-smoke.mjs', path.resolve('.')),
+  required('.github/workflows/cloudflare-deploy.yml', path.resolve('.')),
+  required('.github/workflows/production-monitor.yml', path.resolve('.')),
+  forbidden('assets/generated'), forbidden('assets/characters/super_sean_friends_foundation_spritesheet.png'),
+  forbidden('data/asset-manifest.json'), forbidden('docs')
 ]);
 
 const [
   index, redirects, headers, serviceWorker, sitemap, robots, statsHtml, statsJs, privacy,
   ads, runtime, preferences, preferenceCss, overlay, quests, saveCore, postgameSystems,
-  metaText, factsText, health
+  statusHtml, statusJs, supportHtml, metaText, factsText, health, deployWorkflow,
+  monitorWorkflow, buildStatic, liveSmoke
 ] = await Promise.all([
   text('index.html'), text('_redirects'), text('_headers'), text('sw.js'), text('sitemap.xml'),
   text('robots.txt'), text('stats.html'), text('stats.js'), text('privacy.html'), text('ads.js'),
   text('runtime-hardening.js'), text('player-preferences.js'), text('player-preferences.css'),
   text('ui-overlays.js'), text('js/data-quests.js'), text('js/save-core.js'), text('js/postgame-systems.js'),
-  text('build-meta.json'), text('data/site-facts.json'), text('api/health.js', functionRoot)
+  text('status.html'), text('status.js'), text('support.html'), text('build-meta.json'), text('data/site-facts.json'),
+  text('api/health.js', functionRoot), text('.github/workflows/cloudflare-deploy.yml', path.resolve('.')),
+  text('.github/workflows/production-monitor.yml', path.resolve('.')), text('scripts/build-static.mjs', path.resolve('.')),
+  text('scripts/live-smoke.mjs', path.resolve('.'))
 ]);
 
 if (/\/\*\s+\/index\.html\s+200/.test(redirects)) errors.push('Catch-all 200 rewrite still present.');
 if (/\/assets\/\*[^]*?immutable/.test(headers)) errors.push('Mutable /assets/* still uses immutable caching.');
+if (!/Strict-Transport-Security: max-age=\d+/.test(headers)) errors.push('HSTS is missing from production headers.');
 if (serviceWorker.includes('__BUILD_VERSION__')) errors.push('Service-worker build version was not stamped.');
 if (!index.includes('11 magical regions') || !index.includes('Frostpeak Reaches') || !index.includes('Sunsand Isle')) errors.push('Production homepage facts were not synced to 11 regions.');
 if (!index.includes('uploaded to Cloudflare only when you voluntarily enable Cloud Sync')) errors.push('Production homepage cloud-sync privacy wording is stale.');
 if (!index.includes('js/postgame-systems.js') || index.indexOf('js/postgame-systems.js') > index.indexOf('game.js')) errors.push('Postgame systems extension is not loaded before game.js.');
-for (const page of ['guides.html', 'characters.html', 'world.html', 'updates.html', 'security-policy.html']) {
+if (!index.includes('support.html') || !index.includes('status.html')) errors.push('Homepage does not expose support and service status links.');
+for (const page of ['guides.html', 'characters.html', 'world.html', 'updates.html', 'support.html', 'security-policy.html']) {
   if (!sitemap.includes(page)) errors.push(`Sitemap does not include ${page}.`);
 }
 if (!robots.includes('Disallow: /api/') || !robots.includes('OAI-SearchBot')) errors.push('robots.txt does not protect API routes or state AI search policy.');
@@ -69,21 +90,28 @@ for (const quest of ['postgame_frostpeak', 'frostpeak_queen', 'sunsand_scout', '
 }
 if (!saveCore.includes('SSG.SAVE_VERSION = 3') || !saveCore.includes("raw?.quest?.id !== 'postgame'")) errors.push('Version 3 postgame save migration is missing.');
 if (!postgameSystems.includes('frostpeak_clear') || !postgameSystems.includes('postgame_clear')) errors.push('Postgame achievement conditions are missing.');
+if (!statusHtml.includes('Service status') || !statusJs.includes('/api/health') || !statusJs.includes('/performance-report.json')) errors.push('Public status page is incomplete.');
+if (!supportHtml.includes('Support and troubleshooting') || !supportHtml.includes('issues/new/choose')) errors.push('Player support page is incomplete.');
+if (!buildStatic.includes("'assets', 'data', 'js'") || !buildStatic.includes('generatedSourceRoot') || !buildStatic.includes('await rm(distRoot')) errors.push('Production build does not clean and prune source assets.');
+if (!deployWorkflow.includes('cloudflare/wrangler-action@v3') || !deployWorkflow.includes('CLOUDFLARE_API_TOKEN') || !deployWorkflow.includes('npm run smoke:live')) errors.push('Cloudflare deployment workflow is incomplete.');
+if (!monitorWorkflow.includes("cron: '17 * * * *'") || !monitorWorkflow.includes('issues: write') || !monitorWorkflow.includes('Production smoke test failed')) errors.push('Production monitoring workflow is incomplete.');
+if (!liveSmoke.includes('/api/health') || !liveSmoke.includes('strict transport security') || !liveSmoke.includes('apex redirects to canonical www')) errors.push('Strict live smoke coverage is incomplete.');
 
 try {
   const meta = JSON.parse(metaText);
   const facts = JSON.parse(factsText);
   if (meta.version !== facts.version) errors.push('Build metadata version does not match canonical facts.');
-  if (facts.version !== '1.2.0') errors.push(`Expected release 1.2.0, found ${facts.version}.`);
+  if (facts.version !== '1.2.1') errors.push(`Expected release 1.2.1, found ${facts.version}.`);
   if (!facts.features.some(feature => /gamepad/i.test(feature))) errors.push('Canonical facts do not mention gamepad support.');
   if (!facts.features.some(feature => /postgame epilogue/i.test(feature))) errors.push('Canonical facts do not mention the postgame epilogue.');
+  if (!facts.features.some(feature => /production monitoring/i.test(feature))) errors.push('Canonical facts do not mention production monitoring.');
 } catch (error) { errors.push('Build metadata or canonical facts are invalid JSON.'); }
 
-if (!health.includes("version: '1.2.0'")) errors.push('Health endpoint does not report version 1.2.0.');
+if (!health.includes("version: '1.2.1'")) errors.push('Health endpoint does not report version 1.2.1.');
 if (!statsHtml.includes('stats.js') || !statsHtml.includes('stats.css')) errors.push('Diagnostics still contains inline application code.');
 
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Version 1.2 validation passed: hardened deployment, remappable controls, gamepad support, accessibility preferences, postgame epilogue and performance budgets.');
+console.log('Version 1.2.1 validation passed: production-only assets, automated deployment, public status, live monitoring and commercial release protections.');
