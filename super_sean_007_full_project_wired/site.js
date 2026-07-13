@@ -4,13 +4,17 @@
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (!document.querySelector('link[data-ssg-accessibility]')) {
+  function loadStylesheet(href, marker) {
+    if (document.querySelector(`link[data-ssg-style="${marker}"]`)) return;
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = 'accessibility.css';
-    stylesheet.dataset.ssgAccessibility = 'true';
+    stylesheet.href = href;
+    stylesheet.dataset.ssgStyle = marker;
     document.head.appendChild(stylesheet);
   }
+
+  loadStylesheet('accessibility.css', 'accessibility');
+  loadStylesheet('player-preferences.css', 'player-preferences');
 
   function loadRuntime(src) {
     if (document.querySelector(`script[data-ssg-runtime="${src}"]`)) return;
@@ -21,7 +25,7 @@
     document.body.appendChild(script);
   }
 
-  ['turn-config.js', 'cloud-controls.js', 'accessibility.js', 'runtime-hardening.js'].forEach(loadRuntime);
+  ['turn-config.js', 'cloud-controls.js', 'player-preferences.js', 'accessibility.js', 'runtime-hardening.js'].forEach(loadRuntime);
 
   if (!reduceMotion && 'IntersectionObserver' in window) {
     const targets = document.querySelectorAll(
