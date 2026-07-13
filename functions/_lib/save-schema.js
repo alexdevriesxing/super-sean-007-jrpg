@@ -4,7 +4,8 @@ const GEMS = new Set(['Meadow Gem','Cave Gem','Plains Gem','Forest Gem','Moon Ge
 const QUESTS = new Set([
   'awakening','find_dave','meadow_entry','moldor','homestead_claim','home_foundation',
   'crystal_cave','petro_parts','petro_titan','ruush_trail','moon_tea','lunar_shade',
-  'ruins_seal','tower','xelar_final','postgame'
+  'ruins_seal','tower','xelar_final','postgame_frostpeak','frostpeak_queen',
+  'sunsand_scout','tide_sovereign','postgame_legend','postgame'
 ]);
 
 const isObject = value => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -90,7 +91,7 @@ export function sanitizeSave(raw) {
   hero.mp = Math.min(hero.mp, hero.maxMp + 100_000);
 
   return {
-    version: integer(raw.version, 2, 1, 20),
+    version: integer(raw.version, 3, 1, 20),
     scene: ['title','explore','dialogue','battle','inventory','quest','map','craft','build','shop','fishing','party','coopGuest'].includes(raw.scene) ? raw.scene : 'title',
     mapId,
     player: cleanPlayer(raw.player),
