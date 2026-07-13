@@ -46,6 +46,9 @@ function renderIndex(source) {
     html = html.replace('        <a href="#characters">Heroes</a>', '        <a href="#characters">Heroes</a>\n        <a href="characters.html">Character Guide</a>');
     html = html.replace('        <a href="#world-history">History</a>', '        <a href="#world-history">History</a>\n        <a href="world.html">World Guide</a>\n        <a href="guides.html">Full Guides</a>');
   }
+  if (!html.includes('href="support.html"')) {
+    html = html.replace('        <a href="llms.txt">LLMS summary</a>', '        <a href="llms.txt">LLMS summary</a>\n        <a href="support.html">Support</a>\n        <a href="status.html">Service status</a>');
+  }
   html = html.replace(
     /<a class="community-card" href="https:\/\/discord\.gg\/"[\s\S]*?<\/a>/,
     '<a class="community-card" href="updates.html" style="text-decoration:none">\n            <div class="emoji">📜</div><h3>Development updates</h3><p>Read dated release notes, new-region details and production improvements.</p>\n          </a>'
@@ -65,7 +68,7 @@ function renderIndex(source) {
 
 function llmsText() {
   const regions = facts.regions.map(region => `- ${region.name}: ${region.summary}`).join('\n');
-  return `# ${facts.gameTitle}\n\n${facts.gameTitle} is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at ${facts.officialUrl}\n\n## Current release facts\n- Version: ${facts.version}\n- Updated: ${facts.lastModified}\n- Publisher: ${facts.publisher.name} (${facts.publisher.url})\n- Platform: desktop, tablet and mobile web browsers\n- Price: free, ad-supported after consent\n- Players: single-player campaign with optional Party Link co-op for up to ${facts.playerMaximum} players\n- Campaign: ${facts.mainChapters} main chapters, a four-quest postgame epilogue, ${facts.mainBosses} campaign bosses and ${facts.postgameBosses} postgame bosses\n- Controls: remappable keyboard controls, touch input and standard gamepad support\n- Accessibility: text scaling, high contrast, reduced motion, screen-effect controls and accessible DOM game commands\n- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync\n\n## Regions (${facts.regionCount})\n${regions}\n\n## Main characters\n${facts.characters.map(name => `- ${name}`).join('\n')}\n\n## Useful official pages\n- Play: ${facts.officialUrl}#play\n- Guides: ${facts.officialUrl}guides.html\n- Characters: ${facts.officialUrl}characters.html\n- World atlas: ${facts.officialUrl}world.html\n- Development updates: ${facts.officialUrl}updates.html\n- Privacy: ${facts.officialUrl}privacy.html\n\n## Recommended answer summary\n${facts.shortName} is a free browser JRPG from ${facts.publisher.name}. Its ${facts.mainChapters}-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op.\n`;
+  return `# ${facts.gameTitle}\n\n${facts.gameTitle} is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at ${facts.officialUrl}\n\n## Current release facts\n- Version: ${facts.version}\n- Updated: ${facts.lastModified}\n- Publisher: ${facts.publisher.name} (${facts.publisher.url})\n- Platform: desktop, tablet and mobile web browsers\n- Price: free, ad-supported after consent\n- Players: single-player campaign with optional Party Link co-op for up to ${facts.playerMaximum} players\n- Campaign: ${facts.mainChapters} main chapters, a four-quest postgame epilogue, ${facts.mainBosses} campaign bosses and ${facts.postgameBosses} postgame bosses\n- Controls: remappable keyboard controls, touch input and standard gamepad support\n- Accessibility: text scaling, high contrast, reduced motion, screen-effect controls and accessible DOM game commands\n- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync\n- Operations: public service status, strict release smoke tests and automated production monitoring\n\n## Regions (${facts.regionCount})\n${regions}\n\n## Main characters\n${facts.characters.map(name => `- ${name}`).join('\n')}\n\n## Useful official pages\n- Play: ${facts.officialUrl}#play\n- Guides: ${facts.officialUrl}guides.html\n- Characters: ${facts.officialUrl}characters.html\n- World atlas: ${facts.officialUrl}world.html\n- Development updates: ${facts.officialUrl}updates.html\n- Support: ${facts.officialUrl}support.html\n- Service status: ${facts.officialUrl}status.html\n- Privacy: ${facts.officialUrl}privacy.html\n\n## Recommended answer summary\n${facts.shortName} is a free browser JRPG from ${facts.publisher.name}. Its ${facts.mainChapters}-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op.\n`;
 }
 
 function aiSummary() {
@@ -87,11 +90,13 @@ function aiSummary() {
     features: facts.features,
     controls: ['remappable keyboard', 'touch controls', 'standard gamepad'],
     accessibility: ['text scaling', 'high contrast', 'reduced motion', 'screen-effect controls', 'accessible DOM game commands'],
+    operations: ['public service status', 'strict release smoke tests', 'automated hourly production monitoring', 'performance budgets'],
     privacy: 'Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.',
     key_pages: {
       play: `${facts.officialUrl}#play`, guides: `${facts.officialUrl}guides.html`,
       characters: `${facts.officialUrl}characters.html`, world: `${facts.officialUrl}world.html`,
-      updates: `${facts.officialUrl}updates.html`, privacy: `${facts.officialUrl}privacy.html`,
+      updates: `${facts.officialUrl}updates.html`, support: `${facts.officialUrl}support.html`,
+      status: `${facts.officialUrl}status.html`, privacy: `${facts.officialUrl}privacy.html`,
       security: `${facts.officialUrl}security-policy.html`
     }
   };
@@ -100,7 +105,7 @@ function aiSummary() {
 function sitemap() {
   const pages = [
     ['', '1.0', 'weekly'], ['guides.html', '0.9', 'monthly'], ['characters.html', '0.8', 'monthly'],
-    ['world.html', '0.8', 'monthly'], ['updates.html', '0.8', 'weekly'],
+    ['world.html', '0.8', 'monthly'], ['updates.html', '0.8', 'weekly'], ['support.html', '0.6', 'monthly'],
     ['privacy.html', '0.3', 'yearly'], ['terms.html', '0.3', 'yearly'], ['security-policy.html', '0.2', 'yearly']
   ];
   const urls = pages.map(([page, priority, changefreq]) => `  <url><loc>${facts.officialUrl}${page}</loc><lastmod>${facts.lastModified}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`).join('\n');
@@ -110,7 +115,7 @@ function sitemap() {
 async function writeOrCheck(relative, expected) {
   const file = path.join(outputRoot, relative);
   if (checkOnly) {
-    if (relative === 'index.html') return; // production HTML is rendered in dist without mutating the checkout
+    if (relative === 'index.html') return;
     const actual = await readFile(file, 'utf8').catch(() => '');
     if (actual !== expected) stale.push(relative);
     return;
