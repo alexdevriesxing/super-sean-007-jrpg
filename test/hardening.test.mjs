@@ -30,14 +30,19 @@ test('mutable assets are not cached as immutable for a year', async () => {
   assert.doesNotMatch(headers, /\/assets\/\*[\s\S]*?max-age=31536000, immutable/);
 });
 
-test('public facts and privacy copy stay synchronized', async () => {
-  const index = await readFile(path.join(root, 'index.html'), 'utf8');
+test('canonical facts drive machine files and final dist rendering', async () => {
   const facts = JSON.parse(await readFile(path.join(root, 'data/site-facts.json'), 'utf8'));
+  const ai = JSON.parse(await readFile(path.join(root, 'ai-summary.json'), 'utf8'));
+  const syncScript = await readFile(path.resolve('scripts/sync-site-facts.mjs'), 'utf8');
   assert.equal(facts.regionCount, 11);
-  assert.match(index, /11 magical regions/);
-  assert.match(index, /Frostpeak Reaches/);
-  assert.match(index, /Sunsand Isle/);
-  assert.match(index, /uploaded to Cloudflare only when you voluntarily enable Cloud Sync/);
+  assert.equal(ai.world.region_count, facts.regionCount);
+  assert.equal(ai.players.maximum, facts.playerMaximum);
+  assert.equal(ai.software_version, facts.version);
+  assert.ok(ai.world.regions.some(region => region.name === 'Frostpeak Reaches'));
+  assert.ok(ai.world.regions.some(region => region.name === 'Sunsand Isle'));
+  assert.match(ai.privacy, /sandboxed frames/);
+  assert.match(syncScript, /process\.argv\.includes\('--dist'\)/);
+  assert.match(syncScript, /uploaded to Cloudflare only when you voluntarily enable Cloud Sync/);
 });
 
 test('diagnostic reads reject missing admin authorization', async () => {
