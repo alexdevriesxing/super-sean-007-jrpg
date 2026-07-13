@@ -21,7 +21,7 @@
     document.body.appendChild(script);
   }
 
-  ['cloud-controls.js', 'accessibility.js', 'runtime-hardening.js'].forEach(loadRuntime);
+  ['turn-config.js', 'cloud-controls.js', 'accessibility.js', 'runtime-hardening.js'].forEach(loadRuntime);
 
   if (!reduceMotion && 'IntersectionObserver' in window) {
     const targets = document.querySelectorAll(
