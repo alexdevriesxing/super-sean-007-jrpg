@@ -90,7 +90,11 @@ class CDP {
     });
   }
 
-  close() { this.socket.close(); }
+  close() {
+    if (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING) {
+      this.socket.close();
+    }
+  }
 }
 
 async function evaluate(cdp, expression) {
@@ -113,10 +117,32 @@ async function poll(cdp, expression, timeout = 20_000) {
   throw new Error(`Timed out waiting for browser condition: ${expression}`);
 }
 
-function stopProcess(child) {
-  if (!child || child.killed) return;
+async function stopProcess(child, label) {
+  if (!child || child.exitCode !== null || child.signalCode) return;
+  const exited = new Promise(resolve => child.once('exit', resolve));
   child.kill('SIGTERM');
-  setTimeout(() => { if (!child.killed) child.kill('SIGKILL'); }, 1500).unref();
+  const graceful = await Promise.race([
+    exited.then(() => true),
+    sleep(2000).then(() => false)
+  ]);
+  if (!graceful && child.exitCode === null) {
+    child.kill('SIGKILL');
+    await Promise.race([exited, sleep(2000)]);
+  }
+  if (child.exitCode === null && !child.signalCode) {
+    console.warn(`[smoke] ${label} did not confirm exit before cleanup.`);
+  }
+}
+
+async function cleanupDirectory(directory) {
+  try {
+    await rm(directory, {recursive: true, force: true, maxRetries: 8, retryDelay: 250});
+  } catch (error) {
+    // Chrome may briefly keep profile files open after process exit. This is
+    // non-functional cleanup on an ephemeral CI runner and must not mask a
+    // successful gameplay test.
+    console.warn(`[smoke] Temporary profile cleanup warning: ${error.message}`);
+  }
 }
 
 const userDataDir = await mkdtemp(path.join(os.tmpdir(), 'ssg-chrome-'));
@@ -177,6 +203,7 @@ try {
   if (shell.canvas.width !== 960 || shell.canvas.height !== 540) throw new Error('Game canvas dimensions are incorrect.');
   if (!shell.a11y) throw new Error('Accessible game controls did not load.');
   if (!shell.runtime?.hardened) throw new Error('Production runtime hardening did not initialize.');
+  if (shell.runtime.production && shell.debugExposed) throw new Error('QA debug controls remain exposed in production.');
 
   await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Enter', code: 'Enter'});
   await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Enter', code: 'Enter'});
@@ -207,7 +234,7 @@ try {
   console.log(JSON.stringify({ok: true, shell, initialState: {scene: state.scene, map: state.map.name, level: state.hero.level}, guide}, null, 2));
 } finally {
   cdp?.close();
-  stopProcess(chrome);
-  stopProcess(preview);
-  await rm(userDataDir, {recursive: true, force: true});
+  await stopProcess(chrome, 'Chrome');
+  await stopProcess(preview, 'Vite preview');
+  await cleanupDirectory(userDataDir);
 }
