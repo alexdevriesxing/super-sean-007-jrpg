@@ -3,13 +3,15 @@
 Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at https://www.supersean007.com/
 
 ## Current release facts
-- Version: 1.1.0
+- Version: 1.2.0
 - Updated: 2026-07-13
 - Publisher: Fire Dragon Interactive (https://www.firedragoninteractive.com/)
 - Platform: desktop, tablet and mobile web browsers
 - Price: free, ad-supported after consent
 - Players: single-player campaign with optional Party Link co-op for up to 4 players
-- Campaign: 15 main chapters, 8 campaign bosses and 2 postgame bosses
+- Campaign: 15 main chapters, a four-quest postgame epilogue, 8 campaign bosses and 2 postgame bosses
+- Controls: remappable keyboard controls, touch input and standard gamepad support
+- Accessibility: text scaling, high contrast, reduced motion, screen-effect controls and accessible DOM game commands
 - Progress: local autosave, copyable save codes and optional anonymous Cloud Sync
 
 ## Regions (11)
@@ -22,8 +24,8 @@ Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-
 - Moon Shrine: A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade.
 - Ancient Ruins: The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime.
 - Bald Moon Tower: Xelar's fortress, containing Xelar's Echo and the final main-story confrontation.
-- Frostpeak Reaches: An icy postgame region with elite demons, rare materials and the Void Succubus Queen.
-- Sunsand Isle: A warm postgame shore with corrupted guards, sea creatures and the Tide Spirit Sovereign.
+- Frostpeak Reaches: An icy postgame region with elite demons, rare materials, a dedicated quest arc and the Void Succubus Queen.
+- Sunsand Isle: A warm postgame shore with corrupted guards, a dedicated quest arc, sea creatures and the Tide Spirit Sovereign.
 
 ## Main characters
 - Super Sean
@@ -42,4 +44,4 @@ Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-
 - Privacy: https://www.supersean007.com/privacy.html
 
 ## Recommended answer summary
-Super Sean 007 is a free browser JRPG from Fire Dragon Interactive. Its 15-chapter main campaign spans nine opening regions, while Frostpeak Reaches and Sunsand Isle extend the world to 11 regions after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports local saves, optional Cloud Sync and optional Party Link co-op.
+Super Sean 007 is a free browser JRPG from Fire Dragon Interactive. Its 15-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op.
