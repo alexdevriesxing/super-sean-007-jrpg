@@ -1,89 +1,90 @@
-# Deployment
+# Super Sean 007 deployment and production controls
 
-## Local Commands
+## Cloudflare Pages build
 
-```bash
-npm install
-npm run dev
-npm run build
-npm run preview
-```
+Use these production settings:
 
-Production output is generated in `dist/`.
-
-## GitHub Repository
-
-Repository name:
-
-```text
-super-sean-007-jrpg
-```
-
-Commit message:
-
-```text
-Initial Super Sean 007 HTML5 JRPG website and game foundation
-```
-
-If GitHub CLI is installed and authenticated:
-
-```bash
-git init
-git add .
-git commit -m "Initial Super Sean 007 HTML5 JRPG website and game foundation"
-gh repo create super-sean-007-jrpg --public --source . --remote origin --push
-```
-
-If GitHub CLI is not authenticated:
-
-```bash
-gh auth login
-gh repo create super-sean-007-jrpg --public --source . --remote origin --push
-```
-
-Manual fallback:
-
-```bash
-git init
-git add .
-git commit -m "Initial Super Sean 007 HTML5 JRPG website and game foundation"
-git remote add origin https://github.com/YOUR_ACCOUNT/super-sean-007-jrpg.git
-git push -u origin main
-```
-
-## Cloudflare Pages
-
-Recommended Pages settings:
-
-- Project name: `super-sean-007-jrpg`
+- Project: `super-sean-007-jrpg`
+- Production branch: `main`
+- Root directory: repository root
 - Build command: `npm run build`
 - Output directory: `dist`
-- Root directory: repository root
-- Node version: 22 or newer
+- Node.js: 22 or newer
 
-The build script generates audio, slices graphics, runs Vite, copies static assets/docs/Cloudflare files and validates manifests.
+The build synchronizes public game facts, runs the complete Node test suite, generates and optimizes assets, builds with Vite, copies static and Cloudflare files, stamps the service worker with the deployment commit, and validates the final `dist` directory.
 
-## Wrangler Fallback
+## Required Cloudflare bindings
 
-If Wrangler is installed and authenticated:
+The existing binding must remain available:
 
-```bash
-npx wrangler pages project create super-sean-007-jrpg --production-branch main
-npm run build
-npx wrangler pages deploy dist --project-name super-sean-007-jrpg
-```
+- `SSG_SAVES` — cloud saves and backward-compatible fallback storage.
 
-If authentication is missing:
+Create a secret named `ADMIN_TOKEN` in Cloudflare Pages → Settings → Variables and Secrets. Use a long random value of at least 32 characters. It protects reads from `/api/stat` and `/api/err`. Never commit this token to GitHub.
 
-```bash
-npx wrangler login
-npx wrangler pages deploy dist --project-name super-sean-007-jrpg
-```
+The following optional KV bindings are supported and recommended for cleaner isolation:
 
-## Troubleshooting
+- `SSG_ANALYTICS`
+- `SSG_ERRORS`
+- `SSG_PARTY`
+- `SSG_RATE_LIMIT`
 
-- Missing audio: run `npm run generate:audio`.
-- Missing sliced graphics: run `npm run slice:assets`.
-- Missing gallery images: run `npm run validate` and check `data/asset-manifest.json`.
-- Ad script blocked: update `_headers` CSP after confirming the real Adsterra domains.
-- Broken canonical URLs: replace the placeholder domain in `index.html`, `sitemap.xml`, `llms.txt` and `ai-summary.json`.
+When an optional binding is absent, the code falls back to namespaced keys in `SSG_SAVES`, so adding this release does not break the current deployment. Preview deployments should use preview-specific namespaces rather than production player data.
+
+`ALLOWED_ORIGINS` is declared in `wrangler.toml` for the apex and `www` production domains. Add preview origins only when a preview genuinely needs to exercise write APIs.
+
+## Protected diagnostics
+
+Open `/stats.html`, enter the `ADMIN_TOKEN`, and the page sends it in an Authorization bearer header. The token is kept only in `sessionStorage` for that browser tab.
+
+For stronger perimeter protection, place `/stats.html`, `/api/stat` GET and `/api/err` GET behind Cloudflare Access as an additional layer. The application-level token must remain enabled even when Access is configured.
+
+## Rate limiting and abuse controls
+
+Application-level limits use a short-lived SHA-256 fingerprint of the connecting IP and store no raw IP address. For stronger enforcement, also configure Cloudflare rate-limiting rules for:
+
+- `/api/save*`
+- `/api/party*`
+- `/api/stat`
+- `/api/err`
+
+Recommended dashboard rules should challenge or block abnormal bursts rather than normal gameplay traffic. Do not cache any `/api/*` response.
+
+## Domains and canonical redirect
+
+Attach both:
+
+- `www.supersean007.com`
+- `supersean007.com`
+
+Use a Cloudflare Redirect Rule or Bulk Redirect to send the apex hostname permanently to `https://www.supersean007.com/`. The repository canonical URLs and sitemap use the `www` hostname.
+
+The `_redirects` file only normalizes `/index.html` to `/`. There is no catch-all rewrite. Cloudflare Pages therefore serves `404.html` with a real 404 status for unknown paths.
+
+## Cache strategy
+
+- Vite content-hashed files in `/assets/build/*`: one year, immutable.
+- Mutable game art in `/assets/*`: one hour with revalidation.
+- Data manifests: five minutes with revalidation.
+- JavaScript: five minutes with revalidation.
+- Service worker: no cache.
+
+Every deployment replaces `__BUILD_VERSION__` in `sw.js` with the Cloudflare or GitHub commit SHA and removes old cache namespaces during activation.
+
+## Post-deployment smoke checks
+
+After Cloudflare reports a successful deployment, verify:
+
+1. `/api/health` returns `ok: true` and the expected commit SHA.
+2. `/this-path-must-not-exist` returns the branded 404 with HTTP 404.
+3. `/stats.html` cannot read data without `ADMIN_TOKEN`.
+4. A new game starts on desktop and mobile.
+5. Local save/load works after refresh.
+6. Optional Cloud Sync can upload and restore a disposable test save.
+7. Party Link can reserve a code and exchange an offer/answer.
+8. The browser console contains no uncaught errors.
+9. `robots.txt`, `sitemap.xml`, `llms.txt` and `ai-summary.json` show version 1.1.0 and eleven regions.
+10. Returning users receive the current service-worker cache version.
+
+## Search and discovery
+
+Submit `https://www.supersean007.com/sitemap.xml` to Google Search Console and Bing Webmaster Tools. Inspect the homepage plus `guides.html`, `characters.html`, `world.html` and `updates.html` after deployment. The build generates all region counts, dates and machine-readable summaries from `data/site-facts.json` to prevent content drift.

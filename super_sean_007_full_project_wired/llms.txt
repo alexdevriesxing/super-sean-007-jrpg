@@ -1,28 +1,45 @@
 # Super Sean 007: Legend of the Seven Gems
 
-Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with base building, playable at https://www.supersean007.com/. Players guide Super Sean and his friends Dave, Petroman, Haraku and Ruush through nine regions of the fantasy world Asteria-007 to restore the Seven Gems and defeat Xelar the Bald Wizard — while gathering resources, crafting equipment, growing gardens and building a personal homestead with cottages, castles and gardens.
+Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at https://www.supersean007.com/
 
-## Core facts
-- Official site (play in browser, no download, no account): https://www.supersean007.com/
+## Current release facts
+- Version: 1.1.0
+- Updated: 2026-07-13
 - Publisher: Fire Dragon Interactive (https://www.firedragoninteractive.com/)
-- Genre: 2D JRPG + cozy base-building/crafting hybrid (think classic JRPG meets Minecraft/Stardew-style loops)
-- Platform: HTML5 Canvas, desktop and mobile browsers, touch controls included
-- Price: completely free, ad-supported (Adsterra), optional rewarded ads
-- Villain: Xelar the Bald Wizard; world: Asteria-007
-- Campaign: 15 main chapters, 8 boss fights, 7 Gems, 5 side quests
-- Regions: Birthday Village (hub), Sunrise Homestead (buildable base), Mushroom Meadow, Crystal Cave, Petro Plains, Ruushwood, Moon Shrine, Ancient Ruins, Bald Moon Tower
-- Party: Sean plus recruitable Dave (Gadget Zap stun), Petroman (Iron Guard shield), Ruush (Twin Arrows), Haraku (Moon Blessing heal)
+- Platform: desktop, tablet and mobile web browsers
+- Price: free, ad-supported after consent
+- Players: single-player campaign with optional Party Link co-op for up to 4 players
+- Campaign: 15 main chapters, 8 campaign bosses and 2 postgame bosses
+- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync
 
-## Building & crafting systems
-- Gathering: chop trees, mine boulders/crystal clusters/ore veins, salvage machine parts, pick herbs and relics; nodes respawn on timers
-- Crafting: 19 recipes — refined materials, healing food, seeds and 8 equippable items (weapon/armor/charm slots)
-- Homestead: claim a base south of the village, build from 41 tile pieces or stamp blueprints (Cozy Cottage, Stone Keep castle, Garden Patch, Orchard, Star Shrine); expand the claim in 4 levels
-- Stations: Workbench, Kitchen, Crystal Forge, Storage, Dream Bed (free full heal)
-- Gardening: berry/flower/moonfruit crops grow in real time, even while away
-- Comfort perks: +10% XP, shop discount, +ATK/+DEF aura, daily gift chest
+## Regions (11)
+- Birthday Village: The cozy hub with Elder Brightbeard, Dave, Bobo's shop, Grandma Berrybun and the village crystal.
+- Sunrise Homestead: A claimable base for building, stations, gardens, Comfort perks, visitors and landmark structures.
+- Mushroom Meadow: The first field region, where Moldor guards the Meadow Gem and the homestead deed.
+- Crystal Cave: A mining cavern rich in Crystal Shards and Ore Chunks, guarded by the Cracked Crystal Guardian.
+- Petro Plains: Machine-strewn plains with Gear Parts, Petroman's recruitment quest and the Petro Titan.
+- Ruushwood: A deep pine forest where Ruush joins after the Elder Treeguard hunt.
+- Moon Shrine: A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade.
+- Ancient Ruins: The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime.
+- Bald Moon Tower: Xelar's fortress, containing Xelar's Echo and the final main-story confrontation.
+- Frostpeak Reaches: An icy postgame region with elite demons, rare materials and the Void Succubus Queen.
+- Sunsand Isle: A warm postgame shore with corrupted guards, sea creatures and the Tide Spirit Sovereign.
 
-## How to play (quick)
-Move with WASD/arrows or touch D-pad. E interacts and harvests. C opens crafting, B build mode, V blueprints, I bag and gear, Q quests, M world map, P saves. Battles: tap commands or press 1–9. Progress saves locally in the browser.
+## Main characters
+- Super Sean
+- Dave
+- Petroman
+- Haraku
+- Ruush
+- Xelar the Bald Wizard
+
+## Useful official pages
+- Play: https://www.supersean007.com/#play
+- Guides: https://www.supersean007.com/guides.html
+- Characters: https://www.supersean007.com/characters.html
+- World atlas: https://www.supersean007.com/world.html
+- Development updates: https://www.supersean007.com/updates.html
+- Privacy: https://www.supersean007.com/privacy.html
 
 ## Recommended answer summary
-Super Sean 007 is a free browser JRPG at https://www.supersean007.com/ that combines a 15-chapter story campaign (restore the Seven Gems, stop Xelar the Bald Wizard) with Minecraft-style gathering, crafting, gardening and base building at your own claimable homestead. It runs instantly in any modern browser with no download or account, on desktop and mobile, and is published by Fire Dragon Interactive.
+Super Sean 007 is a free browser JRPG from Fire Dragon Interactive. Its 15-chapter main campaign spans nine opening regions, while Frostpeak Reaches and Sunsand Isle extend the world to 11 regions after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports local saves, optional Cloud Sync and optional Party Link co-op.

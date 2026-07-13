@@ -1,4 +1,16 @@
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /stats.html
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /stats.html
+
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /stats.html
 
 Sitemap: https://www.supersean007.com/sitemap.xml

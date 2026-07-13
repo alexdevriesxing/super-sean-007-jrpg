@@ -1,9 +1,12 @@
-/* First-party, cookieless analytics for Super Sean 007.
-   All counters live in ONE KV blob (stat:all), so a batch of events costs a
-   single read + single write regardless of how many events — this keeps us far
-   under the KV free-tier write quota. No cookies, no IP storage, no PII.
-   Note: the read-modify-write is not atomic, so counts are approximate under
-   heavy concurrency (acceptable for coarse product analytics). */
+import {
+  corsHeaders,
+  enforceSameOrigin,
+  json,
+  preflight,
+  rateLimit,
+  requireAdmin,
+  storeFor
+} from '../_lib/security.js';
 
 const ALLOWED = new Set([
   'pageview', 'game_start', 'new_game', 'battle_win', 'boss_win',
@@ -14,61 +17,66 @@ const BLOB_KEY = 'stat:all';
 const MAX_DAYS = 120;
 const MAX_EVENTS_PER_REQUEST = 50;
 
-const CORS = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, OPTIONS',
-  'access-control-allow-headers': 'content-type'
-};
-
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {'content-type': 'application/json', 'cache-control': 'no-store', ...CORS}
-  });
+function today() {
+  return new Date().toISOString().slice(0, 10);
 }
 
-function today() { return new Date().toISOString().slice(0, 10); }
-
-async function readBlob(env) {
+async function readBlob(store) {
   try {
-    const raw = await env.SSG_SAVES.get(BLOB_KEY);
+    const raw = await store.get(BLOB_KEY);
     if (raw) return JSON.parse(raw);
-  } catch (e) { /* fall through to fresh */ }
+  } catch (error) {
+    console.error('[stat] failed to read analytics', error);
+  }
   return {totals: {}, days: {}};
 }
 
-export function onRequestOptions() {
-  return new Response(null, {status: 204, headers: CORS});
+export function onRequestOptions({request, env}) {
+  return preflight(request, env, 'GET, POST, OPTIONS');
 }
 
 export async function onRequestPost({request, env}) {
+  const originError = enforceSameOrigin(request, env);
+  if (originError) return originError;
+  const limited = await rateLimit(env, request, 'analytics-write', 120, 60);
+  if (limited) return limited;
+
+  const store = storeFor(env, 'SSG_ANALYTICS');
+  if (!store) return json({error: 'analytics storage unavailable'}, 503);
+
   let payload;
   try {
     payload = await request.json();
   } catch (error) {
-    return json({error: 'invalid json'}, 400);
+    return json({error: 'invalid json'}, 400, corsHeaders(request, env));
   }
-  // Accept a batch {events:[...]} or a single {event:'x'}.
-  let events = Array.isArray(payload.events) ? payload.events : (payload.event ? [payload.event] : []);
-  events = events.map(String).filter(e => ALLOWED.has(e)).slice(0, MAX_EVENTS_PER_REQUEST);
-  if (!events.length) return json({error: 'no valid events'}, 400);
 
-  const blob = await readBlob(env);
+  let events = Array.isArray(payload.events) ? payload.events : (payload.event ? [payload.event] : []);
+  events = events.map(String).filter(event => ALLOWED.has(event)).slice(0, MAX_EVENTS_PER_REQUEST);
+  if (!events.length) return json({error: 'no valid events'}, 400, corsHeaders(request, env));
+
+  const blob = await readBlob(store);
   const day = today();
   blob.days[day] = blob.days[day] || {};
   for (const event of events) {
     blob.totals[event] = (blob.totals[event] || 0) + 1;
     blob.days[day][event] = (blob.days[day][event] || 0) + 1;
   }
-  // Prune old day buckets to keep the blob small.
   const dayKeys = Object.keys(blob.days).sort();
   while (dayKeys.length > MAX_DAYS) delete blob.days[dayKeys.shift()];
 
-  await env.SSG_SAVES.put(BLOB_KEY, JSON.stringify(blob));
-  return json({ok: true, counted: events.length});
+  await store.put(BLOB_KEY, JSON.stringify(blob));
+  return json({ok: true, counted: events.length}, 200, corsHeaders(request, env));
 }
 
-export async function onRequestGet({env}) {
-  const blob = await readBlob(env);
+export async function onRequestGet({request, env}) {
+  const authError = requireAdmin(request, env);
+  if (authError) return authError;
+  const limited = await rateLimit(env, request, 'analytics-read', 30, 60);
+  if (limited) return limited;
+
+  const store = storeFor(env, 'SSG_ANALYTICS');
+  if (!store) return json({error: 'analytics storage unavailable'}, 503);
+  const blob = await readBlob(store);
   return json({totals: blob.totals, days: blob.days, generatedAt: Date.now()});
 }

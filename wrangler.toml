@@ -1,6 +1,9 @@
 name = "super-sean-007-jrpg"
 pages_build_output_dir = "dist"
-compatibility_date = "2026-01-01"
+compatibility_date = "2026-07-13"
+
+[vars]
+ALLOWED_ORIGINS = "https://www.supersean007.com,https://supersean007.com"
 
 [[kv_namespaces]]
 binding = "SSG_SAVES"

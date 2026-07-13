@@ -1,9 +1,7 @@
-/* Super Sean 007 — service worker for installable, offline-capable play.
-   Navigation: network-first with cached shell fallback.
-   App code (same-origin .js): network-first so a fix is never blocked by a
-   stale cached script; falls back to cache when offline.
-   Other static assets: stale-while-revalidate runtime cache. */
-const VERSION = 'ssg-v2';
+/* Super Sean 007 service worker. The build replaces __BUILD_VERSION__ with
+   the Cloudflare/GitHub commit SHA so every production deployment gets a fresh
+   cache namespace. */
+const VERSION = 'ssg-__BUILD_VERSION__';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -17,31 +15,44 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => Promise.all(
-      keys.filter(k => !k.startsWith(VERSION)).map(k => caches.delete(k))
+      keys.filter(key => !key.startsWith(VERSION)).map(key => caches.delete(key))
     )).then(() => self.clients.claim())
   );
 });
 
 function isStatic(url) {
-  return /\.(?:js|css|png|jpg|jpeg|webp|gif|svg|wav|mp3|woff2?|ico|json)$/i.test(url.pathname);
+  return /\.(?:css|png|jpg|jpeg|webp|gif|svg|wav|mp3|ogg|woff2?|ico)$/i.test(url.pathname);
+}
+
+function isFreshnessCritical(url) {
+  return /\.(?:js|json|webmanifest)$/i.test(url.pathname) || url.pathname === '/site.webmanifest';
+}
+
+async function networkFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  try {
+    const response = await fetch(request);
+    if (response.ok) await cache.put(request, response.clone());
+    return response;
+  } catch (error) {
+    return cache.match(request);
+  }
 }
 
 self.addEventListener('fetch', event => {
   const {request} = event;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-
-  // Never cache the API (saves, party, analytics) — always go to network.
-  if (url.pathname.startsWith('/api/')) return;
-  // Only handle same-origin; let cross-origin (ads, fonts) pass through.
+  if (url.pathname.startsWith('/api/') || url.pathname === '/stats.html') return;
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then(response => {
-          const copy = response.clone();
-          caches.open(SHELL).then(cache => cache.put('/', copy)).catch(() => {});
+          if (response.ok && response.status !== 404) {
+            caches.open(SHELL).then(cache => cache.put('/', response.clone())).catch(() => {});
+          }
           return response;
         })
         .catch(() => caches.match('/').then(cached => cached || caches.match('/index.html')))
@@ -49,19 +60,8 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // App code must always be fresh — a cached, broken script must never be able
-  // to hold the game hostage. Network-first, falling back to cache offline.
-  if (url.pathname.endsWith('.js')) {
-    event.respondWith(
-      caches.open(RUNTIME).then(cache =>
-        fetch(request)
-          .then(response => {
-            if (response.ok) cache.put(request, response.clone());
-            return response;
-          })
-          .catch(() => cache.match(request))
-      )
-    );
+  if (isFreshnessCritical(url)) {
+    event.respondWith(networkFirst(request, RUNTIME));
     return;
   }
 
