@@ -23,7 +23,7 @@
 
     function dismiss() {
       el.remove();
-      if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+      if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus({preventScroll: true});
     }
 
     el.addEventListener('click', event => { if (event.target === el) dismiss(); });
@@ -40,7 +40,11 @@
 
     el.dismiss = dismiss;
     document.body.appendChild(el);
-    requestAnimationFrame(() => focusable(el)[0]?.focus());
+    const initialFocus = focusable(el)[0];
+    initialFocus?.focus({preventScroll: true});
+    requestAnimationFrame(() => {
+      if (el.isConnected && !el.contains(document.activeElement)) initialFocus?.focus({preventScroll: true});
+    });
     return el;
   }
 
