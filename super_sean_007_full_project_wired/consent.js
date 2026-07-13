@@ -1,19 +1,14 @@
-/* Super Sean 007 — consent gate + cookieless analytics bootstrap.
-   Loads FIRST (before ads.js). Ads (third-party, cookie-dropping) load only
-   after the visitor accepts. Analytics is first-party and cookieless, so it
-   runs regardless of the ad choice. */
+/* Super Sean 007 — consent gate and cookieless analytics bootstrap.
+   Third-party advertising loads only after the visitor accepts. */
 (() => {
   'use strict';
 
   const CONSENT_KEY = 'super-sean-007-consent';
   const api = {
-    read() { try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; } },
-    write(v) { try { localStorage.setItem(CONSENT_KEY, v); } catch (e) {} }
+    read() { try { return localStorage.getItem(CONSENT_KEY); } catch (error) { return null; } },
+    write(value) { try { localStorage.setItem(CONSENT_KEY, value); } catch (error) {} }
   };
 
-  /* ---------- cookieless analytics (no consent required) ---------- */
-  // Events are queued and flushed as one batched beacon, so a whole session
-  // costs a handful of KV writes instead of one per event.
   const Stats = {
     sent: new Set(),
     queue: [],
@@ -36,34 +31,45 @@
         if (useBeacon && navigator.sendBeacon) {
           navigator.sendBeacon('/api/stat', new Blob([body], {type: 'application/json'}));
         } else {
-          fetch('/api/stat', {method: 'POST', headers: {'content-type': 'application/json'}, body, keepalive: true}).catch(() => {});
+          fetch('/api/stat', {
+            method: 'POST',
+            headers: {'content-type': 'application/json'},
+            body,
+            keepalive: true,
+            credentials: 'same-origin'
+          }).catch(() => {});
         }
-      } catch (e) {}
+      } catch (error) {}
     }
   };
   window.SSGStats = {track: (event, once = false) => Stats.track(event, once)};
-  // Flush the batch when the visitor leaves.
   document.addEventListener('visibilitychange', () => { if (document.hidden) Stats.flush(true); });
   window.addEventListener('pagehide', () => Stats.flush(true));
-  // Page view once per load.
   Stats.track('pageview', true);
 
-  // Capture uncaught errors (throttled to a few per session).
   let errCount = 0;
-  function reportError(msg, url, line) {
-    if (errCount >= 5 || !msg) return;
+  function reportError(message, url, line) {
+    if (errCount >= 5 || !message) return;
     errCount += 1;
     try {
       fetch('/api/err', {
-        method: 'POST', headers: {'content-type': 'application/json'}, keepalive: true,
-        body: JSON.stringify({msg: String(msg).slice(0, 500), url: String(url || location.pathname), line: line || 0})
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        credentials: 'same-origin',
+        keepalive: true,
+        body: JSON.stringify({
+          msg: String(message).slice(0, 500),
+          url: String(url || location.pathname).slice(0, 500),
+          line: line || 0
+        })
       }).catch(() => {});
-    } catch (e) {}
+    } catch (error) {}
   }
-  window.addEventListener('error', e => reportError(e.message, e.filename, e.lineno));
-  window.addEventListener('unhandledrejection', e => reportError('unhandledrejection: ' + (e.reason && (e.reason.message || e.reason)), location.pathname, 0));
+  window.addEventListener('error', event => reportError(event.message, event.filename, event.lineno));
+  window.addEventListener('unhandledrejection', event => {
+    reportError(`unhandledrejection: ${event.reason && (event.reason.message || event.reason)}`, location.pathname, 0);
+  });
 
-  /* ---------- ad consent gate ---------- */
   function loadAds() {
     if (window.__ssgAdsLoaded) return;
     window.__ssgAdsLoaded = true;
@@ -74,8 +80,7 @@
   }
 
   function removeBanner() {
-    const el = document.getElementById('consentBanner');
-    if (el) el.remove();
+    document.getElementById('consentBanner')?.remove();
   }
 
   function showBanner() {
@@ -86,7 +91,7 @@
     banner.setAttribute('aria-label', 'Cookie and ads consent');
     banner.innerHTML = `
       <div class="consent-inner">
-        <p>Super Sean 007 is free thanks to ads. We use our own cookieless analytics, and — with your OK — third-party ads (Adsterra) that may set cookies. Your game progress stays in your browser. <a href="privacy.html" style="color:#7cecff">Privacy Policy</a>.</p>
+        <p>Super Sean 007 is free thanks to ads. We use aggregate, cookieless first-party analytics and — with your permission — third-party Adsterra ads that may set cookies. Progress stays in your browser by default and is uploaded to Cloudflare only when you enable Cloud Sync. <a href="privacy.html" style="color:#7cecff">Privacy Policy</a>.</p>
         <div class="consent-actions">
           <button type="button" class="consent-btn decline" id="consentDecline">Play without ad cookies</button>
           <button type="button" class="consent-btn accept" id="consentAccept">Accept &amp; play</button>
@@ -110,15 +115,9 @@
   };
 
   const decision = api.read();
-  if (decision === 'accepted') {
-    loadAds();
-  } else if (decision === 'declined') {
-    // respect the choice; no ads this session
-  } else {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', showBanner, {once: true});
-    } else {
-      showBanner();
-    }
+  if (decision === 'accepted') loadAds();
+  else if (decision !== 'declined') {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBanner, {once: true});
+    else showBanner();
   }
 })();
