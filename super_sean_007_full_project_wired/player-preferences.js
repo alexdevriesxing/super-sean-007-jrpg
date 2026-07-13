@@ -83,6 +83,11 @@
     return Boolean(document.querySelector('.ssg-overlay'));
   }
 
+  function currentState() {
+    try { return JSON.parse(window.render_game_to_text?.() || '{}'); }
+    catch (error) { return {}; }
+  }
+
   function actionForCode(code) {
     return ACTIONS.find(([id]) => prefs.keys[id] === code)?.[0] || null;
   }
@@ -96,7 +101,20 @@
     }));
   }
 
+  function maybeStartNgPlus(event) {
+    if (!event.isTrusted || event.code !== 'KeyG' || isTypingTarget(event.target) || overlayOpen()) return false;
+    const state = currentState();
+    if (state.scene !== 'explore' || state.map?.id !== 'homestead' || state.quest?.id !== 'postgame_legend') return false;
+    if (typeof window.SuperSeanGame?.startNewGamePlus !== 'function') return false;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    window.SuperSeanGame.startNewGamePlus();
+    announce('New Game Plus started.');
+    return true;
+  }
+
   function translatePhysical(event, down) {
+    if (down && maybeStartNgPlus(event)) return;
     if (!event.isTrusted || isTypingTarget(event.target) || overlayOpen()) return;
     const action = actionForCode(event.code);
     if (!action) return;
@@ -111,8 +129,7 @@
   window.addEventListener('keyup', event => translatePhysical(event, false), true);
 
   function stateScene() {
-    try { return JSON.parse(window.render_game_to_text?.() || '{}').scene || 'unknown'; }
-    catch (error) { return 'unknown'; }
+    return currentState().scene || 'unknown';
   }
 
   function tap(code) {
