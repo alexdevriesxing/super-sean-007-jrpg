@@ -4,53 +4,58 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy Policy — Super Sean 007</title>
-  <meta name="description" content="Privacy policy for Super Sean 007: local saves, optional Cloudflare cloud sync, cookieless analytics, error diagnostics, security controls, cookies and advertising choices.">
+  <meta name="description" content="Privacy policy for Super Sean 007 covering local saves, optional Cloudflare sync, aggregate analytics, diagnostics, Party Link and consent-based advertising.">
   <link rel="canonical" href="https://www.supersean007.com/privacy.html">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap">
-  <style>
-    body{font-family:'Nunito',system-ui,sans-serif;color:#12365a;background:linear-gradient(180deg,#eaf8ff,#fffaf2);margin:0;line-height:1.7}
-    .wrap{max-width:760px;margin:auto;padding:48px 20px 80px}a{color:#168ed0}h1{font-size:2.1rem;margin:0 0 6px}h2{margin-top:34px;font-size:1.3rem;color:#145f91}.updated{color:#5a708a;font-size:.9rem}.back{display:inline-block;margin-bottom:24px;font-weight:800;text-decoration:none}code{background:#edf7ff;padding:.1rem .35rem;border-radius:.35rem}
-  </style>
+  <style>body{font-family:'Nunito',system-ui,sans-serif;color:#12365a;background:linear-gradient(180deg,#eaf8ff,#fffaf2);margin:0;line-height:1.7}.wrap{max-width:800px;margin:auto;padding:48px 20px 80px}a{color:#168ed0}h1{font-size:2.1rem;margin:0 0 6px}h2{margin-top:34px;font-size:1.3rem;color:#145f91}.updated{color:#5a708a;font-size:.9rem}.back{display:inline-block;margin-bottom:24px;font-weight:800;text-decoration:none}code{background:#edf7ff;padding:.1rem .35rem;border-radius:.35rem}</style>
 </head>
-<body>
-  <div class="wrap">
-    <a class="back" href="/">← Back to Super Sean 007</a>
-    <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 13 July 2026</p>
-    <p>Super Sean 007: Legend of the Seven Gems is a free browser game published by Fire Dragon Interactive. No account, real name or email address is required to play.</p>
+<body><main class="wrap">
+  <a class="back" href="/">← Back to Super Sean 007</a>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: 13 July 2026 · Consent policy version 2026-07-13-v2</p>
+  <p>Super Sean 007: Legend of the Seven Gems is a free browser game published and operated by Fire Dragon Interactive. No account, real name or email address is required to play. Operator contact details are available through <a href="https://www.firedragoninteractive.com" rel="noopener noreferrer">Fire Dragon Interactive</a>.</p>
 
-    <h2>Local game progress</h2>
-    <p>Your save is stored locally in your browser by default using localStorage. It remains on that device unless you voluntarily enable Cloud Sync. You can erase local progress by clearing browser data or starting a new game.</p>
+  <h2>Local game progress</h2>
+  <p>Your save, settings and consent choice are stored in your browser using localStorage. They remain on that device unless you enable Cloud Sync. You can remove local data through your browser settings. The consent record contains your choice, the policy version and the time of the choice, and is renewed after 180 days or when the policy changes.</p>
 
-    <h2>Optional Cloud Sync</h2>
-    <p>When you enable Cloud Sync, your save is uploaded to Cloudflare against a random sync ID generated on your device. We do not attach your name, email or account identity to that ID. Possession of the sync ID grants access to the save, so treat it like a password. Cloud saves expire after 180 days of inactivity.</p>
+  <h2>Optional Cloud Sync</h2>
+  <p>When you enable Cloud Sync, the game uploads a validated copy of your save to Cloudflare under a random sync ID generated on your device. We do not attach a name, email or account identity to it. Possession of the ID grants access to that save, so treat it like a password.</p>
+  <p>Cloud saves expire after 180 days of inactivity. Settings lets you download a backup, replace or restore a cloud copy, rotate the sync ID and permanently delete the stored cloud copy.</p>
 
-    <h2>Aggregate analytics</h2>
-    <p>We use first-party, cookieless analytics to count aggregate events such as page views, new games, battles won and bosses defeated. Analytics requests are origin checked and rate limited. We do not use analytics cookies, store analytics IP addresses or build advertising profiles from these events.</p>
+  <h2>Aggregate analytics</h2>
+  <p>First-party, cookieless analytics count aggregate events such as page views, new games, battles won, bosses defeated, homestead claims and co-op starts. The current fallback counter is approximate under concurrent traffic. Daily aggregates are retained for up to 120 days. We do not use these events to create individual advertising profiles.</p>
 
-    <h2>Error diagnostics and security</h2>
-    <p>If the game encounters an unexpected error, it may send the error message, page path and code line so that we can repair the problem. Error reports do not include your save, name, email or full IP address. Short-lived, hashed network fingerprints may be used solely to enforce abuse-prevention limits on API requests.</p>
+  <h2>Error diagnostics and service security</h2>
+  <p>When the game encounters an unexpected error, it may send a bounded error message, stack excerpt, page path, code line, release version and current game scene. Reports do not include your save, cloud ID, name, email or raw IP address. The latest 60 reports are retained for no longer than 30 days and can be read only through protected administrator access.</p>
+  <p>Short-lived SHA-256 network fingerprints may be used only to enforce abuse-prevention limits. Raw addresses are not written to the application’s analytics or diagnostics records.</p>
 
-    <h2>Advertising</h2>
-    <p>The game is supported by Adsterra advertising. Third-party ad scripts load only after you accept on the consent banner. Choosing “Play without ad cookies” prevents those scripts from loading during your session. When enabled, advertising partners may use cookies or similar technologies to serve and measure ads. You can change your choice from the in-game Settings menu.</p>
+  <h2>Advertising and consent</h2>
+  <p>Third-party Adsterra advertising loads only after you choose “Accept advertising.” Choosing “Play without third-party ads” prevents those units from loading. Ad units run inside sandboxed, opaque-origin frames designed to prevent access to game localStorage and cloud IDs. Advertising providers may still process cookies, network data and device information within their own frames under their policies.</p>
+  <p>You can reset your advertising choice from Settings. Declining advertising does not block normal gameplay, although ad-funded optional rewards are unavailable.</p>
 
-    <h2>Co-op Party Link</h2>
-    <p>The optional co-op feature uses short-lived Cloudflare records to exchange WebRTC connection information. Signalling records expire after approximately ten minutes; gameplay traffic then travels directly between participating browsers where supported.</p>
+  <h2>Party Link co-op</h2>
+  <p>Party Link stores short-lived WebRTC signalling records in Cloudflare for approximately ten minutes. Offers and answers are deleted after they are read where possible. Gameplay traffic then travels directly between participating browsers or through an optional TURN relay. Other players may see the display name you enter for the party session.</p>
 
-    <h2>Children</h2>
-    <p>The game is family-friendly and does not require personal identifiers. We do not knowingly request or collect names, email addresses, precise locations or account profiles from children.</p>
+  <h2>Service providers and international processing</h2>
+  <p>Cloudflare provides hosting, Functions, KV storage and optional relay configuration. Adsterra provides advertising only after consent. These providers may process data in countries outside your own under their respective terms and transfer safeguards.</p>
 
-    <h2>Your choices</h2>
-    <ul>
-      <li>Decline third-party ad cookies or reset your decision in Settings.</li>
-      <li>Keep Cloud Sync disabled to retain progress only on your device.</li>
-      <li>Clear browser storage to remove local progress and your stored sync ID.</li>
-      <li>Do not share your cloud sync ID publicly.</li>
-    </ul>
+  <h2>Legal bases</h2>
+  <p>Depending on your jurisdiction, optional advertising is based on consent; Cloud Sync and Party Link are processed at your request to provide those features; and limited security, diagnostics and aggregate service measurement are used for operating and protecting the game where permitted by applicable law.</p>
 
-    <h2>Contact</h2>
-    <p>Questions can be directed to <a href="https://www.firedragoninteractive.com" rel="noopener">Fire Dragon Interactive</a>.</p>
-    <p><a href="/terms.html">Terms of Service</a></p>
-  </div>
-</body>
-</html>
+  <h2>Your choices and rights</h2>
+  <ul>
+    <li>Decline or reset third-party advertising consent.</li>
+    <li>Keep Cloud Sync disabled and use local saves only.</li>
+    <li>Download, rotate or delete your cloud save from Settings.</li>
+    <li>Clear browser storage to remove local progress, settings, consent and the stored sync ID.</li>
+    <li>Contact the operator to request access, correction, deletion, restriction or objection where those rights apply.</li>
+    <li>Lodge a complaint with your local data-protection authority.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>The game is family-friendly and does not request direct identifiers. It is not intended to collect personal profiles from children. Parents and guardians can select the no-ad option and keep Cloud Sync disabled.</p>
+
+  <h2>Security and contact</h2>
+  <p>Security reports should follow our <a href="/security-policy.html">responsible disclosure policy</a>. General privacy questions can be directed through <a href="https://www.firedragoninteractive.com" rel="noopener noreferrer">Fire Dragon Interactive</a>.</p>
+  <p><a href="/terms.html">Terms of Service</a> · <a href="/.well-known/security.txt">Security contact</a></p>
+</main></body></html>
