@@ -11,7 +11,7 @@ Use these production settings:
 - Output directory: `dist`
 - Node.js: 22 or newer
 
-The build runs semantic release checks and Node tests, generates and optimizes assets, builds with Vite, copies static and Cloudflare files, renders canonical public facts into `dist`, stamps the service worker with the deployment commit, validates commercial security and SEO invariants, and produces a deployable artifact in GitHub Actions. CI also starts the production preview in real headless Chrome and verifies the game shell, title-screen start, accessible settings dialog and guide page.
+The build runs semantic release checks and Node tests, generates and optimizes assets, builds with Vite, copies static and Cloudflare files, renders canonical public facts into `dist`, stamps the service worker with the deployment commit, validates commercial security and SEO invariants, enforces performance budgets, and produces a deployable artifact in GitHub Actions. CI also starts the production preview in real headless Chrome and verifies the game shell, title-screen start, remappable controls, accessibility preferences, performance report, Settings dialog and guide page.
 
 ## Required Cloudflare bindings and secrets
 
@@ -71,7 +71,26 @@ Before a production launch, test:
 - An explicit overwrite requiring the confirmation header.
 - Sync-ID rotation and revocation of the old ID.
 - Cloud deletion while retaining the local browser save.
-- An old-version save migration.
+- Version 1 and 2 save migration into the version 3 epilogue schema.
+
+## Player controls and accessibility
+
+Version 1.2 stores keyboard and visual preferences locally and independently from the game save. Verify:
+
+- Every listed keyboard action can be rebound and duplicate keys are swapped rather than silently duplicated.
+- Arrow keys remain available as a movement fallback.
+- Standard gamepad D-pad, left stick, A/B, menu shortcuts and Start-to-Settings work.
+- Text scaling does not clip Settings or accessible controls at 130%.
+- High-contrast mode remains readable in the website, overlays and canvas.
+- Reduced-motion mode suppresses nonessential animation.
+- Disabling screen effects does not alter gameplay state.
+- Clearing local site data resets preferences without damaging a separately stored cloud save.
+
+## Performance budgets
+
+`data/performance-budget.json` defines the release ceilings for total `dist` size, JavaScript, CSS, initial critical assets, individual files and the number of files larger than two megabytes. `npm run budget:performance` writes `dist/performance-report.json` and fails the build when a ceiling is exceeded.
+
+Treat budget changes as reviewed product decisions. Do not simply raise a threshold to make CI green. A threshold increase must explain the new asset, expected player benefit, mobile impact and why regional or lower-resolution loading is not suitable.
 
 ## Domains and canonical redirect
 
@@ -102,19 +121,23 @@ Configure Cloudflare’s GitHub integration so the production deployment status 
 
 After Cloudflare reports a successful deployment, verify:
 
-1. `/api/health` returns `ok: true` and the expected commit SHA.
+1. `/api/health` returns `ok: true`, version `1.2.0` and the expected commit SHA.
 2. `/this-path-must-not-exist` returns the branded page with HTTP 404.
 3. `/stats.html` cannot read data without `ADMIN_TOKEN` and is protected by Cloudflare Access.
 4. A new game starts on desktop and mobile.
 5. Local save/load works after refresh.
 6. Cloud upload, restore, conflict, rotation and deletion work with a disposable save.
-7. Party Link reserves a code, consumes offers/answers and connects across separate networks through TURN where required.
-8. The browser console contains no uncaught errors.
-9. `robots.txt`, `sitemap.xml`, `llms.txt` and `ai-summary.json` show version 1.1.0 and eleven regions.
-10. `/.well-known/security.txt` and `/security-policy.html` are available.
-11. Third-party ad units appear only after consent and remain sandboxed.
-12. Returning users receive the current service-worker cache version.
-13. Production `SuperSeanGame.debug` is absent.
+7. A completed version 1 or 2 save enters the Frostpeak/Sunsand epilogue at the correct stage.
+8. Remapped keyboard input and a standard gamepad work in exploration, dialogue, battle and menus.
+9. Text scaling, high contrast, reduced motion and screen-effect settings persist after reload.
+10. Party Link reserves a code, consumes offers/answers and connects across separate networks through TURN where required.
+11. The browser console contains no uncaught errors.
+12. `robots.txt`, `sitemap.xml`, `llms.txt` and `ai-summary.json` show version 1.2.0 and eleven regions.
+13. `/.well-known/security.txt` and `/security-policy.html` are available.
+14. Third-party ad units appear only after consent and remain sandboxed.
+15. Returning users receive the current service-worker cache version.
+16. Production `SuperSeanGame.debug` is absent while the safe New Game+ action remains available after the epilogue.
+17. `/performance-report.json` reports `passed: true`.
 
 ## Search and discovery
 
