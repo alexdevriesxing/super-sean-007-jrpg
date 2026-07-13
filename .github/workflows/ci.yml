@@ -44,6 +44,7 @@ jobs:
           path: |
             build-output.log
             browser-smoke-output.log
+            dist/performance-report.json
           if-no-files-found: warn
           retention-days: 14
       - name: Upload deployable production artifact
