@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service Status — Super Sean 007</title>
+  <meta name="description" content="Live technical status for Super Sean 007, including the deployed release, service health and production performance budget.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="canonical" href="https://www.supersean007.com/status.html">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="status.css">
+</head>
+<body>
+  <main class="status-shell">
+    <a class="back" href="/">← Back to Super Sean 007</a>
+    <p class="eyebrow">Production operations</p>
+    <h1>Service status</h1>
+    <p class="lead">This page checks the public game shell, Cloudflare Functions release metadata and the production performance report without exposing private diagnostics.</p>
+
+    <div id="overall" class="overall checking" role="status" aria-live="polite">Checking production…</div>
+
+    <section class="status-grid" aria-label="Production checks">
+      <article class="status-card"><h2>Game website</h2><p id="siteState">Checking…</p><dl><div><dt>HTTP</dt><dd id="siteHttp">—</dd></div><div><dt>Version</dt><dd id="siteVersion">—</dd></div></dl></article>
+      <article class="status-card"><h2>Cloudflare API</h2><p id="apiState">Checking…</p><dl><div><dt>Branch</dt><dd id="apiBranch">—</dd></div><div><dt>Commit</dt><dd id="apiCommit">—</dd></div></dl></article>
+      <article class="status-card"><h2>Performance budget</h2><p id="perfState">Checking…</p><dl><div><dt>Distribution</dt><dd id="perfBytes">—</dd></div><div><dt>Critical load</dt><dd id="criticalBytes">—</dd></div></dl></article>
+      <article class="status-card"><h2>Security contact</h2><p id="securityState">Checking…</p><p><a href="/.well-known/security.txt">Responsible disclosure details</a></p></article>
+    </section>
+
+    <section class="help-card">
+      <h2>Having trouble playing?</h2>
+      <p>Check the <a href="support.html">support and troubleshooting page</a>. The public status page deliberately does not expose cloud saves, error reports, analytics or administrator credentials.</p>
+    </section>
+    <p class="checked">Last checked: <time id="checkedAt">—</time></p>
+  </main>
+  <script src="status.js" defer></script>
+</body>
+</html>

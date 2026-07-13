@@ -1,4 +1,4 @@
-import {access, mkdtemp, rm} from 'node:fs/promises';
+import {access, mkdtemp, readFile, rm} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
@@ -8,6 +8,7 @@ const PORT = 4173;
 const DEBUG_PORT = 9222;
 const BASE_URL = `http://${HOST}:${PORT}`;
 const VITE_BIN = path.resolve('node_modules/vite/bin/vite.js');
+const EXPECTED_VERSION = JSON.parse(await readFile('package.json', 'utf8')).version;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function findChrome() {
@@ -203,7 +204,7 @@ try {
   if (!shell.a11y) throw new Error('Accessible game controls did not load.');
   if (!shell.preferences) throw new Error('Player preference runtime did not load.');
   if (!shell.runtime?.hardened) throw new Error('Production runtime hardening did not initialize.');
-  if (shell.runtime.version !== '1.2.0') throw new Error(`Unexpected runtime version ${shell.runtime.version}.`);
+  if (shell.runtime.version !== EXPECTED_VERSION) throw new Error(`Unexpected runtime version ${shell.runtime.version}; expected ${EXPECTED_VERSION}.`);
   if (shell.runtime.production && shell.debugExposed) throw new Error('QA debug controls remain exposed in production.');
 
   await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Enter', code: 'Enter'});

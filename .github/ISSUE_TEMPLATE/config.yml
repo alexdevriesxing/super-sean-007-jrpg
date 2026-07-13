@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Player support and troubleshooting
+    url: https://www.supersean007.com/support.html
+    about: Check common fixes before opening a public bug report.
+  - name: Security vulnerability
+    url: https://www.supersean007.com/security-policy.html
+    about: Use the private responsible-disclosure route instead of a public issue.
+  - name: Live service status
+    url: https://www.supersean007.com/status.html
+    about: Check the current deployed version and public production health.

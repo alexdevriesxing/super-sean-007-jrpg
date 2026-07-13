@@ -26,6 +26,9 @@ expect(ai.campaign?.postgame_quests === 4, 'AI summary postgame quest count is s
 expect(ai.controls?.includes('standard gamepad'), 'AI summary is missing gamepad support');
 expect(ai.controls?.includes('remappable keyboard'), 'AI summary is missing remappable keyboard controls');
 expect(ai.accessibility?.includes('high contrast'), 'AI summary is missing accessibility preferences');
+expect(ai.operations?.includes('public service status'), 'AI summary is missing production operations');
+expect(ai.key_pages?.support?.endsWith('/support.html'), 'AI summary is missing the support page');
+expect(ai.key_pages?.status?.endsWith('/status.html'), 'AI summary is missing the service status page');
 expect(ai.key_pages?.security?.endsWith('/security-policy.html'), 'AI summary is missing the security policy page');
 expect(ai.privacy?.includes('sandboxed frames'), 'AI summary does not describe isolated advertising');
 
@@ -34,13 +37,15 @@ expect(llms.includes(`Regions (${facts.regionCount})`), 'llms.txt region count i
 expect(llms.includes(`up to ${facts.playerMaximum} players`), 'llms.txt player count is stale');
 expect(llms.includes('four-quest postgame epilogue'), 'llms.txt is missing the postgame epilogue');
 expect(llms.includes('standard gamepad support'), 'llms.txt is missing gamepad support');
+expect(llms.includes('automated production monitoring'), 'llms.txt is missing production monitoring');
 for (const region of facts.regions) expect(llms.includes(region.name), `llms.txt is missing ${region.name}`);
 
-for (const page of ['', 'guides.html', 'characters.html', 'world.html', 'updates.html', 'privacy.html', 'terms.html', 'security-policy.html']) {
+for (const page of ['', 'guides.html', 'characters.html', 'world.html', 'updates.html', 'support.html', 'privacy.html', 'terms.html', 'security-policy.html']) {
   expect(sitemap.includes(`<loc>${facts.officialUrl}${page}</loc>`), `sitemap is missing ${page || 'homepage'}`);
 }
 expect(syncScript.includes("process.argv.includes('--dist')"), 'production fact synchronization is not configured for dist');
 expect(syncScript.includes('js/postgame-systems.js'), 'production HTML does not inject the postgame systems extension');
+expect(syncScript.includes('status.html'), 'production HTML does not expose the service status link');
 
 if (errors.length) {
   console.error(errors.join('\n'));

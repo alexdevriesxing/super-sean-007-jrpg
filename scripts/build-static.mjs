@@ -4,22 +4,42 @@ import path from 'node:path';
 const projectRoot = path.resolve('super_sean_007_full_project_wired');
 const distRoot = path.resolve('dist');
 const entries = [
-  'assets', 'data', 'docs', 'js', '.well-known',
+  'assets', 'data', 'js', '.well-known',
   'game.js', 'ads.js', 'site.js', 'consent.js', 'ui-overlays.js', 'sw.js',
   'turn-config.js', 'cloud-controls.js', 'player-preferences.js', 'accessibility.js', 'runtime-hardening.js',
-  'stats.html', 'stats.js', 'stats.css', 'privacy.html', 'terms.html', '404.html', 'security-policy.html',
+  'stats.html', 'stats.js', 'stats.css', 'status.html', 'status.js', 'status.css', 'support.html',
+  'privacy.html', 'terms.html', '404.html', 'security-policy.html',
   'guides.html', 'characters.html', 'world.html', 'updates.html', 'content.css',
   'styles.css', 'accessibility.css', 'player-preferences.css', 'favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt',
   'ai-summary.json', 'site.webmanifest', 'humans.txt', 'security.txt',
   '_headers', '_redirects'
 ];
 
+const omittedProductionPaths = new Set([
+  path.join(projectRoot, 'assets', 'characters', 'super_sean_friends_foundation_spritesheet.png'),
+  path.join(projectRoot, 'data', 'asset-manifest.json')
+]);
+const generatedSourceRoot = path.join(projectRoot, 'assets', 'generated');
+
+function includeInProduction(source) {
+  if (source === generatedSourceRoot || source.startsWith(`${generatedSourceRoot}${path.sep}`)) return false;
+  return !omittedProductionPaths.has(source);
+}
+
+// dist/ is cleaned immediately before Vite runs. This step overlays the
+// production-only static runtime while preserving Vite's generated index and
+// content-hashed assets/build files.
 await mkdir(distRoot, {recursive: true});
 
 for (const entry of entries) {
   const from = path.join(projectRoot, entry);
   const to = path.join(distRoot, entry);
-  await cp(from, to, {recursive: true, force: true, errorOnExist: false}).catch(error => {
+  await cp(from, to, {
+    recursive: true,
+    force: true,
+    errorOnExist: false,
+    filter: includeInProduction
+  }).catch(error => {
     if (error.code !== 'ENOENT') throw error;
   });
 }
@@ -37,4 +57,4 @@ await writeFile(path.join(distRoot, 'build-meta.json'), `${JSON.stringify({
   builtAt: new Date().toISOString()
 }, null, 2)}\n`);
 
-console.log(`Copied static site to dist/ and stamped ${facts.version} service worker ${buildId}.`);
+console.log(`Copied production-only static site to dist/ and stamped ${facts.version} service worker ${buildId}.`);

@@ -1,0 +1,106 @@
+name: Monitor production
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: super-sean-production-monitor
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out current production source
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run strict live smoke test
+        id: smoke
+        continue-on-error: true
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+          PRODUCTION_URL: https://www.supersean007.com
+          SMOKE_ATTEMPTS: 6
+          SMOKE_DELAY_MS: 10000
+        run: |
+          set -o pipefail
+          node scripts/live-smoke.mjs --report=production-monitor-report.json 2>&1 | tee production-monitor.log
+
+      - name: Upload monitoring evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: super-sean-production-monitor-${{ github.run_id }}
+          path: |
+            production-monitor.log
+            production-monitor-report.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Open or update production incident
+        if: steps.smoke.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = 'Production smoke test failed';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              'The automated production smoke test failed.',
+              '',
+              `- Expected commit: \`${context.sha}\``,
+              `- Workflow run: ${runUrl}`,
+              `- Checked at: ${new Date().toISOString()}`,
+              '',
+              'Download the production-monitor artifact from the workflow run for the complete report. Do not close this issue until a later monitor run confirms recovery.'
+            ].join('\n');
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            const existing = issues.find(issue => !issue.pull_request && issue.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number, body});
+            } else {
+              await github.rest.issues.create({owner: context.repo.owner, repo: context.repo.repo, title, body, assignees: [context.repo.owner]});
+            }
+
+      - name: Close recovered production incident
+        if: steps.smoke.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = 'Production smoke test failed';
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            const existing = issues.find(issue => !issue.pull_request && issue.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body: `Production recovered and passed the complete smoke test at ${new Date().toISOString()} on commit \`${context.sha}\`.`
+              });
+              await github.rest.issues.update({owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number, state: 'closed', state_reason: 'completed'});
+            }
+
+      - name: Fail workflow when production is unhealthy
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1
