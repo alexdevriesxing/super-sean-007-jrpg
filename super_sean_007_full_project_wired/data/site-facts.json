@@ -1,7 +1,7 @@
 {
   "gameTitle": "Super Sean 007: Legend of the Seven Gems",
   "shortName": "Super Sean 007",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "officialUrl": "https://www.supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
@@ -40,6 +40,7 @@
     "text scaling, high contrast, reduced motion and screen-effect preferences",
     "local saves, copyable save codes and optional Cloud Sync",
     "optional one-to-four-player Party Link co-op",
-    "desktop, tablet and mobile controls"
+    "desktop, tablet and mobile controls",
+    "public service status and automated production monitoring"
   ]
 }
