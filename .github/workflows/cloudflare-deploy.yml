@@ -27,6 +27,10 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Resolve canonical release version
+        id: release
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+
       - name: Check Cloudflare deployment credentials
         id: credentials
         env:
@@ -67,7 +71,7 @@ jobs:
         if: steps.credentials.outputs.ready == 'true'
         env:
           EXPECTED_COMMIT: ${{ github.sha }}
-          EXPECTED_VERSION: 1.2.1
+          EXPECTED_VERSION: ${{ steps.release.outputs.version }}
           PRODUCTION_URL: https://www.supersean007.com
         run: |
           set -o pipefail
