@@ -152,7 +152,26 @@ const JOBS = [
   // outlined deerling + turtle + horned goat)
   ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [426, 225, 75, 77], 'animal_deerling'],
   ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [759, 225, 91, 74], 'animal_turtle'],
-  ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [1090, 225, 83, 77], 'animal_skygoat']
+  ['ui_vfx/vriendelijke_dieren_en_rijdieren_ontwerpen.png', [1090, 225, 83, 77], 'animal_skygoat'],
+
+  // Party allies — distinct battle sprites drawn beside Sean (friends sheet, 1536 wide)
+  ['spritesheets/super_sean_friends_spritesheets.png', [517, 60, 51, 63], 'ally_dave'],
+  ['spritesheets/super_sean_friends_spritesheets.png', [902, 60, 58, 63], 'ally_petroman'],
+  ['spritesheets/super_sean_friends_spritesheets.png', [95, 635, 45, 55], 'ally_haraku'],
+  ['spritesheets/super_sean_friends_spritesheets.png', [665, 632, 49, 58], 'ally_ruush'],
+  // Dark Knights & Corrupted Guards (Xelar's realm elites)
+  ['spritesheets/chibi_rpg_donkere_ridder_sprite_sheet.png', [104, 145, 58, 83], 'mob_black_knight'],
+  ['spritesheets/chibi_rpg_donkere_ridder_sprite_sheet.png', [433, 145, 88, 83], 'mob_shadow_paladin'],
+  ['spritesheets/chibi_rpg_donkere_ridder_sprite_sheet.png', [773, 145, 70, 83], 'mob_royal_guard'],
+  ['spritesheets/chibi_rpg_donkere_ridder_sprite_sheet.png', [1121, 151, 91, 77], 'mob_doom_halberdier'],
+  // Xelar's Minions
+  ['spritesheets/minions_sprite_sheet_overzicht.png', [196, 175, 79, 71], 'mob_shadow_acolyte'],
+  ['spritesheets/minions_sprite_sheet_overzicht.png', [566, 175, 94, 68], 'mob_bat_imp'],
+  ['spritesheets/minions_sprite_sheet_overzicht.png', [1036, 186, 63, 58], 'mob_cursed_slime'],
+  // Extra village NPCs (festival & village-life sheet)
+  ['spritesheets/super_sean_npcs_karakterblad.png', [76, 185, 75, 123], 'npc_cook'],
+  ['spritesheets/super_sean_npcs_karakterblad.png', [70, 425, 81, 125], 'npc_teacher'],
+  ['spritesheets/super_sean_npcs_karakterblad.png', [70, 655, 81, 139], 'npc_musician']
 ];
 
 for (const [sheet, box, name] of JOBS) {

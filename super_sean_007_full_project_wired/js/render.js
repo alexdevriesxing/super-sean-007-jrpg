@@ -11,6 +11,8 @@
     const S = () => ctx.state();
     const sys = () => ctx.systems();
     const clickables = [];
+    // Party member -> distinct battle ally sprite (friends spritesheet).
+    const ALLY_SPRITES = {dave: 'ally_dave', petroman: 'ally_petroman', haraku: 'ally_haraku', ruush: 'ally_ruush'};
 
     /* ---------- primitives ---------- */
     function panel(x, y, w, h, fill) {
@@ -333,6 +335,17 @@
       hotspot(0, 0, GAME_W, GAME_H, () => ctx.nextDialogue());
     }
 
+    // Row of active status-effect icons; falsy entries are skipped. Right-anchored
+    // for the enemy (icons grow leftward), left-anchored for Sean.
+    function drawStatusIcons(x, y, list, rightAnchor = false) {
+      const active = list.filter(Boolean);
+      const S = 24;
+      active.forEach((name, i) => {
+        const ix = rightAnchor ? x - (i + 1) * (S + 2) : x + i * (S + 2);
+        ctx.drawIcon(name, ix, y, S, S);
+      });
+    }
+
     /* ---------- battle ---------- */
     function drawBattle() {
       const battle = ctx.battleApi().current;
@@ -351,6 +364,13 @@
         g.fillStyle = grd; g.fillRect(0, 0, GAME_W, GAME_H);
       }
       ctx.drawCharacterFrame('sean', 0, 140, 225, 150, 150);
+      // Recruited friends stand with Sean — a little formation to his lower-left.
+      const allies = S().party.filter(c => ALLY_SPRITES[c]);
+      allies.slice(0, 4).forEach((c, i) => {
+        const ax = 30 + (i % 2) * 50, ay = 288 + Math.floor(i / 2) * 54;
+        const bob = Math.sin(Date.now() / 360 + i) * 2;
+        ctx.drawIcon(ALLY_SPRITES[c], ax, ay + bob, 52, 52);
+      });
       const custom = e.sprite && ctx.img[e.sprite];
       const useCustom = custom && custom.complete && custom.naturalWidth;
       const enemyImg = useCustom ? custom : (e.kind === 'xelar' ? ctx.img.xelar : ctx.img[e.kind]);
@@ -362,9 +382,18 @@
       }
       g.fillStyle = '#fff'; g.font = 'bold 24px Nunito'; g.fillText(e.name, 610, 82);
       bar(610, 92, 260, 18, e.hp / e.maxHp, '#ff5f7e', '#ffd3dc');
-      g.fillText('Super Sean', 100, 208);
+      drawStatusIcons(880, 74, [
+        battle.stunned > 0 && 'status_stun',
+        battle.enemyGuard > 0 && 'status_barrier'
+      ]);
+      g.fillStyle = '#fff'; g.fillText('Super Sean', 100, 208);
       bar(100, 216, 240, 16, h.hp / h.maxHp, '#ff5f7e', '#ffd3dc');
       bar(100, 238, 240, 13, h.mp / stats.maxMp, '#41b8ff', '#d8f3ff');
+      drawStatusIcons(348, 202, [
+        battle.poison > 0 && 'status_poison',
+        battle.weakened > 0 && 'status_weak',
+        (battle.guard || battle.ironGuard > 0) && 'status_shield'
+      ]);
       panel(60, 388, 840, 132, 'rgba(255,255,255,.94)');
       const cmds = ctx.battleApi().commands();
       battle.buttons = [];

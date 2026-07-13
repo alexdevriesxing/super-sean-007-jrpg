@@ -127,6 +127,9 @@
   ];
 
   SSG.NPC_LINES = {
+    cook_nadia: ['Smell that? Mushroom stew, hero-sized portions!', 'Bring me fresh caps and I\'ll teach you a recipe someday.'],
+    teacher_opal: ['Study your maps, Sean — every region hides a lesson.', 'The Seven Gems were a school project once. True story!'],
+    bard_lio: ['♪ Sean, Sean, the gem-bright hero… ♪ still working on the rhyme.', 'A song for the road? On the house, for a friend of the village.'],
     animal_deer: ['The deerling blinks up at you and nuzzles your hand. ✿'],
     animal_turtle: ['The turtle slowly, contentedly, chews a leaf. All is well.'],
     animal_goat: ['The sky goat bleats and its little wings give a hopeful flap!'],

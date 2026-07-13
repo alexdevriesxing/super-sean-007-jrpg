@@ -126,6 +126,13 @@ if (vfxManifest?.sprites) {
   }
 }
 
+const uiManifest = await readJson('data/ui-manifest.json');
+if (uiManifest?.sprites) {
+  for (const name of uiManifest.sprites) {
+    await expectFile(`${uiManifest.base}${name}.png`);
+  }
+}
+
 await expectFile('index.html', distRoot);
 await expectFile('js/systems.js', distRoot);
 await expectFile('js/coop.js', distRoot);

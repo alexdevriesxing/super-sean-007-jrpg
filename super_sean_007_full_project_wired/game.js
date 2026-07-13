@@ -65,13 +65,14 @@
   /* ---------------- managers ---------------- */
   const AssetManager = {
     async init() {
-      const [assetWiring, slicedAssets, mobManifest, objectManifest, iconManifest, vfxManifest] = await Promise.all([
+      const [assetWiring, slicedAssets, mobManifest, objectManifest, iconManifest, vfxManifest, uiManifest] = await Promise.all([
         fetchJson('data/asset-wiring.json'),
         fetchJson('data/sliced-assets.json'),
         fetchJson('data/mob-manifest.json'),
         fetchJson('data/object-manifest.json'),
         fetchJson('data/icon-manifest.json'),
-        fetchJson('data/vfx-manifest.json')
+        fetchJson('data/vfx-manifest.json'),
+        fetchJson('data/ui-manifest.json')
       ]);
       runtime.assetWiring = assetWiring || {};
       runtime.slicedAssets = slicedAssets || {sheets: {}, frames: []};
@@ -97,6 +98,10 @@
       // Battle effect sprites (slashes, zaps, heals, ...).
       if (vfxManifest?.sprites) {
         vfxManifest.sprites.forEach(name => { deferred[name] = `${vfxManifest.base}${name}.png`; });
+      }
+      // Battle transition cards + status-effect icons.
+      if (uiManifest?.sprites) {
+        uiManifest.sprites.forEach(name => { deferred[name] = `${uiManifest.base}${name}.png`; });
       }
 
       // Block boot only on the handful of images the first frame truly needs;
@@ -613,6 +618,27 @@
     addFx('', {img: EMOTES[mood] || EMOTES.happy, y: state.player.y - 62, vy: -0.22, life: 95, size: 40, ...opts});
   }
 
+  // Full-screen battle transition card (Battle Start / Victory / Level Up …):
+  // scales in, holds, then fades. Drawn over everything by drawCard().
+  let card = null;
+  function showCard(name, life = 78) {
+    if (card && card.life > 12) return; // don't clobber a card still on screen
+    card = {name, life, maxLife: life};
+  }
+  function drawCard() {
+    if (!card) return;
+    const im = img[card.name];
+    if (!im || !im.complete || !im.naturalWidth) { card = null; return; }
+    const t = 1 - card.life / card.maxLife;           // 0 → 1 over its life
+    const scale = t < 0.18 ? 0.6 + (t / 0.18) * 0.45 : 1.05 - Math.min(0.05, (t - 0.18) * 0.1);
+    const alpha = card.life < 16 ? card.life / 16 : (t < 0.12 ? t / 0.12 : 1);
+    const h = 210 * scale, w = h * (im.naturalWidth / im.naturalHeight);
+    g.save();
+    g.globalAlpha = Math.max(0, Math.min(1, alpha));
+    g.drawImage(im, GAME_W / 2 - w / 2, GAME_H / 2 - h / 2 - 30, w, h);
+    g.restore();
+  }
+
   /* ---------------- module wiring ---------------- */
   const ctx = {
     g, GAME_W, GAME_H, img,
@@ -629,6 +655,7 @@
     showToast,
     fx: addFx,
     emote: showEmote,
+    showCard,
     sfx: id => AudioManager.playSfx(id),
     music: id => AudioManager.playMusic(id),
     stat: (event, once) => { try { window.SSGStats && window.SSGStats.track(event, once); } catch (e) {} },
@@ -811,6 +838,7 @@
   /* ---------------- update loop ---------------- */
   function update(dt) {
     if (toastTimer > 0) toastTimer -= 1;
+    if (card) { card.life -= dt / 16.67; if (card.life <= 0) card = null; }
     for (let i = fx.length - 1; i >= 0; i--) {
       const f = fx[i];
       f.y += f.vy * dt / 16.67;
@@ -877,6 +905,7 @@
     update(dt);
     renderer.render();
     drawFx();
+    drawCard();
     requestAnimationFrame(loop);
   }
 
@@ -1077,6 +1106,7 @@
     for (let i = 0; i < steps; i++) update(1000 / 60);
     renderer.render();
     drawFx();
+    drawCard();
     return renderGameToText();
   };
 

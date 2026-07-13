@@ -1,0 +1,27 @@
+{
+  "base": "assets/sliced/ui/",
+  "sprites": [
+    "card_player_turn",
+    "card_enemy_turn",
+    "card_battle_start",
+    "card_victory",
+    "card_crit",
+    "card_levelup",
+    "card_newskill",
+    "card_item",
+    "status_poison",
+    "status_burn",
+    "status_freeze",
+    "status_paralyze",
+    "status_sleep",
+    "status_stun",
+    "status_silence",
+    "status_confuse",
+    "status_weak",
+    "status_strong",
+    "status_regen",
+    "status_shield",
+    "status_barrier",
+    "status_slow"
+  ]
+}

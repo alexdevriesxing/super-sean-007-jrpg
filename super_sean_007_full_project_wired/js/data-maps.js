@@ -115,7 +115,10 @@
       {id:'pip', name:'Pip', char:'ruush', sprite:'npc_child', x:13*T, y:12*T+30, role:'Future castle owner'},
       {id:'farmer_gil', name:'Farmer Gil', char:'dave', sprite:'npc_farmer', x:20*T, y:16*T, role:'Grows the valley\'s vegetables'},
       {id:'baker_tom', name:'Baker Tom', char:'dave', sprite:'npc_baker', x:18*T, y:6*T, role:'Apprentice baker'},
-      {id:'timmy', name:'Timmy', char:'ruush', sprite:'npc_village_boy', x:8*T, y:12*T, role:'Village kid'}
+      {id:'timmy', name:'Timmy', char:'ruush', sprite:'npc_village_boy', x:8*T, y:12*T, role:'Village kid'},
+      {id:'cook_nadia', name:'Cook Nadia', char:'haraku', sprite:'npc_cook', x:22*T, y:8*T, role:'Runs the festival kitchen'},
+      {id:'teacher_opal', name:'Teacher Opal', char:'haraku', sprite:'npc_teacher', x:6*T, y:6*T, role:'Village schoolteacher'},
+      {id:'bard_lio', name:'Bard Lio', char:'ruush', sprite:'npc_musician', x:24*T, y:14*T, role:'Plays for coins and cheer'}
     ];
     m.chests = [
       {id:'village_chest', x:7*T, y:15*T, reward:{coins:25, item:'Berry Juice'}, label:'Village chest'},
@@ -340,6 +343,8 @@
     mon(m, {id:'shadowslime', kind:'slime', name:'Horned Imp', x:6*T, y:5*T, hp:220, atk:30, xp:95, coins:62, sprite:'mob_horned_imp'});
     mon(m, {id:'voidbat', kind:'bat', name:'Hellhound', x:8*T, y:12*T, hp:200, atk:31, xp:98, coins:64, sprite:'mob_hellhound'});
     mon(m, {id:'darkcrystal', kind:'crystal', name:'Void Succubus', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, sprite:'mob_void_succubus'});
+    mon(m, {id:'blackknight', kind:'crystal', name:'Black Knight', x:11*T, y:9*T, hp:270, atk:34, xp:112, coins:74, sprite:'mob_black_knight'});
+    mon(m, {id:'shadowacolyte', kind:'mushroom', name:'Shadow Acolyte', x:21*T, y:13*T, hp:230, atk:32, xp:104, coins:70, sprite:'mob_shadow_acolyte'});
     mon(m, {id:'xelar_echo', kind:'xelar', name:"Xelar's Echo", x:20*T, y:11*T, hp:420, atk:34, xp:200, coins:170, boss:true, hue:40, sprite:'boss_sorceress'});
     mon(m, {id:'xelar_final', kind:'xelar', name:'Xelar the Bald Wizard', x:23*T, y:3*T, hp:640, atk:40, xp:400, coins:400, boss:true, final:true, sprite:'boss_xelar',
       requiresDefeated:'xelar_echo', unlocks:'frostpeak'});
@@ -364,6 +369,8 @@
     mon(m, {id:'fp_imp', kind:'bat', name:'Horned Imp', x:7*T, y:6*T, hp:260, atk:34, xp:120, coins:80, sprite:'mob_horned_imp'});
     mon(m, {id:'fp_flame', kind:'crystal', name:'Flame Demon', x:20*T, y:5*T, hp:300, atk:37, xp:135, coins:90, sprite:'mob_flame_demon'});
     mon(m, {id:'fp_hound', kind:'slime', name:'Hellhound', x:14*T, y:13*T, hp:280, atk:36, xp:130, coins:85, sprite:'mob_hellhound'});
+    mon(m, {id:'fp_halberd', kind:'crystal', name:'Doom Halberdier', x:11*T, y:4*T, hp:320, atk:38, xp:140, coins:95, sprite:'mob_doom_halberdier'});
+    mon(m, {id:'fp_batimp', kind:'bat', name:'Bat Imp', x:24*T, y:14*T, hp:250, atk:35, xp:122, coins:80, sprite:'mob_bat_imp'});
     mon(m, {id:'fp_boss', kind:'crystal', name:'Void Succubus Queen', x:26*T, y:3*T, hp:820, atk:46, xp:420, coins:420, boss:true, sprite:'mob_void_succubus', unlocks:'sunsand'});
     m.chests = [{id:'fp_chest', x:4*T, y:14*T, reward:{coins:200, item:'Starfall Edge'}, label:'Frozen cache'}];
     m.digSpots = [[8, 5], [22, 12], [15, 9]];
@@ -389,6 +396,8 @@
     mon(m, {id:'ss_crab', kind:'crystal', name:'Shell Crab', x:8*T, y:6*T, hp:300, atk:36, xp:130, coins:85, sprite:'mob_shell_crab'});
     mon(m, {id:'ss_puffer', kind:'mushroom', name:'Puffer Fishling', x:18*T, y:12*T, hp:290, atk:35, xp:128, coins:82, sprite:'mob_puffer_fishling'});
     mon(m, {id:'ss_slime', kind:'slime', name:'Crystal Slime', x:22*T, y:6*T, hp:280, atk:34, xp:125, coins:80, sprite:'mob_crystal_slime'});
+    mon(m, {id:'ss_guard', kind:'crystal', name:'Corrupted Royal Guard', x:12*T, y:14*T, hp:330, atk:37, xp:138, coins:92, sprite:'mob_royal_guard'});
+    mon(m, {id:'ss_ooze', kind:'mushroom', name:'Cursed Slime', x:16*T, y:4*T, hp:260, atk:34, xp:120, coins:78, sprite:'mob_cursed_slime'});
     mon(m, {id:'ss_boss', kind:'bat', name:'Tide Spirit Sovereign', x:26*T, y:14*T, hp:900, atk:48, xp:480, coins:500, boss:true, sprite:'mob_water_spirit'});
     m.chests = [{id:'ss_chest', x:4*T, y:4*T, reward:{coins:260, item:'Relic Crown'}, label:'Sunken treasure'}];
     m.digSpots = [[6, 13], [20, 4], [24, 12]];

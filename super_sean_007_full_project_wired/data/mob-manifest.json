@@ -49,6 +49,20 @@
     "mob_treasure_mimic",
     "animal_deerling",
     "animal_turtle",
-    "animal_skygoat"
+    "animal_skygoat",
+    "ally_dave",
+    "ally_petroman",
+    "ally_haraku",
+    "ally_ruush",
+    "mob_black_knight",
+    "mob_shadow_paladin",
+    "mob_royal_guard",
+    "mob_doom_halberdier",
+    "mob_shadow_acolyte",
+    "mob_bat_imp",
+    "mob_cursed_slime",
+    "npc_cook",
+    "npc_teacher",
+    "npc_musician"
   ]
 }

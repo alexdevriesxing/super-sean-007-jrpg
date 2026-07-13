@@ -249,7 +249,31 @@ Built and shipped the full gap-analysis follow-up:
   rendering in preview with their enemies.
 - Verified live in a battle: vfx_slash draws on hit, mushforest bg renders; both
   new regions render with distinct enemies. Full build + validate green, 18/18 tests.
-- DEFERRED: UI skin (task #8) — the UI-sheet panel frames have cream-filled interiors
-  needing careful border-only 9-slice to avoid bleeding over panel content; risky to
-  land well without visual iteration, and the current programmatic panels look clean.
-  Left as a focused follow-up rather than rushing a regression risk.
+- DEFERRED (done next session, see below): UI skin (task #8).
+
+## 2026-07-12 (cont.) — Final asset wiring: UI polish, party, more enemies/NPCs
+Wired the last valuable unused sheets (raw/ dumps + low-res split_pack/ + non-grid
+generated tilesets are intentionally left — no game-ready value).
+- **UI polish (task #8, reframed)**: `scripts/slice-ui.mjs` slices the dedicated
+  `super_sean_007_game_ui_ontwerp.png` → 22 sprites in `assets/sliced/ui/` +
+  `data/ui-manifest.json`. Rather than risk a panel 9-slice, wired the two
+  high-impact, low-risk pieces: (1) 8 **battle transition cards** (Battle Start /
+  Victory / Level Up / Crit / …) shown as a centre-screen scale-in+fade popup via
+  new `ctx.showCard(name)` + module `card`/`drawCard()` in game.js (drawn after
+  drawFx in loop + advanceTime); triggered in battle.js on start (non-boss),
+  win (levelup>victory), Friendship Burst (crit). (2) 14 **status-effect icons**
+  drawn beside combatant HP bars via `drawStatusIcons()` in render.js — poison/
+  weak/shield on Sean, stun/barrier on the enemy. Verified: Battle Start card at
+  full opacity, shield icon on Guard.
+- **Party allies in battle (task #11)**: `slice-mobs` adds ally_dave/petroman/
+  haraku/ruush from super_sean_friends_spritesheets.png; render.js draws the
+  recruited party (ALLY_SPRITES map) as a bobbing 2×2 formation lower-left of Sean.
+- **More enemies (task #12)**: 4 dark knights (black_knight/shadow_paladin/
+  royal_guard/doom_halberdier) + 3 minions (shadow_acolyte/bat_imp/cursed_slime);
+  placed across tower + Frostpeak + Sunsand for variety.
+- **Village NPCs (task #13)**: npc_cook/teacher/musician → Cook Nadia, Teacher Opal,
+  Bard Lio ambient villagers in the village with NPC_LINES.
+- slice-mobs now 63 sprites; slice:ui added to dev + generate:assets; validate +
+  ui-manifest cover it. Full build + validate green, 18/18 tests, zero console
+  errors. Verified in preview: transition card, status shield, party formation,
+  new villagers all render.

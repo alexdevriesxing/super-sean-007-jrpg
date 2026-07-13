@@ -72,6 +72,8 @@
       };
       ctx.setScene('battle');
       ctx.music(monster.boss ? 'boss' : 'battle');
+      // Bosses get the cinematic name-card; regular fights get a Battle Start! card.
+      if (!monster.boss) ctx.showCard('card_battle_start', 60);
     }
 
     function commands() {
@@ -144,6 +146,7 @@
       } else if (id === 'friendship') {
         if (h.friendship < 40) { battle.log.unshift('Friendship meter needs 40 power.'); return; }
         h.friendship -= 40;
+        ctx.showCard('card_crit', 54);
         dealDamage(Math.max(30, Math.floor(stats.attack * 2.7 + h.level * 8)), 'Friendship Burst hits', 'vfx_stars');
         ctx.sfx('level_up');
       } else if (id === 'item') {
@@ -294,15 +297,19 @@
       h.xp += Math.floor(e.xp * xpMult);
       h.coins += e.coins;
       h.friendship = Math.min(100, h.friendship + (e.boss ? 18 : 6));
+      let leveled = false;
       while (h.xp >= h.xpNext) {
         h.xp -= h.xpNext;
         h.level += 1;
         h.xpNext = Math.floor(h.xpNext * 1.35 + 15);
         h.maxHp += 18; h.maxMp += 5; h.attack += 3; h.defense += 2;
         h.hp = h.maxHp; h.mp = sys().heroStats().maxMp;
+        leveled = true;
         ctx.sfx('level_up');
         ctx.showToast(`Level up! Sean reached level ${h.level}.`);
       }
+      // A level-up card trumps the victory card (more exciting); else Victory.
+      ctx.showCard(leveled ? 'card_levelup' : 'card_victory', leveled ? 96 : 84);
       sys().bumpStat('battlesWon');
       ctx.stat('battle_win');
       if (e.boss) ctx.stat('boss_win');
