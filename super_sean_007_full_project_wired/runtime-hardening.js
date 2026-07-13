@@ -11,6 +11,11 @@
     const game = window.SuperSeanGame;
     if (!game) return false;
 
+    if (game.debug?.startNgPlus && !game.startNewGamePlus) {
+      const startNgPlus = game.debug.startNgPlus;
+      game.startNewGamePlus = () => startNgPlus();
+    }
+
     if (production && game.debug) {
       try { delete game.debug; } catch (error) { game.debug = undefined; }
     }
