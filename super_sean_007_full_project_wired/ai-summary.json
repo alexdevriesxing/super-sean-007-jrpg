@@ -1,7 +1,7 @@
 {
   "game_title": "Super Sean 007: Legend of the Seven Gems",
   "short_name": "Super Sean 007",
-  "software_version": "1.2.0",
+  "software_version": "1.2.1",
   "last_updated": "2026-07-13",
   "official_url": "https://www.supersean007.com/",
   "publisher": {
@@ -130,7 +130,8 @@
     "text scaling, high contrast, reduced motion and screen-effect preferences",
     "local saves, copyable save codes and optional Cloud Sync",
     "optional one-to-four-player Party Link co-op",
-    "desktop, tablet and mobile controls"
+    "desktop, tablet and mobile controls",
+    "public service status and automated production monitoring"
   ],
   "controls": [
     "remappable keyboard",
@@ -144,6 +145,12 @@
     "screen-effect controls",
     "accessible DOM game commands"
   ],
+  "operations": [
+    "public service status",
+    "strict release smoke tests",
+    "automated hourly production monitoring",
+    "performance budgets"
+  ],
   "privacy": "Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
   "key_pages": {
     "play": "https://www.supersean007.com/#play",
@@ -151,6 +158,8 @@
     "characters": "https://www.supersean007.com/characters.html",
     "world": "https://www.supersean007.com/world.html",
     "updates": "https://www.supersean007.com/updates.html",
+    "support": "https://www.supersean007.com/support.html",
+    "status": "https://www.supersean007.com/status.html",
     "privacy": "https://www.supersean007.com/privacy.html",
     "security": "https://www.supersean007.com/security-policy.html"
   }
