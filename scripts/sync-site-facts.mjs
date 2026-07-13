@@ -2,6 +2,8 @@ import {readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 
 const projectRoot = path.resolve('super_sean_007_full_project_wired');
+const distOnly = process.argv.includes('--dist');
+const outputRoot = distOnly ? path.resolve('dist') : projectRoot;
 const facts = JSON.parse(await readFile(path.join(projectRoot, 'data/site-facts.json'), 'utf8'));
 const checkOnly = process.argv.includes('--check');
 const numberWord = facts.regionCount === 11 ? 'eleven' : String(facts.regionCount);
@@ -25,7 +27,6 @@ function replaceAllKnown(html) {
 
 function renderIndex(source) {
   let html = replaceAllKnown(source);
-
   if (!html.includes('"softwareVersion"')) {
     html = html.replace(
       '        "isAccessibleForFree": true,\n        "inLanguage": "en",',
@@ -34,13 +35,10 @@ function renderIndex(source) {
   } else {
     html = html.replace(/"softwareVersion": "[^"]+"/, `"softwareVersion": "${facts.version}"`);
   }
-
   if (!html.includes('<h3>Frostpeak Reaches</h3>')) {
     const anchor = '          <article><h3>Ancient Ruins &amp; Bald Moon Tower</h3><p>The collapsed capital of the Gem Guardians — and above it, Xelar’s fortress, where the final battle awaits.</p></article>';
-    const additions = `${anchor}\n          <article><h3>Frostpeak Reaches</h3><p>An icy postgame route beyond Xelar’s tower, filled with elite demons, rare ore and the Void Succubus Queen.</p></article>\n          <article><h3>Sunsand Isle</h3><p>A warm postgame shore of relics and sea creatures, ending with the Tide Spirit Sovereign.</p></article>`;
-    html = html.replace(anchor, additions);
+    html = html.replace(anchor, `${anchor}\n          <article><h3>Frostpeak Reaches</h3><p>An icy postgame route beyond Xelar’s tower, filled with elite demons, rare ore and the Void Succubus Queen.</p></article>\n          <article><h3>Sunsand Isle</h3><p>A warm postgame shore of relics and sea creatures, ending with the Tide Spirit Sovereign.</p></article>`);
   }
-
   if (!html.includes('href="updates.html"')) {
     html = html.replace('        <a href="#faq">FAQ</a>', '        <a href="#faq">FAQ</a>\n        <a href="updates.html">Updates</a>');
   }
@@ -48,7 +46,6 @@ function renderIndex(source) {
     html = html.replace('        <a href="#characters">Heroes</a>', '        <a href="#characters">Heroes</a>\n        <a href="characters.html">Character Guide</a>');
     html = html.replace('        <a href="#world-history">History</a>', '        <a href="#world-history">History</a>\n        <a href="world.html">World Guide</a>\n        <a href="guides.html">Full Guides</a>');
   }
-
   html = html.replace(
     /<a class="community-card" href="https:\/\/discord\.gg\/"[\s\S]*?<\/a>/,
     '<a class="community-card" href="updates.html" style="text-decoration:none">\n            <div class="emoji">📜</div><h3>Development updates</h3><p>Read dated release notes, new-region details and production improvements.</p>\n          </a>'
@@ -86,7 +83,8 @@ function aiSummary() {
     key_pages: {
       play: `${facts.officialUrl}#play`, guides: `${facts.officialUrl}guides.html`,
       characters: `${facts.officialUrl}characters.html`, world: `${facts.officialUrl}world.html`,
-      updates: `${facts.officialUrl}updates.html`, privacy: `${facts.officialUrl}privacy.html`
+      updates: `${facts.officialUrl}updates.html`, privacy: `${facts.officialUrl}privacy.html`,
+      security: `${facts.officialUrl}security-policy.html`
     }
   };
 }
@@ -102,8 +100,9 @@ function sitemap() {
 }
 
 async function writeOrCheck(relative, expected) {
-  const file = path.join(projectRoot, relative);
+  const file = path.join(outputRoot, relative);
   if (checkOnly) {
+    if (relative === 'index.html') return; // production HTML is rendered in dist without mutating the checkout
     const actual = await readFile(file, 'utf8').catch(() => '');
     if (actual !== expected) stale.push(relative);
     return;
@@ -111,7 +110,7 @@ async function writeOrCheck(relative, expected) {
   await writeFile(file, expected);
 }
 
-const indexSource = await readFile(path.join(projectRoot, 'index.html'), 'utf8');
+const indexSource = await readFile(path.join(outputRoot, 'index.html'), 'utf8');
 await Promise.all([
   writeOrCheck('index.html', renderIndex(indexSource)),
   writeOrCheck('llms.txt', llmsText()),
@@ -123,4 +122,5 @@ if (checkOnly && stale.length) {
   console.error(`Generated public content is stale: ${stale.join(', ')}. Run npm run sync:site and commit the result.`);
   process.exit(1);
 }
-console.log(`${checkOnly ? 'Verified' : 'Synced'} public facts for ${facts.shortName} ${facts.version} (${facts.regionCount} regions).`);
+const target = distOnly ? 'production dist' : 'source';
+console.log(`${checkOnly ? 'Verified' : 'Synced'} ${target} public facts for ${facts.shortName} ${facts.version} (${facts.regionCount} regions).`);
