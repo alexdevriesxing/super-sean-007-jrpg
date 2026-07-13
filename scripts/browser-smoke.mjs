@@ -7,6 +7,7 @@ const HOST = '127.0.0.1';
 const PORT = 4173;
 const DEBUG_PORT = 9222;
 const BASE_URL = `http://${HOST}:${PORT}`;
+const VITE_BIN = path.resolve('node_modules/vite/bin/vite.js');
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function findChrome() {
@@ -138,9 +139,6 @@ async function cleanupDirectory(directory) {
   try {
     await rm(directory, {recursive: true, force: true, maxRetries: 8, retryDelay: 250});
   } catch (error) {
-    // Chrome may briefly keep profile files open after process exit. This is
-    // non-functional cleanup on an ephemeral CI runner and must not mask a
-    // successful gameplay test.
     console.warn(`[smoke] Temporary profile cleanup warning: ${error.message}`);
   }
 }
@@ -151,7 +149,7 @@ let chrome;
 let cdp;
 
 try {
-  preview = spawn('npm', ['run', 'preview', '--', '--port', String(PORT)], {
+  preview = spawn(process.execPath, [VITE_BIN, 'preview', '--host', HOST, '--port', String(PORT)], {
     env: {...process.env, NO_COLOR: '1'},
     stdio: ['ignore', 'pipe', 'pipe']
   });
