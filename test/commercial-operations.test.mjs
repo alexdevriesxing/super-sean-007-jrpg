@@ -5,12 +5,18 @@ import {readFile} from 'node:fs/promises';
 const read = path => readFile(path, 'utf8');
 
 test('production build removes development-only source art', async () => {
-  const source = await read('scripts/build-static.mjs');
-  assert.match(source, /await rm\(distRoot/);
+  const [clean, source, pkg] = await Promise.all([
+    read('scripts/clean-dist.mjs'),
+    read('scripts/build-static.mjs'),
+    read('package.json')
+  ]);
+  assert.match(clean, /rm\(distRoot/);
+  assert.match(pkg, /npm run clean:dist && vite build/);
   assert.match(source, /generatedSourceRoot/);
   assert.match(source, /super_sean_friends_foundation_spritesheet\.png/);
   assert.match(source, /asset-manifest\.json/);
   assert.doesNotMatch(source, /'assets', 'data', 'docs'/);
+  assert.doesNotMatch(source, /rm\(distRoot/);
 });
 
 test('Cloudflare deployment is gated by encrypted GitHub secrets and live verification', async () => {
@@ -20,6 +26,7 @@ test('Cloudflare deployment is gated by encrypted GitHub secrets and live verifi
   assert.match(workflow, /cloudflare\/wrangler-action@v3/);
   assert.match(workflow, /pages deploy dist --project-name=super-sean-007-jrpg/);
   assert.match(workflow, /npm run smoke:live/);
+  assert.match(workflow, /steps\.release\.outputs\.version/);
 });
 
 test('scheduled production monitoring opens and closes one incident', async () => {
