@@ -1,7 +1,7 @@
 {
   "game_title": "Super Sean 007: Legend of the Seven Gems",
   "short_name": "Super Sean 007",
-  "software_version": "1.1.0",
+  "software_version": "1.2.0",
   "last_updated": "2026-07-13",
   "official_url": "https://www.supersean007.com/",
   "publisher": {
@@ -16,42 +16,133 @@
     "cozy adventure",
     "turn-based RPG"
   ],
-  "platform": ["Web browser", "HTML5 Canvas", "Desktop", "Tablet", "Mobile"],
-  "status": "Full free-to-play game: 15-chapter campaign, two postgame regions and open-ended homestead building.",
+  "platform": [
+    "Web browser",
+    "HTML5 Canvas",
+    "Desktop",
+    "Tablet",
+    "Mobile"
+  ],
+  "status": "Full free-to-play game: 15-chapter campaign, a four-quest postgame epilogue and open-ended homestead building.",
   "players": {
     "minimum": 1,
     "maximum": 4,
-    "modes": ["single player", "optional Party Link co-op"]
+    "modes": [
+      "single player",
+      "optional Party Link co-op"
+    ]
   },
-  "main_characters": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
+  "main_characters": [
+    "Super Sean",
+    "Dave",
+    "Petroman",
+    "Haraku",
+    "Ruush",
+    "Xelar the Bald Wizard"
+  ],
   "world": {
     "name": "Asteria-007",
     "region_count": 11,
     "regions": [
-      {"id":"village","name":"Birthday Village","type":"hub","summary":"The cozy hub with Elder Brightbeard, Dave, Bobo's shop, Grandma Berrybun and the village crystal."},
-      {"id":"homestead","name":"Sunrise Homestead","type":"buildable base","summary":"A claimable base for building, stations, gardens, Comfort perks, visitors and landmark structures."},
-      {"id":"meadow","name":"Mushroom Meadow","type":"campaign","summary":"The first field region, where Moldor guards the Meadow Gem and the homestead deed."},
-      {"id":"cave","name":"Crystal Cave","type":"campaign","summary":"A mining cavern rich in Crystal Shards and Ore Chunks, guarded by the Cracked Crystal Guardian."},
-      {"id":"petro","name":"Petro Plains","type":"campaign","summary":"Machine-strewn plains with Gear Parts, Petroman's recruitment quest and the Petro Titan."},
-      {"id":"ruushwood","name":"Ruushwood","type":"campaign","summary":"A deep pine forest where Ruush joins after the Elder Treeguard hunt."},
-      {"id":"moon","name":"Moon Shrine","type":"campaign","summary":"A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade."},
-      {"id":"ruins","name":"Ancient Ruins","type":"campaign","summary":"The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime."},
-      {"id":"tower","name":"Bald Moon Tower","type":"campaign finale","summary":"Xelar's fortress, containing Xelar's Echo and the final main-story confrontation."},
-      {"id":"frostpeak","name":"Frostpeak Reaches","type":"postgame","summary":"An icy postgame region with elite demons, rare materials and the Void Succubus Queen."},
-      {"id":"sunsand","name":"Sunsand Isle","type":"postgame","summary":"A warm postgame shore with corrupted guards, sea creatures and the Tide Spirit Sovereign."}
+      {
+        "id": "village",
+        "name": "Birthday Village",
+        "type": "hub",
+        "summary": "The cozy hub with Elder Brightbeard, Dave, Bobo's shop, Grandma Berrybun and the village crystal."
+      },
+      {
+        "id": "homestead",
+        "name": "Sunrise Homestead",
+        "type": "buildable base",
+        "summary": "A claimable base for building, stations, gardens, Comfort perks, visitors and landmark structures."
+      },
+      {
+        "id": "meadow",
+        "name": "Mushroom Meadow",
+        "type": "campaign",
+        "summary": "The first field region, where Moldor guards the Meadow Gem and the homestead deed."
+      },
+      {
+        "id": "cave",
+        "name": "Crystal Cave",
+        "type": "campaign",
+        "summary": "A mining cavern rich in Crystal Shards and Ore Chunks, guarded by the Cracked Crystal Guardian."
+      },
+      {
+        "id": "petro",
+        "name": "Petro Plains",
+        "type": "campaign",
+        "summary": "Machine-strewn plains with Gear Parts, Petroman's recruitment quest and the Petro Titan."
+      },
+      {
+        "id": "ruushwood",
+        "name": "Ruushwood",
+        "type": "campaign",
+        "summary": "A deep pine forest where Ruush joins after the Elder Treeguard hunt."
+      },
+      {
+        "id": "moon",
+        "name": "Moon Shrine",
+        "type": "campaign",
+        "summary": "A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade."
+      },
+      {
+        "id": "ruins",
+        "name": "Ancient Ruins",
+        "type": "campaign",
+        "summary": "The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime."
+      },
+      {
+        "id": "tower",
+        "name": "Bald Moon Tower",
+        "type": "campaign finale",
+        "summary": "Xelar's fortress, containing Xelar's Echo and the final main-story confrontation."
+      },
+      {
+        "id": "frostpeak",
+        "name": "Frostpeak Reaches",
+        "type": "postgame",
+        "summary": "An icy postgame region with elite demons, rare materials, a dedicated quest arc and the Void Succubus Queen."
+      },
+      {
+        "id": "sunsand",
+        "name": "Sunsand Isle",
+        "type": "postgame",
+        "summary": "A warm postgame shore with corrupted guards, a dedicated quest arc, sea creatures and the Tide Spirit Sovereign."
+      }
     ]
   },
-  "campaign": {"main_chapters":15,"campaign_bosses":8,"postgame_bosses":2,"gems_to_restore":7},
+  "campaign": {
+    "main_chapters": 15,
+    "postgame_quests": 4,
+    "campaign_bosses": 8,
+    "postgame_bosses": 2,
+    "gems_to_restore": 7
+  },
   "features": [
     "HTML5 Canvas browser play",
     "turn-based party battles",
-    "fifteen-chapter campaign",
+    "fifteen-chapter campaign plus a four-quest postgame epilogue",
     "resource gathering and nineteen crafting recipes",
     "tile-based homestead building and blueprints",
     "real-time gardening",
+    "remappable keyboard controls and standard gamepad support",
+    "text scaling, high contrast, reduced motion and screen-effect preferences",
     "local saves, copyable save codes and optional Cloud Sync",
     "optional one-to-four-player Party Link co-op",
     "desktop, tablet and mobile controls"
+  ],
+  "controls": [
+    "remappable keyboard",
+    "touch controls",
+    "standard gamepad"
+  ],
+  "accessibility": [
+    "text scaling",
+    "high contrast",
+    "reduced motion",
+    "screen-effect controls",
+    "accessible DOM game commands"
   ],
   "privacy": "Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
   "key_pages": {

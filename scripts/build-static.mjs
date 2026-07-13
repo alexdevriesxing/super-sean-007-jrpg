@@ -6,10 +6,10 @@ const distRoot = path.resolve('dist');
 const entries = [
   'assets', 'data', 'docs', 'js', '.well-known',
   'game.js', 'ads.js', 'site.js', 'consent.js', 'ui-overlays.js', 'sw.js',
-  'turn-config.js', 'cloud-controls.js', 'accessibility.js', 'runtime-hardening.js',
+  'turn-config.js', 'cloud-controls.js', 'player-preferences.js', 'accessibility.js', 'runtime-hardening.js',
   'stats.html', 'stats.js', 'stats.css', 'privacy.html', 'terms.html', '404.html', 'security-policy.html',
   'guides.html', 'characters.html', 'world.html', 'updates.html', 'content.css',
-  'styles.css', 'accessibility.css', 'favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt',
+  'styles.css', 'accessibility.css', 'player-preferences.css', 'favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt',
   'ai-summary.json', 'site.webmanifest', 'humans.txt', 'security.txt',
   '_headers', '_redirects'
 ];

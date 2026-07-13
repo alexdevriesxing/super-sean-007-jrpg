@@ -186,7 +186,7 @@ try {
   const loaded = cdp.waitFor('Page.loadEventFired');
   await cdp.send('Page.navigate', {url: `${BASE_URL}/?qa=1`});
   await loaded;
-  await poll(cdp, `Boolean(window.SuperSeanGame && window.render_game_to_text)`);
+  await poll(cdp, `Boolean(window.SuperSeanGame && window.render_game_to_text && window.SSGPlayerPreferences)`);
   await evaluate(cdp, `document.getElementById('consentDecline')?.click()`);
   await poll(cdp, `document.getElementById('gameLoader')?.classList.contains('hidden')`, 30_000);
 
@@ -194,13 +194,16 @@ try {
     title: document.title,
     canvas: {width: document.getElementById('gameCanvas')?.width, height: document.getElementById('gameCanvas')?.height},
     a11y: Boolean(document.getElementById('ssgA11yControls')),
+    preferences: Boolean(window.SSGPlayerPreferences),
     runtime: window.SSGRuntimeInfo || null,
     debugExposed: Boolean(window.SuperSeanGame?.debug)
   }))()`);
   if (!shell.title.includes('Super Sean 007')) throw new Error(`Unexpected title: ${shell.title}`);
   if (shell.canvas.width !== 960 || shell.canvas.height !== 540) throw new Error('Game canvas dimensions are incorrect.');
   if (!shell.a11y) throw new Error('Accessible game controls did not load.');
+  if (!shell.preferences) throw new Error('Player preference runtime did not load.');
   if (!shell.runtime?.hardened) throw new Error('Production runtime hardening did not initialize.');
+  if (shell.runtime.version !== '1.2.0') throw new Error(`Unexpected runtime version ${shell.runtime.version}.`);
   if (shell.runtime.production && shell.debugExposed) throw new Error('QA debug controls remain exposed in production.');
 
   await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Enter', code: 'Enter'});
@@ -214,13 +217,46 @@ try {
     const node = document.getElementById('ssgSettings');
     return {
       exists: Boolean(node), role: node?.getAttribute('role'), modal: node?.getAttribute('aria-modal'),
-      focusedInside: Boolean(node?.contains(document.activeElement))
+      focusedInside: Boolean(node?.contains(document.activeElement)),
+      textScale: Boolean(node?.querySelector('#prefTextScale')),
+      keybinds: node?.querySelectorAll('.ssg-keybind').length || 0,
+      gamepadStatus: Boolean(node?.querySelector('.ssg-gamepad-status'))
     };
   })()`);
   if (!dialog.exists || dialog.role !== 'dialog' || dialog.modal !== 'true') throw new Error('Settings dialog lacks accessible dialog semantics.');
   if (!dialog.focusedInside) throw new Error('Settings dialog did not receive focus.');
+  if (!dialog.textScale || dialog.keybinds < 10 || !dialog.gamepadStatus) throw new Error('Settings does not expose complete player preferences.');
+
+  const preferenceResult = await evaluate(cdp, `(() => {
+    const api = window.SSGPlayerPreferences;
+    const initial = api.get();
+    api.setBinding('interact', 'KeyI');
+    const remapped = api.get();
+    api.update({textScale: 1.3, highContrast: true, reduceMotion: true, screenEffects: false});
+    const classes = {
+      highContrast: document.body.classList.contains('ssg-high-contrast'),
+      reduceMotion: document.body.classList.contains('ssg-reduce-motion'),
+      noEffects: document.body.classList.contains('ssg-no-screen-effects')
+    };
+    api.reset();
+    return {
+      initialInteract: initial.keys.interact,
+      remappedInteract: remapped.keys.interact,
+      swappedInventory: remapped.keys.inventory,
+      classes,
+      resetInteract: api.get().keys.interact
+    };
+  })()`);
+  if (preferenceResult.initialInteract !== 'KeyE' || preferenceResult.remappedInteract !== 'KeyI') throw new Error('Keyboard remapping failed.');
+  if (preferenceResult.swappedInventory !== 'KeyE') throw new Error('Duplicate key swapping failed.');
+  if (!preferenceResult.classes.highContrast || !preferenceResult.classes.reduceMotion || !preferenceResult.classes.noEffects) throw new Error('Visual preferences were not applied.');
+  if (preferenceResult.resetInteract !== 'KeyE') throw new Error('Preference reset failed.');
+
   await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Escape', code: 'Escape'});
   await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Escape', code: 'Escape'});
+
+  const performance = await fetch(`${BASE_URL}/performance-report.json`).then(response => response.json());
+  if (!performance.passed || !performance.totals?.criticalBytes) throw new Error('Performance budget report did not pass.');
 
   const guideLoaded = cdp.waitFor('Page.loadEventFired');
   await cdp.send('Page.navigate', {url: `${BASE_URL}/guides.html`});
@@ -229,7 +265,14 @@ try {
   if (!guide.title.includes('Guide') || guide.h1.length < 10) throw new Error('Guide page did not render meaningful content.');
 
   if (exceptions.length) throw new Error(`Browser exceptions:\n${exceptions.join('\n')}`);
-  console.log(JSON.stringify({ok: true, shell, initialState: {scene: state.scene, map: state.map.name, level: state.hero.level}, guide}, null, 2));
+  console.log(JSON.stringify({
+    ok: true,
+    shell,
+    initialState: {scene: state.scene, map: state.map.name, level: state.hero.level},
+    preferences: preferenceResult,
+    performance: performance.totals,
+    guide
+  }, null, 2));
 } finally {
   cdp?.close();
   await stopProcess(chrome, 'Chrome');

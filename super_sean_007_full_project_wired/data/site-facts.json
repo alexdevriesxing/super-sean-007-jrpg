@@ -1,7 +1,7 @@
 {
   "gameTitle": "Super Sean 007: Legend of the Seven Gems",
   "shortName": "Super Sean 007",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "officialUrl": "https://www.supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
@@ -25,17 +25,19 @@
     {"id":"moon","name":"Moon Shrine","type":"campaign","summary":"A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade."},
     {"id":"ruins","name":"Ancient Ruins","type":"campaign","summary":"The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime."},
     {"id":"tower","name":"Bald Moon Tower","type":"campaign finale","summary":"Xelar's fortress, containing Xelar's Echo and the final main-story confrontation."},
-    {"id":"frostpeak","name":"Frostpeak Reaches","type":"postgame","summary":"An icy postgame region with elite demons, rare materials and the Void Succubus Queen."},
-    {"id":"sunsand","name":"Sunsand Isle","type":"postgame","summary":"A warm postgame shore with corrupted guards, sea creatures and the Tide Spirit Sovereign."}
+    {"id":"frostpeak","name":"Frostpeak Reaches","type":"postgame","summary":"An icy postgame region with elite demons, rare materials, a dedicated quest arc and the Void Succubus Queen."},
+    {"id":"sunsand","name":"Sunsand Isle","type":"postgame","summary":"A warm postgame shore with corrupted guards, a dedicated quest arc, sea creatures and the Tide Spirit Sovereign."}
   ],
   "characters": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
   "features": [
     "HTML5 Canvas browser play",
     "turn-based party battles",
-    "fifteen-chapter campaign",
+    "fifteen-chapter campaign plus a four-quest postgame epilogue",
     "resource gathering and nineteen crafting recipes",
     "tile-based homestead building and blueprints",
     "real-time gardening",
+    "remappable keyboard controls and standard gamepad support",
+    "text scaling, high contrast, reduced motion and screen-effect preferences",
     "local saves, copyable save codes and optional Cloud Sync",
     "optional one-to-four-player Party Link co-op",
     "desktop, tablet and mobile controls"

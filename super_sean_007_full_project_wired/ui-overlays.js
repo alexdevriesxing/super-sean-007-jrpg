@@ -4,6 +4,7 @@
 
   const SITE_URL = 'https://www.supersean007.com/';
   const g = () => window.SuperSeanGame;
+  const prefsApi = () => window.SSGPlayerPreferences;
 
   function focusable(root) {
     return Array.from(root.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'))
@@ -79,6 +80,76 @@
     }
   }
 
+  function preferenceHtml() {
+    const pref = prefsApi()?.get?.();
+    if (!pref) return '<p class="ssg-note">Control preferences are still loading.</p>';
+    const bindings = pref.actions.map(action => `
+      <button type="button" class="ssg-btn ssg-keybind" data-action="${action.id}">
+        <span>${action.label}</span><kbd>${action.display}</kbd>
+      </button>`).join('');
+    return `
+      <h3>Accessibility &amp; display</h3>
+      <div class="ssg-preference-grid">
+        <label>Text size
+          <select id="prefTextScale">
+            <option value="1" ${pref.textScale === 1 ? 'selected' : ''}>Standard</option>
+            <option value="1.15" ${pref.textScale === 1.15 ? 'selected' : ''}>Large</option>
+            <option value="1.3" ${pref.textScale === 1.3 ? 'selected' : ''}>Extra large</option>
+          </select>
+        </label>
+        <label>High contrast <input type="checkbox" id="prefContrast" ${pref.highContrast ? 'checked' : ''}></label>
+        <label>Reduce motion <input type="checkbox" id="prefMotion" ${pref.reduceMotion ? 'checked' : ''}></label>
+        <label>Screen effects <input type="checkbox" id="prefEffects" ${pref.screenEffects ? 'checked' : ''}></label>
+        <label>Gamepad input <input type="checkbox" id="prefGamepad" ${pref.gamepadEnabled ? 'checked' : ''}></label>
+      </div>
+      <p class="ssg-gamepad-status" role="status">Controller: ${pref.gamepad.connected ? 'connected' : 'not detected'}. Left stick/D-pad moves; A confirms; B backs out; Start opens Settings.</p>
+      <h3>Keyboard controls</h3>
+      <p class="ssg-note">Choose a control, then press its new key. Arrow keys always remain available for movement.</p>
+      <div class="ssg-key-grid">${bindings}</div>
+      <button type="button" class="ssg-btn" id="prefReset">Reset controls and display</button>`;
+  }
+
+  function bindPreferences(el) {
+    const api = prefsApi();
+    if (!api) return;
+    const update = patch => api.update(patch);
+    el.querySelector('#prefTextScale')?.addEventListener('change', event => update({textScale: Number(event.target.value)}));
+    el.querySelector('#prefContrast')?.addEventListener('change', event => update({highContrast: event.target.checked}));
+    el.querySelector('#prefMotion')?.addEventListener('change', event => update({reduceMotion: event.target.checked}));
+    el.querySelector('#prefEffects')?.addEventListener('change', event => update({screenEffects: event.target.checked}));
+    el.querySelector('#prefGamepad')?.addEventListener('change', event => update({gamepadEnabled: event.target.checked}));
+    el.querySelector('#prefReset')?.addEventListener('click', () => {
+      api.reset();
+      setStatus(el, 'Controls and display preferences reset. Reopen Settings to review them.');
+    });
+    el.querySelectorAll('.ssg-keybind').forEach(button => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.action;
+        button.classList.add('capturing');
+        button.querySelector('kbd').textContent = 'Press key';
+        setStatus(el, 'Press a keyboard key now, or Escape to cancel.');
+        const capture = event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          button.classList.remove('capturing');
+          if (event.code === 'Escape') {
+            button.querySelector('kbd').textContent = api.get().actions.find(item => item.id === action)?.display || '—';
+            setStatus(el, 'Key change cancelled.');
+            return;
+          }
+          api.setBinding(action, event.code);
+          button.querySelector('kbd').textContent = api.labelForCode(event.code);
+          setStatus(el, `${button.querySelector('span').textContent} is now ${api.labelForCode(event.code)}.`);
+        };
+        window.addEventListener('keydown', capture, {capture: true, once: true});
+      });
+    });
+    window.addEventListener('ssg:gamepad', event => {
+      const target = el.querySelector('.ssg-gamepad-status');
+      if (target && el.isConnected) target.textContent = event.detail.connected ? `Controller connected: ${event.detail.id || 'gamepad'}.` : 'Controller disconnected.';
+    }, {once: true});
+  }
+
   window.SSGSettings = () => {
     const settings = g()?.settings ? g().settings() : {music: 0.3, sfx: 0.45, cloud: false, cloudId: ''};
     const el = overlay('ssgSettings', `
@@ -90,6 +161,8 @@
       <label class="ssg-row">Sound effects
         <input type="range" id="setSfx" min="0" max="1" step="0.05" value="${Number(settings.sfx) || 0}">
       </label>
+      ${preferenceHtml()}
+      <h3>Progress &amp; sharing</h3>
       <div class="ssg-buttons">
         <button class="ssg-btn" id="setCloud">${settings.cloud ? '☁ Cloud Sync: ON' : '☁ Enable Cloud Sync'}</button>
         <button class="ssg-btn" id="cloudLoad">⬇ Load cloud copy</button>
@@ -114,6 +187,7 @@
       idNote.querySelector('code').textContent = settings.cloudId;
     }
 
+    bindPreferences(el);
     el.querySelector('.ssg-x').onclick = () => el.dismiss();
     el.querySelector('#setMusic').oninput = event => g()?.setMusicVolume(parseFloat(event.target.value));
     el.querySelector('#setSfx').oninput = event => g()?.setSfxVolume(parseFloat(event.target.value));
@@ -135,10 +209,10 @@
       <button class="ssg-x" aria-label="Close instructions">×</button>
       <h2>Welcome to Asteria-007!</h2>
       <ul class="ssg-guide">
-        <li><b>Move</b> with WASD, arrow keys or the on-screen D-pad.</li>
+        <li><b>Move</b> with WASD, arrow keys, the on-screen D-pad or a controller.</li>
         <li><b>E</b> talks, opens chests, harvests resources and fishes.</li>
         <li><b>Beat Moldor</b> to earn the homestead, then use <b>B</b> to build and <b>C</b> to craft.</li>
-        <li><b>Q</b> quests · <b>I</b> bag · <b>M</b> map.</li>
+        <li><b>Q</b> quests · <b>I</b> bag · <b>M</b> map. Every keyboard action can be remapped in Settings.</li>
         <li><b>👥 Party</b> lets friends join online where network conditions permit.</li>
       </ul>
       <p class="ssg-note">First quest: talk to <b>Elder Brightbeard</b> in Birthday Village.</p>

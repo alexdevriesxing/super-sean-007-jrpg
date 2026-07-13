@@ -11,6 +11,11 @@
     const game = window.SuperSeanGame;
     if (!game) return false;
 
+    if (game.debug?.startNgPlus && !game.startNewGamePlus) {
+      const startNgPlus = game.debug.startNgPlus;
+      game.startNewGamePlus = () => startNgPlus();
+    }
+
     if (production && game.debug) {
       try { delete game.debug; } catch (error) { game.debug = undefined; }
     }
@@ -35,7 +40,7 @@
     window.SSGRuntimeInfo = Object.freeze({
       hardened: true,
       production,
-      version: document.body.dataset.siteVersion || '1.1.0'
+      version: document.body.dataset.siteVersion || '1.2.0'
     });
     return true;
   }

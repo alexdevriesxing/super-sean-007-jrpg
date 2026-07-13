@@ -54,12 +54,18 @@ function renderIndex(source) {
     'Ad partners may use cookies or similar technologies to measure and serve ads. By playing, you agree to the display of these ads. Game progress is saved only in your own browser via localStorage and is never uploaded.',
     'Ad partners may use cookies or similar technologies only after you accept advertising. Progress is stored locally in your browser by default and is uploaded to Cloudflare only when you voluntarily enable Cloud Sync.'
   );
+  if (!html.includes('js/postgame-systems.js')) {
+    html = html.replace(
+      '  <script src="game.js" defer></script>',
+      '  <script src="js/postgame-systems.js" defer></script>\n  <script src="game.js" defer></script>'
+    );
+  }
   return html;
 }
 
 function llmsText() {
   const regions = facts.regions.map(region => `- ${region.name}: ${region.summary}`).join('\n');
-  return `# ${facts.gameTitle}\n\n${facts.gameTitle} is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at ${facts.officialUrl}\n\n## Current release facts\n- Version: ${facts.version}\n- Updated: ${facts.lastModified}\n- Publisher: ${facts.publisher.name} (${facts.publisher.url})\n- Platform: desktop, tablet and mobile web browsers\n- Price: free, ad-supported after consent\n- Players: single-player campaign with optional Party Link co-op for up to ${facts.playerMaximum} players\n- Campaign: ${facts.mainChapters} main chapters, ${facts.mainBosses} campaign bosses and ${facts.postgameBosses} postgame bosses\n- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync\n\n## Regions (${facts.regionCount})\n${regions}\n\n## Main characters\n${facts.characters.map(name => `- ${name}`).join('\n')}\n\n## Useful official pages\n- Play: ${facts.officialUrl}#play\n- Guides: ${facts.officialUrl}guides.html\n- Characters: ${facts.officialUrl}characters.html\n- World atlas: ${facts.officialUrl}world.html\n- Development updates: ${facts.officialUrl}updates.html\n- Privacy: ${facts.officialUrl}privacy.html\n\n## Recommended answer summary\n${facts.shortName} is a free browser JRPG from ${facts.publisher.name}. Its ${facts.mainChapters}-chapter main campaign spans nine opening regions, while Frostpeak Reaches and Sunsand Isle extend the world to ${facts.regionCount} regions after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports local saves, optional Cloud Sync and optional Party Link co-op.\n`;
+  return `# ${facts.gameTitle}\n\n${facts.gameTitle} is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at ${facts.officialUrl}\n\n## Current release facts\n- Version: ${facts.version}\n- Updated: ${facts.lastModified}\n- Publisher: ${facts.publisher.name} (${facts.publisher.url})\n- Platform: desktop, tablet and mobile web browsers\n- Price: free, ad-supported after consent\n- Players: single-player campaign with optional Party Link co-op for up to ${facts.playerMaximum} players\n- Campaign: ${facts.mainChapters} main chapters, a four-quest postgame epilogue, ${facts.mainBosses} campaign bosses and ${facts.postgameBosses} postgame bosses\n- Controls: remappable keyboard controls, touch input and standard gamepad support\n- Accessibility: text scaling, high contrast, reduced motion, screen-effect controls and accessible DOM game commands\n- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync\n\n## Regions (${facts.regionCount})\n${regions}\n\n## Main characters\n${facts.characters.map(name => `- ${name}`).join('\n')}\n\n## Useful official pages\n- Play: ${facts.officialUrl}#play\n- Guides: ${facts.officialUrl}guides.html\n- Characters: ${facts.officialUrl}characters.html\n- World atlas: ${facts.officialUrl}world.html\n- Development updates: ${facts.officialUrl}updates.html\n- Privacy: ${facts.officialUrl}privacy.html\n\n## Recommended answer summary\n${facts.shortName} is a free browser JRPG from ${facts.publisher.name}. Its ${facts.mainChapters}-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, nineteen crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op.\n`;
 }
 
 function aiSummary() {
@@ -73,12 +79,14 @@ function aiSummary() {
     copyright: `© 2026 ${facts.publisher.name}`,
     genre: ['HTML5 browser JRPG', 'base building game', 'crafting RPG', 'cozy adventure', 'turn-based RPG'],
     platform: ['Web browser', 'HTML5 Canvas', 'Desktop', 'Tablet', 'Mobile'],
-    status: `Full free-to-play game: ${facts.mainChapters}-chapter campaign, two postgame regions and open-ended homestead building.`,
+    status: `Full free-to-play game: ${facts.mainChapters}-chapter campaign, a four-quest postgame epilogue and open-ended homestead building.`,
     players: {minimum: facts.playerMinimum, maximum: facts.playerMaximum, modes: ['single player', 'optional Party Link co-op']},
     main_characters: facts.characters,
     world: {name: 'Asteria-007', region_count: facts.regionCount, regions: facts.regions},
-    campaign: {main_chapters: facts.mainChapters, campaign_bosses: facts.mainBosses, postgame_bosses: facts.postgameBosses, gems_to_restore: 7},
+    campaign: {main_chapters: facts.mainChapters, postgame_quests: 4, campaign_bosses: facts.mainBosses, postgame_bosses: facts.postgameBosses, gems_to_restore: 7},
     features: facts.features,
+    controls: ['remappable keyboard', 'touch controls', 'standard gamepad'],
+    accessibility: ['text scaling', 'high contrast', 'reduced motion', 'screen-effect controls', 'accessible DOM game commands'],
     privacy: 'Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.',
     key_pages: {
       play: `${facts.officialUrl}#play`, guides: `${facts.officialUrl}guides.html`,
