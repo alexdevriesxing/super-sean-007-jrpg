@@ -22,18 +22,25 @@ expect(ai.players?.maximum === facts.playerMaximum, 'AI summary player count is 
 expect(ai.world?.regions?.length === facts.regions.length, 'AI summary region list is incomplete');
 expect(ai.campaign?.main_chapters === facts.mainChapters, 'AI summary chapter count is stale');
 expect(ai.campaign?.postgame_bosses === facts.postgameBosses, 'AI summary postgame boss count is stale');
+expect(ai.campaign?.postgame_quests === 4, 'AI summary postgame quest count is stale');
+expect(ai.controls?.includes('standard gamepad'), 'AI summary is missing gamepad support');
+expect(ai.controls?.includes('remappable keyboard'), 'AI summary is missing remappable keyboard controls');
+expect(ai.accessibility?.includes('high contrast'), 'AI summary is missing accessibility preferences');
 expect(ai.key_pages?.security?.endsWith('/security-policy.html'), 'AI summary is missing the security policy page');
 expect(ai.privacy?.includes('sandboxed frames'), 'AI summary does not describe isolated advertising');
 
 expect(llms.includes(`Version: ${facts.version}`), 'llms.txt version is stale');
 expect(llms.includes(`Regions (${facts.regionCount})`), 'llms.txt region count is stale');
 expect(llms.includes(`up to ${facts.playerMaximum} players`), 'llms.txt player count is stale');
+expect(llms.includes('four-quest postgame epilogue'), 'llms.txt is missing the postgame epilogue');
+expect(llms.includes('standard gamepad support'), 'llms.txt is missing gamepad support');
 for (const region of facts.regions) expect(llms.includes(region.name), `llms.txt is missing ${region.name}`);
 
 for (const page of ['', 'guides.html', 'characters.html', 'world.html', 'updates.html', 'privacy.html', 'terms.html', 'security-policy.html']) {
   expect(sitemap.includes(`<loc>${facts.officialUrl}${page}</loc>`), `sitemap is missing ${page || 'homepage'}`);
 }
 expect(syncScript.includes("process.argv.includes('--dist')"), 'production fact synchronization is not configured for dist');
+expect(syncScript.includes('js/postgame-systems.js'), 'production HTML does not inject the postgame systems extension');
 
 if (errors.length) {
   console.error(errors.join('\n'));
