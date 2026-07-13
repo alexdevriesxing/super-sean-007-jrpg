@@ -1,0 +1,213 @@
+import {access, mkdtemp, rm} from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import os from 'node:os';
+import path from 'node:path';
+
+const HOST = '127.0.0.1';
+const PORT = 4173;
+const DEBUG_PORT = 9222;
+const BASE_URL = `http://${HOST}:${PORT}`;
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function findChrome() {
+  const candidates = [
+    process.env.CHROME_PATH,
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser'
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    try { await access(candidate); return candidate; } catch (error) {}
+  }
+  throw new Error('Chrome/Chromium was not found. Set CHROME_PATH or install a headless browser.');
+}
+
+async function waitForHttp(url, timeout = 30_000) {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url, {redirect: 'manual'});
+      if (response.status < 500) return;
+    } catch (error) {}
+    await sleep(250);
+  }
+  throw new Error(`Timed out waiting for ${url}`);
+}
+
+class CDP {
+  constructor(url) {
+    if (typeof WebSocket !== 'function') throw new Error('Node.js 22 WebSocket support is required.');
+    this.socket = new WebSocket(url);
+    this.nextId = 1;
+    this.pending = new Map();
+    this.events = new Map();
+  }
+
+  async open() {
+    await new Promise((resolve, reject) => {
+      this.socket.addEventListener('open', resolve, {once: true});
+      this.socket.addEventListener('error', reject, {once: true});
+    });
+    this.socket.addEventListener('message', event => {
+      const message = JSON.parse(String(event.data));
+      if (message.id) {
+        const pending = this.pending.get(message.id);
+        if (!pending) return;
+        this.pending.delete(message.id);
+        if (message.error) pending.reject(new Error(`${message.error.message} (${message.error.code})`));
+        else pending.resolve(message.result || {});
+        return;
+      }
+      const listeners = this.events.get(message.method) || [];
+      listeners.forEach(listener => listener(message.params || {}));
+    });
+  }
+
+  send(method, params = {}) {
+    const id = this.nextId++;
+    const promise = new Promise((resolve, reject) => this.pending.set(id, {resolve, reject}));
+    this.socket.send(JSON.stringify({id, method, params}));
+    return promise;
+  }
+
+  on(method, listener) {
+    const listeners = this.events.get(method) || [];
+    listeners.push(listener);
+    this.events.set(method, listeners);
+  }
+
+  waitFor(method, timeout = 15_000) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(`Timed out waiting for ${method}`)), timeout);
+      const listener = params => {
+        clearTimeout(timer);
+        const listeners = this.events.get(method) || [];
+        this.events.set(method, listeners.filter(item => item !== listener));
+        resolve(params);
+      };
+      this.on(method, listener);
+    });
+  }
+
+  close() { this.socket.close(); }
+}
+
+async function evaluate(cdp, expression) {
+  const result = await cdp.send('Runtime.evaluate', {
+    expression,
+    awaitPromise: true,
+    returnByValue: true,
+    userGesture: true
+  });
+  if (result.exceptionDetails) throw new Error(result.exceptionDetails.text || 'Browser evaluation failed.');
+  return result.result?.value;
+}
+
+async function poll(cdp, expression, timeout = 20_000) {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    if (await evaluate(cdp, expression)) return;
+    await sleep(250);
+  }
+  throw new Error(`Timed out waiting for browser condition: ${expression}`);
+}
+
+function stopProcess(child) {
+  if (!child || child.killed) return;
+  child.kill('SIGTERM');
+  setTimeout(() => { if (!child.killed) child.kill('SIGKILL'); }, 1500).unref();
+}
+
+const userDataDir = await mkdtemp(path.join(os.tmpdir(), 'ssg-chrome-'));
+let preview;
+let chrome;
+let cdp;
+
+try {
+  preview = spawn('npm', ['run', 'preview', '--', '--port', String(PORT)], {
+    env: {...process.env, NO_COLOR: '1'},
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+  preview.stdout.on('data', chunk => process.stdout.write(`[preview] ${chunk}`));
+  preview.stderr.on('data', chunk => process.stderr.write(`[preview] ${chunk}`));
+  await waitForHttp(BASE_URL);
+
+  const chromePath = await findChrome();
+  chrome = spawn(chromePath, [
+    '--headless=new', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage',
+    '--disable-background-networking', '--disable-default-apps', '--disable-extensions',
+    '--mute-audio', `--remote-debugging-port=${DEBUG_PORT}`, `--user-data-dir=${userDataDir}`,
+    'about:blank'
+  ], {stdio: ['ignore', 'ignore', 'pipe']});
+  chrome.stderr.on('data', () => {});
+  await waitForHttp(`http://${HOST}:${DEBUG_PORT}/json/version`);
+
+  const target = await fetch(`http://${HOST}:${DEBUG_PORT}/json/new?${encodeURIComponent(`${BASE_URL}/?qa=1`)}`, {method: 'PUT'}).then(response => response.json());
+  cdp = new CDP(target.webSocketDebuggerUrl);
+  await cdp.open();
+
+  const exceptions = [];
+  await Promise.all([
+    cdp.send('Page.enable'),
+    cdp.send('Runtime.enable'),
+    cdp.send('Log.enable'),
+    cdp.send('Network.enable')
+  ]);
+  cdp.on('Runtime.exceptionThrown', event => exceptions.push(event.exceptionDetails?.text || 'Uncaught browser exception'));
+  cdp.on('Log.entryAdded', event => {
+    if (event.entry?.level === 'error' && !/favicon|fonts\.googleapis/.test(event.entry.text || '')) exceptions.push(event.entry.text);
+  });
+
+  const loaded = cdp.waitFor('Page.loadEventFired');
+  await cdp.send('Page.navigate', {url: `${BASE_URL}/?qa=1`});
+  await loaded;
+  await poll(cdp, `Boolean(window.SuperSeanGame && window.render_game_to_text)`);
+  await evaluate(cdp, `document.getElementById('consentDecline')?.click()`);
+  await poll(cdp, `document.getElementById('gameLoader')?.classList.contains('hidden')`, 30_000);
+
+  const shell = await evaluate(cdp, `(() => ({
+    title: document.title,
+    canvas: {width: document.getElementById('gameCanvas')?.width, height: document.getElementById('gameCanvas')?.height},
+    a11y: Boolean(document.getElementById('ssgA11yControls')),
+    runtime: window.SSGRuntimeInfo || null,
+    debugExposed: Boolean(window.SuperSeanGame?.debug)
+  }))()`);
+  if (!shell.title.includes('Super Sean 007')) throw new Error(`Unexpected title: ${shell.title}`);
+  if (shell.canvas.width !== 960 || shell.canvas.height !== 540) throw new Error('Game canvas dimensions are incorrect.');
+  if (!shell.a11y) throw new Error('Accessible game controls did not load.');
+  if (!shell.runtime?.hardened) throw new Error('Production runtime hardening did not initialize.');
+
+  await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Enter', code: 'Enter'});
+  await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Enter', code: 'Enter'});
+  await poll(cdp, `JSON.parse(window.render_game_to_text()).scene !== 'title'`);
+  const state = await evaluate(cdp, `JSON.parse(window.render_game_to_text())`);
+  if (!state.map?.id || !state.hero?.level) throw new Error('Rendered game state is incomplete.');
+
+  const dialog = await evaluate(cdp, `(() => {
+    window.SSGSettings();
+    const node = document.getElementById('ssgSettings');
+    return {
+      exists: Boolean(node), role: node?.getAttribute('role'), modal: node?.getAttribute('aria-modal'),
+      focusedInside: Boolean(node?.contains(document.activeElement))
+    };
+  })()`);
+  if (!dialog.exists || dialog.role !== 'dialog' || dialog.modal !== 'true') throw new Error('Settings dialog lacks accessible dialog semantics.');
+  if (!dialog.focusedInside) throw new Error('Settings dialog did not receive focus.');
+  await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Escape', code: 'Escape'});
+  await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Escape', code: 'Escape'});
+
+  const guideLoaded = cdp.waitFor('Page.loadEventFired');
+  await cdp.send('Page.navigate', {url: `${BASE_URL}/guides.html`});
+  await guideLoaded;
+  const guide = await evaluate(cdp, `({title: document.title, h1: document.querySelector('h1')?.textContent || ''})`);
+  if (!guide.title.includes('Guide') || guide.h1.length < 10) throw new Error('Guide page did not render meaningful content.');
+
+  if (exceptions.length) throw new Error(`Browser exceptions:\n${exceptions.join('\n')}`);
+  console.log(JSON.stringify({ok: true, shell, initialState: {scene: state.scene, map: state.map.name, level: state.hero.level}, guide}, null, 2));
+} finally {
+  cdp?.close();
+  stopProcess(chrome);
+  stopProcess(preview);
+  await rm(userDataDir, {recursive: true, force: true});
+}
