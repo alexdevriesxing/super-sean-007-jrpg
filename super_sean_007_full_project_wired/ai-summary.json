@@ -1,74 +1,65 @@
 {
   "game_title": "Super Sean 007: Legend of the Seven Gems",
   "short_name": "Super Sean 007",
+  "software_version": "1.1.0",
+  "last_updated": "2026-07-13",
   "official_url": "https://www.supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
     "url": "https://www.firedragoninteractive.com/"
   },
   "copyright": "© 2026 Fire Dragon Interactive",
-  "genre": ["HTML5 browser JRPG", "base building game", "crafting RPG", "cozy farming RPG", "turn-based adventure"],
+  "genre": [
+    "HTML5 browser JRPG",
+    "base building game",
+    "crafting RPG",
+    "cozy adventure",
+    "turn-based RPG"
+  ],
   "platform": ["Web browser", "HTML5 Canvas", "Desktop", "Tablet", "Mobile"],
-  "status": "Full free-to-play game: 15-chapter campaign plus open-ended homestead building endgame.",
-  "main_characters": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush"],
-  "party_skills": {
-    "Dave": "Gadget Zap — damage plus a one-turn stun",
-    "Petroman": "Iron Guard — halves damage taken for two turns",
-    "Ruush": "Twin Arrows — two quick strikes",
-    "Haraku": "Moon Blessing — heals 35% of max HP"
+  "status": "Full free-to-play game: 15-chapter campaign, two postgame regions and open-ended homestead building.",
+  "players": {
+    "minimum": 1,
+    "maximum": 4,
+    "modes": ["single player", "optional Party Link co-op"]
   },
-  "villain": {
-    "name": "Xelar the Bald Wizard",
-    "summary": "A cosmic sorcerer trying to drain the Seven Gems and conquer the known universe from the Bald Moon Tower."
-  },
+  "main_characters": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
   "world": {
     "name": "Asteria-007",
-    "regions": ["Birthday Village", "Sunrise Homestead (buildable base)", "Mushroom Meadow", "Crystal Cave", "Petro Plains", "Ruushwood", "Moon Shrine", "Ancient Ruins", "Bald Moon Tower"]
+    "region_count": 11,
+    "regions": [
+      {"id":"village","name":"Birthday Village","type":"hub","summary":"The cozy hub with Elder Brightbeard, Dave, Bobo's shop, Grandma Berrybun and the village crystal."},
+      {"id":"homestead","name":"Sunrise Homestead","type":"buildable base","summary":"A claimable base for building, stations, gardens, Comfort perks, visitors and landmark structures."},
+      {"id":"meadow","name":"Mushroom Meadow","type":"campaign","summary":"The first field region, where Moldor guards the Meadow Gem and the homestead deed."},
+      {"id":"cave","name":"Crystal Cave","type":"campaign","summary":"A mining cavern rich in Crystal Shards and Ore Chunks, guarded by the Cracked Crystal Guardian."},
+      {"id":"petro","name":"Petro Plains","type":"campaign","summary":"Machine-strewn plains with Gear Parts, Petroman's recruitment quest and the Petro Titan."},
+      {"id":"ruushwood","name":"Ruushwood","type":"campaign","summary":"A deep pine forest where Ruush joins after the Elder Treeguard hunt."},
+      {"id":"moon","name":"Moon Shrine","type":"campaign","summary":"A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade."},
+      {"id":"ruins","name":"Ancient Ruins","type":"campaign","summary":"The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime."},
+      {"id":"tower","name":"Bald Moon Tower","type":"campaign finale","summary":"Xelar's fortress, containing Xelar's Echo and the final main-story confrontation."},
+      {"id":"frostpeak","name":"Frostpeak Reaches","type":"postgame","summary":"An icy postgame region with elite demons, rare materials and the Void Succubus Queen."},
+      {"id":"sunsand","name":"Sunsand Isle","type":"postgame","summary":"A warm postgame shore with corrupted guards, sea creatures and the Tide Spirit Sovereign."}
+    ]
   },
-  "campaign": {
-    "main_chapters": 15,
-    "bosses": 8,
-    "gems_to_restore": 7,
-    "side_quests": 5,
-    "monster_types": "20+ regional variants of slimes, mushrooms, bats and crystal creatures"
-  },
-  "building_and_crafting": {
-    "gathering": "Respawning nodes: trees, boulders, mushrooms, berry hedges, crystal clusters, ore veins, machine scrap, moon herbs, ancient relics.",
-    "crafting": "19 recipes covering materials, healing food, seeds and 8 equippable items across weapon, armor and charm slots.",
-    "homestead": "Claim a base, build from 41 tile pieces or stamp blueprints (Cozy Cottage, Stone Keep castle, Garden Patch, Orchard, Star Shrine), expand the claim across 4 levels; removing pieces refunds all materials.",
-    "stations": ["Workbench", "Kitchen", "Crystal Forge", "Storage Chest", "Dream Bed (free full restore)"],
-    "gardening": "Berry, flower and moonfruit crops grow in real time, even while offline.",
-    "comfort_perks": ["+10% battle XP", "15% shop discount", "+2 ATK/+2 DEF aura", "daily gift chest"]
-  },
-  "gameplay_summary": "Top-down exploration across nine regions, NPC dialogue, quests, treasure chests, turn-based party battles, XP and levels, friendship burst meter, resource gathering, crafting, gardening and tile-based base building. Progress saves locally in the browser.",
-  "monetization_model": "Free-to-play, ad-supported browser game with Adsterra placements plus optional in-game rewarded ads.",
-  "how_to_play": {
-    "movement": "WASD or Arrow keys, or the mobile touch D-pad.",
-    "interact_and_harvest": "Press E (or tap Interact) near NPCs, chests, portals and resource nodes; nodes take multiple hits.",
-    "crafting": "Press C anywhere; advanced recipes need homestead stations.",
-    "building": "Press B at the claimed homestead; V opens blueprints; right-click or X removes pieces with a full refund.",
-    "menus": "I bag and equipment, Q quests and gems, M world map, P save.",
-    "battle": "Click/tap commands or press number keys 1-9.",
-    "audio": "O toggles music, L toggles SFX."
-  },
-  "key_pages_and_anchors": [
-    {"label": "Play Now", "url": "/#play"},
-    {"label": "Story and Lore", "url": "/#story"},
-    {"label": "Heroes", "url": "/#characters"},
-    {"label": "World and Regions", "url": "/#world"},
-    {"label": "Homestead Building", "url": "/#homestead"},
-    {"label": "World History", "url": "/#world-history"},
-    {"label": "Quests", "url": "/#quests"},
-    {"label": "Mechanics", "url": "/#mechanics"},
-    {"label": "Beginner's Guide", "url": "/#guide"},
-    {"label": "Gallery", "url": "/#gallery"},
-    {"label": "FAQ", "url": "/#faq"},
-    {"label": "Privacy and Ad Disclosure", "url": "/#privacy"}
+  "campaign": {"main_chapters":15,"campaign_bosses":8,"postgame_bosses":2,"gems_to_restore":7},
+  "features": [
+    "HTML5 Canvas browser play",
+    "turn-based party battles",
+    "fifteen-chapter campaign",
+    "resource gathering and nineteen crafting recipes",
+    "tile-based homestead building and blueprints",
+    "real-time gardening",
+    "local saves, copyable save codes and optional Cloud Sync",
+    "optional one-to-four-player Party Link co-op",
+    "desktop, tablet and mobile controls"
   ],
-  "deployment": {
-    "type": "Static website",
-    "recommended_host": "Cloudflare Pages",
-    "build_command": "npm run build",
-    "output_directory": "dist"
+  "privacy": "Progress is local by default. Cloud Sync is optional. Third-party ads load only after consent. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
+  "key_pages": {
+    "play": "https://www.supersean007.com/#play",
+    "guides": "https://www.supersean007.com/guides.html",
+    "characters": "https://www.supersean007.com/characters.html",
+    "world": "https://www.supersean007.com/world.html",
+    "updates": "https://www.supersean007.com/updates.html",
+    "privacy": "https://www.supersean007.com/privacy.html"
   }
 }
