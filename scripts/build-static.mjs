@@ -1,4 +1,4 @@
-import {cp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
+import {cp, mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 
 const projectRoot = path.resolve('super_sean_007_full_project_wired');
@@ -26,9 +26,9 @@ function includeInProduction(source) {
   return !omittedProductionPaths.has(source);
 }
 
-// Always build from a clean directory. This prevents removed source artwork or
-// stale service-worker files from surviving an incremental local/CI build.
-await rm(distRoot, {recursive: true, force: true});
+// dist/ is cleaned immediately before Vite runs. This step overlays the
+// production-only static runtime while preserving Vite's generated index and
+// content-hashed assets/build files.
 await mkdir(distRoot, {recursive: true});
 
 for (const entry of entries) {
