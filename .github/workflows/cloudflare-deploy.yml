@@ -29,7 +29,9 @@ jobs:
 
       - name: Resolve canonical release version
         id: release
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Check Cloudflare deployment credentials
         id: credentials
