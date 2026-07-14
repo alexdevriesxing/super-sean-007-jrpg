@@ -112,6 +112,14 @@
       // once, and never awaited so it cannot delay or wedge the game.
       this.streamImages(deferred, 24);
     },
+    // Release-scoped cache-bust: asset URLs are stable between releases, but a
+    // CDN edge can hold a poisoned response for the bare URL far longer than
+    // the origin intends. Versioned URLs bypass any such stale entry.
+    versionedSrc(src) {
+      const v = document.body?.dataset?.siteVersion;
+      if (!v || /^(data:|blob:|https?:)/.test(src)) return src;
+      return `${src}${src.includes('?') ? '&' : '?'}v=${encodeURIComponent(v)}`;
+    },
     // Load one image, resolving on load, error, OR timeout so a single stalled
     // request can never leave the boot promise pending forever.
     loadImage(key, src, timeout) {
@@ -126,7 +134,7 @@
         };
         im.onload = () => settle(true);
         im.onerror = () => settle(false);
-        im.src = src;
+        im.src = this.versionedSrc(src);
         img[key] = im;
         if (timeout) setTimeout(() => settle(false), timeout);
       });
