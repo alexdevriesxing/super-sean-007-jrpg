@@ -1137,7 +1137,12 @@
     // QA helpers for automated playtesting (client-side game, no secrets to protect)
     debug: {
       teleport(mapId, tx, ty) {
-        if (!maps[mapId]) return false;
+        const m = maps[mapId];
+        if (!m) return false;
+        // Default to map centre when coords are omitted, and ignore non-finite
+        // input so a bad call can never corrupt the player position with NaN.
+        if (!Number.isFinite(tx)) tx = Math.floor(m.w / 2);
+        if (!Number.isFinite(ty)) ty = Math.floor(m.h / 2);
         state.mapId = mapId;
         state.player.x = tx * TILE;
         state.player.y = ty * TILE;

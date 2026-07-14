@@ -94,6 +94,62 @@ test('every unlock target in quests is a real map', () => {
   }
 });
 
+test('every shop item is a real item', () => {
+  for (const s of SSG.SHOP_STOCK) {
+    assert.ok(SSG.ITEMS[s.item], `shop item ${s.item} exists`);
+    assert.ok(typeof s.price === 'number' && s.price > 0, `shop item ${s.item} priced`);
+  }
+});
+
+test('every monster drop is a real item and every map monster kind has a drop table', () => {
+  for (const [mob, list] of Object.entries(SSG.MONSTER_DROPS)) {
+    for (const [item, chance] of list) {
+      assert.ok(SSG.ITEMS[item], `drop table ${mob} item ${item} exists`);
+      assert.ok(chance > 0 && chance <= 1, `drop table ${mob} chance for ${item} in range`);
+    }
+  }
+  const maps = SSG.buildMaps();
+  for (const m of Object.values(maps)) {
+    for (const mon of m.monsters) {
+      if (mon.kind) assert.ok(SSG.MONSTER_DROPS[mon.kind], `monster ${mon.id} kind ${mon.kind} has a drop table`);
+    }
+  }
+});
+
+test('side quests reference real items', () => {
+  for (const q of SSG.SIDE_QUESTS) {
+    if (q.ask?.item) assert.ok(SSG.ITEMS[q.ask.item], `side quest ${q.id} ask ${q.ask.item} exists`);
+    for (const item of Object.keys(q.reward?.items || {})) {
+      assert.ok(SSG.ITEMS[item], `side quest ${q.id} reward ${item} exists`);
+    }
+  }
+});
+
+test('every locked portal is reachable via a quest unlock or a boss unlock chain', () => {
+  const maps = SSG.buildMaps();
+  const questUnlocks = new Set(SSG.MAIN_QUESTS.map(q => q.onDone?.unlock).filter(Boolean));
+  const bossUnlocks = new Set();
+  const bossIds = new Set();
+  for (const m of Object.values(maps)) {
+    for (const mon of m.monsters) {
+      if (mon.unlocks) bossUnlocks.add(mon.unlocks);
+      if (mon.boss) bossIds.add(mon.id);
+    }
+  }
+  for (const m of Object.values(maps)) {
+    for (const pt of m.portals) {
+      if (!pt.locked) continue;
+      assert.ok(questUnlocks.has(pt.locked) || bossUnlocks.has(pt.locked),
+        `portal ${pt.id} lock '${pt.locked}' is unlocked by a quest or a boss`);
+    }
+    // A boss that gates on defeating another boss must name a real boss.
+    for (const mon of m.monsters) {
+      if (mon.requiresDefeated) assert.ok(bossIds.has(mon.requiresDefeated),
+        `monster ${mon.id} requiresDefeated '${mon.requiresDefeated}' is a real boss`);
+    }
+  }
+});
+
 test('crops reference real seed items and ripe tiles', () => {
   for (const [key, crop] of Object.entries(SSG.CROPS)) {
     assert.ok(SSG.ITEMS[crop.seed], `crop ${key} seed exists`);
