@@ -8,3 +8,15 @@ ALLOWED_ORIGINS = "https://www.supersean007.com,https://supersean007.com"
 [[kv_namespaces]]
 binding = "SSG_SAVES"
 id = "d24ef7eb2db8476b8e0d2702b490163b"
+
+[[kv_namespaces]]
+binding = "SSG_ANALYTICS"
+id = "7aefd4e3b4d7492890b6295f63e7c9ad"
+
+[[kv_namespaces]]
+binding = "SSG_ERRORS"
+id = "53b776f145bc4699bfc8d79cae0498c1"
+
+[[kv_namespaces]]
+binding = "SSG_PARTY"
+id = "4a3dc88c91704637b2958c164055a53e"
