@@ -85,6 +85,8 @@
       if (done.recruit && !st.party.includes(done.recruit)) {
         st.party.push(done.recruit);
         ctx.showToast(`${cap(done.recruit)} joined the party!`);
+        // Every friend brings a battle skill along.
+        ctx.showCard('card_newskill', 96);
         ctx.sfx('level_up');
       }
       if (done.gem && !st.gems.includes(done.gem)) { st.gems.push(done.gem); ctx.stat('gem'); ctx.showToast(`${done.gem} restored! (${st.gems.length}/7)`); }
@@ -382,6 +384,7 @@
         st.hero.coins += coins;
         addItem('Berry', 2);
         ctx.sfx('chest');
+        ctx.fx('', {img: 'icon_gift', x: st.player.x + 16, y: st.player.y - 46, size: 44, vy: -0.25, life: 80});
         ctx.showToast(`Gift chest: +${coins} coins, +2 Berries!`);
         ctx.save();
         return;
@@ -541,7 +544,14 @@
         gather_50: (stats.gathered || 0) >= 50,
         xelar_down: Boolean(st.defeatedBosses.xelar_final),
         all_gems: st.gems.length >= 7,
-        ng_plus: (st.ngPlus || 0) >= 1
+        ng_plus: (st.ngPlus || 0) >= 1,
+        chest_hunter: Object.keys(st.chestsOpened || {}).length >= 5,
+        coin_500: st.hero.coins >= 500,
+        battles_25: (stats.battlesWon || 0) >= 25,
+        locksmith: (stats.lockedChestsOpened || 0) >= 1,
+        completionist: SSG.ACHIEVEMENTS
+          .filter(a => a.id !== 'completionist')
+          .every(a => (st.achievements || {})[a.id])
       };
     }
     function checkAchievements() {
@@ -634,6 +644,7 @@
         addItem('Crystal Candy', 1);
         st.daily.done = true;
         bumpStat('dailiesDone');
+        ctx.fx('', {img: 'icon_gift', x: st.player.x + 16, y: st.player.y - 46, size: 44, vy: -0.25, life: 80});
         ctx.sfx('reward');
         ctx.showDialogue('Quest Board', [`Request fulfilled: ${req.qty} × ${req.item}. The villagers leave ${reward} coins and a Crystal Candy. Come back tomorrow!`]);
         ctx.save();

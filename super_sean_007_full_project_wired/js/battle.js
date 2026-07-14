@@ -61,6 +61,11 @@
         stunned: 0,
         poison: 0,
         weakened: 0,
+        burn: 0,
+        frozen: 0,
+        slowed: 0,
+        regen: 0,
+        inspired: 0,
         enemyGuard: 0,
         phase2: false,
         cooldowns: {},
@@ -97,6 +102,8 @@
 
     function dealDamage(amount, source, fxName) {
       const e = battle.enemy;
+      if (battle.inspired > 0) amount = Math.floor(amount * 1.25);
+      if (battle.frozen > 0) amount = Math.max(1, Math.floor(amount * 0.5));
       if (battle.enemyGuard > 0) {
         amount = Math.max(1, Math.floor(amount * 0.5));
         battle.enemyGuard -= 1;
@@ -123,7 +130,7 @@
     }
 
     function healConsumableName() {
-      return ['Mushroom Stew', 'Courage Crumble', 'Berry Juice', 'Crystal Candy', 'Moon Tea']
+      return ['Star Elixir', 'Mushroom Stew', 'Honey Bread', 'Courage Crumble', 'Berry Juice', 'Zest Soda', 'Crystal Candy', 'Moon Tea']
         .find(name => sys().countItem(name) > 0) || null;
     }
 
@@ -148,11 +155,14 @@
         h.friendship -= 40;
         ctx.showCard('card_crit', 54);
         dealDamage(Math.max(30, Math.floor(stats.attack * 2.7 + h.level * 8)), 'Friendship Burst hits', 'vfx_stars');
+        battle.inspired = 3;
+        battle.log.unshift('Sean is Inspired — attacks hit 25% harder!');
         ctx.sfx('level_up');
       } else if (id === 'item') {
         const name = healConsumableName();
         if (!name) { battle.log.unshift('No snacks left! Craft food at your kitchen.'); return; }
         sys().useConsumable(name);
+        ctx.showCard('card_item', 48);
         battle.log.unshift(`Sean uses ${name}.`);
       } else if (id === 'guard') {
         battle.guard = true;
@@ -197,8 +207,10 @@
         battle.cooldowns.blessing = 3;
         const heal = Math.floor(h.maxHp * 0.35);
         h.hp = Math.min(h.maxHp, h.hp + heal);
-        battle.log.unshift(`Haraku's Moon Blessing restores ${heal} HP.`);
+        battle.regen = 2;
+        battle.log.unshift(`Haraku's Moon Blessing restores ${heal} HP and grants Regen (2 turns).`);
         hitFx('vfx_heal', 'player', 120);
+        hitFx('vfx_nature', 'player', 90);
         ctx.sfx('reward');
       } else {
         acted = false;
@@ -214,13 +226,31 @@
       const e = battle.enemy;
       const h = S().hero;
       const stats = sys().heroStats();
-      Object.keys(battle.cooldowns).forEach(k => { battle.cooldowns[k] = Math.max(0, battle.cooldowns[k] - 1); });
+      // Soaked: party skill cooldowns don't recover this turn.
+      if (battle.slowed > 0) battle.slowed -= 1;
+      else Object.keys(battle.cooldowns).forEach(k => { battle.cooldowns[k] = Math.max(0, battle.cooldowns[k] - 1); });
       if (battle.weakened > 0) battle.weakened -= 1;
+      if (battle.frozen > 0) battle.frozen -= 1;
+      if (battle.inspired > 0) battle.inspired -= 1;
+      if (battle.regen > 0) {
+        battle.regen -= 1;
+        const heal = Math.max(5, Math.floor(h.maxHp * 0.06));
+        h.hp = Math.min(h.maxHp, h.hp + heal);
+        battle.log.unshift(`Regen mends Sean for ${heal} HP.`);
+        hitFx('vfx_nature', 'player', 70);
+      }
       if (battle.poison > 0) {
         battle.poison -= 1;
         const tick = Math.max(4, Math.floor(h.maxHp * 0.04));
         h.hp = Math.max(1, h.hp - tick);
         battle.log.unshift(`Spores sting Sean for ${tick} poison damage (${battle.poison} turns left).`);
+      }
+      if (battle.burn > 0) {
+        battle.burn -= 1;
+        const tick = Math.max(5, Math.floor(h.maxHp * 0.05));
+        h.hp = Math.max(1, h.hp - tick);
+        battle.log.unshift(`Flames sear Sean for ${tick} burn damage (${battle.burn} turns left).`);
+        hitFx('vfx_fire', 'player', 80);
       }
       if (battle.stunned > 0) {
         battle.stunned -= 1;
@@ -236,6 +266,33 @@
         battle.log.unshift(`${e.name} gleams with true bald power — stronger and partly restored!`);
         hitFx('vfx_spirit', 'enemy', 210);
         ctx.sfx('portal');
+        battle.turn = 'player';
+        return;
+      }
+      // Elemental abilities (fire burns, ice freezes, water soaks).
+      if (e.element === 'fire' && battle.burn === 0 && Math.random() < 0.25) {
+        battle.burn = 3;
+        battle.log.unshift(`${e.name} breathes fire — Sean is burning!`);
+        hitFx('vfx_fire', 'player', 110);
+        ctx.sfx('hit');
+        battle.turn = 'player';
+        return;
+      }
+      if (e.element === 'ice' && battle.frozen === 0 && Math.random() < 0.22) {
+        battle.frozen = 2;
+        battle.log.unshift(`${e.name} exhales frost — Sean's attacks are halved for 2 turns!`);
+        hitFx('vfx_ice', 'player', 110);
+        ctx.sfx('menu_open');
+        battle.turn = 'player';
+        return;
+      }
+      if (e.element === 'water' && battle.slowed === 0 && Math.random() < 0.25) {
+        battle.slowed = 2;
+        const splash = Math.max(3, Math.floor(e.atk * 0.4));
+        h.hp = Math.max(1, h.hp - splash);
+        battle.log.unshift(`${e.name} crashes a wave — ${splash} damage and skills recover slower!`);
+        hitFx('vfx_water', 'player', 110);
+        ctx.sfx('hit');
         battle.turn = 'player';
         return;
       }
@@ -274,7 +331,10 @@
       h.hp = Math.max(0, h.hp - dmg);
       battle.log.unshift(`${e.name} hits for ${dmg} damage.`);
       ctx.fx(`-${dmg}`, {screen: true, x: 180 + Math.random() * 50, y: 230 + Math.random() * 30, color: '#ff8ba0', size: 20, life: 55});
-      hitFx(e.kind === 'xelar' ? 'vfx_zap' : 'vfx_claw', 'player');
+      const strikeFx = e.element === 'water' ? 'vfx_water'
+        : e.element === 'fire' ? 'vfx_fire'
+        : e.kind === 'xelar' ? 'vfx_zap' : 'vfx_claw';
+      hitFx(strikeFx, 'player');
       ctx.sfx('hit');
       battle.turn = h.hp <= 0 ? 'defeat' : 'player';
       if (battle.turn === 'defeat') battle.log.unshift('Sean falls! Choose: reward revive or return home.');
@@ -296,6 +356,10 @@
       const xpMult = sys().perkActive('xp') ? 1.1 : 1;
       h.xp += Math.floor(e.xp * xpMult);
       h.coins += e.coins;
+      // Spoils popup with a coin icon tiered by the payout size.
+      const coinIcon = e.coins >= 60 ? 'icon_coin_gold' : e.coins >= 25 ? 'icon_coin_silver' : 'icon_coin_bronze';
+      ctx.fx('', {img: coinIcon, screen: true, x: 480, y: 240, size: 40, vy: -0.35, life: 70});
+      ctx.fx(`+${e.coins} coins`, {screen: true, x: 452, y: 292, color: '#ffe98a', size: 18, life: 70});
       h.friendship = Math.min(100, h.friendship + (e.boss ? 18 : 6));
       let leveled = false;
       while (h.xp >= h.xpNext) {

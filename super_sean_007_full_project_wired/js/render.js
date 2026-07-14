@@ -83,9 +83,15 @@
       }
       for (const chest of m.chests) {
         if (S().chestsOpened[chest.id] && !chest.ad) continue;
-        const sprite = chest.ad ? 'chest_gold' : 'chest_wood';
+        const sprite = chest.ad ? 'chest_gold'
+          : chest.tier === 'gem' ? 'chest_gem'
+          : chest.tier === 'purple' ? 'chest_purple' : 'chest_wood';
         if (!ctx.drawIcon(sprite, chest.x - cam.x + 8, chest.y - cam.y + 12, 48, 48)) {
           ctx.drawTile('birthday', 20, chest.x - cam.x, chest.y - cam.y);
+        }
+        if (chest.locked) {
+          ctx.drawIcon('marker_lock', chest.x - cam.x + 38, chest.y - cam.y + 2, 22, 22);
+          drawLabel('Locked', chest.x - cam.x - 4, chest.y - cam.y - 14, '#e8d6ff');
         }
         if (chest.ad) drawLabel('Reward', chest.x - cam.x - 8, chest.y - cam.y - 14, '#fff4a9');
       }
@@ -119,6 +125,10 @@
           drawSprite(spr, npc.x - cam.x + ox, npc.y - cam.y + oy, npc.animal ? 60 : 72, npc.name);
         } else {
           drawCharacter(npc.char, npc.x - cam.x + ox, npc.y - cam.y + oy, 0, npc.name, npc.hue);
+        }
+        if (npc.shop) {
+          const bob = Math.sin(Date.now() / 340) * 3;
+          ctx.drawIcon('marker_shop', npc.x - cam.x + 24, npc.y - cam.y - 52 + bob, 24, 24);
         }
       }
       for (const mon of m.monsters) {
@@ -218,6 +228,10 @@
       if (mon.hue && !(custom && custom.naturalWidth)) g.filter = `hue-rotate(${mon.hue}deg)`;
       if (im && im.complete && im.naturalWidth) g.drawImage(im, x - size / 2, y - size / 2, size, size);
       g.restore();
+      if (mon.boss) {
+        const bob = Math.sin(Date.now() / 320) * 3;
+        ctx.drawIcon('marker_battle', x - 11, y - size / 2 - 44 + bob, 22, 22);
+      }
       drawLabel(mon.name, x - size / 2, y - size / 2 - 17, mon.boss ? '#ffd76a' : '#fff');
     }
 
@@ -381,17 +395,36 @@
         g.restore();
       }
       g.fillStyle = '#fff'; g.font = 'bold 24px Nunito'; g.fillText(e.name, 610, 82);
+      // Element badge next to the enemy name (fire/ice/water/wind/light/void).
+      const ELEMENT_ICONS = {fire:'icon_fire', ice:'icon_ice', water:'icon_water', wind:'icon_wind', light:'icon_light', void:'icon_void'};
+      if (e.element && ELEMENT_ICONS[e.element]) {
+        ctx.drawIcon(ELEMENT_ICONS[e.element], 612 + g.measureText(e.name).width + 8, 62, 24, 24);
+      }
       bar(610, 92, 260, 18, e.hp / e.maxHp, '#ff5f7e', '#ffd3dc');
       drawStatusIcons(880, 74, [
         battle.stunned > 0 && 'status_stun',
         battle.enemyGuard > 0 && 'status_barrier'
       ]);
+      // Turn banner card at the top of the arena (hidden during boss intros).
+      const bannerName = battle.turn === 'player' ? 'card_player_turn' : battle.turn === 'enemy' ? 'card_enemy_turn' : null;
+      const banner = bannerName && ctx.img[bannerName];
+      if (banner && banner.complete && banner.naturalWidth && !(battle.intro > 0)) {
+        const bh = 34, bw = bh * (banner.naturalWidth / banner.naturalHeight);
+        g.save(); g.globalAlpha = 0.92;
+        g.drawImage(banner, GAME_W / 2 - bw / 2, 10, bw, bh);
+        g.restore();
+      }
       g.fillStyle = '#fff'; g.fillText('Super Sean', 100, 208);
       bar(100, 216, 240, 16, h.hp / h.maxHp, '#ff5f7e', '#ffd3dc');
       bar(100, 238, 240, 13, h.mp / stats.maxMp, '#41b8ff', '#d8f3ff');
       drawStatusIcons(348, 202, [
         battle.poison > 0 && 'status_poison',
+        battle.burn > 0 && 'status_burn',
+        battle.frozen > 0 && 'status_freeze',
+        battle.slowed > 0 && 'status_slow',
         battle.weakened > 0 && 'status_weak',
+        battle.regen > 0 && 'status_regen',
+        battle.inspired > 0 && 'status_strong',
         (battle.guard || battle.ironGuard > 0) && 'status_shield'
       ]);
       panel(60, 388, 840, 132, 'rgba(255,255,255,.94)');
@@ -449,7 +482,8 @@
       drawWorld(); drawHud();
       panel(90, 56, 780, 424, 'rgba(255,255,255,.97)');
       const st = S();
-      g.fillStyle = '#12365a'; g.font = 'bold 26px Nunito'; g.fillText('Bag, Gear & Party', 122, 96);
+      ctx.drawIcon('icon_chest', 118, 72, 30, 30);
+      g.fillStyle = '#12365a'; g.font = 'bold 26px Nunito'; g.fillText('Bag, Gear & Party', 156, 96);
       g.font = '13px Nunito'; g.fillStyle = '#2471a3';
       g.fillText('Click a snack to eat it · click gear to equip/unequip · Esc to close', 122, 116);
       const entries = Object.entries(st.items).filter(([, n]) => n > 0);
@@ -507,13 +541,13 @@
       g.fillText(`Achievements ${unlockedCount}/${SSG.ACHIEVEMENTS.length}`, 640, 126);
       SSG.ACHIEVEMENTS.forEach((a, i) => {
         const has = Boolean(st.achievements?.[a.id]);
-        const y = 148 + i * 18;
+        const y = 146 + i * 14;
         g.save(); if (!has) g.globalAlpha = 0.3;
-        ctx.drawIcon(a.badge, 640, y - 12, 15, 15);
+        ctx.drawIcon(a.badge, 640, y - 10, 12, 12);
         g.restore();
-        g.font = has ? 'bold 12px Nunito' : '12px Nunito';
+        g.font = has ? 'bold 11px Nunito' : '11px Nunito';
         g.fillStyle = has ? '#0f8a3d' : '#93a6b8';
-        g.fillText(a.label, 660, y);
+        g.fillText(a.label, 658, y);
       });
       g.font = 'bold 16px Nunito'; g.fillStyle = '#12365a'; g.fillText('Side Quests', 122, 330);
       let y = 352;
@@ -541,9 +575,10 @@
       g.stroke();
       const REGION_MARKERS = {
         village: 'marker_home', meadow: 'marker_pin', cave: 'marker_gem', petro: 'marker_camp',
-        ruushwood: 'marker_quest', moon: 'marker_star', ruins: 'marker_gate', tower: 'marker_castle',
+        ruushwood: 'marker_quest', moon: 'marker_star', ruins: 'marker_gate', tower: 'marker_tower',
         frostpeak: 'marker_flag', sunsand: 'marker_anchor'
       };
+      const allMaps = ctx.maps();
       SSG.WORLD_NODES.forEach(([id, name, x, y]) => {
         const unlocked = id === 'village' || id === 'meadow' || st.unlocked[id];
         const here = st.mapId === id;
@@ -553,6 +588,13 @@
         if (unlocked) {
           const bounce = here ? Math.sin(Date.now() / 250) * 3 : 0;
           ctx.drawIcon(REGION_MARKERS[id] || 'marker_pin', x - 14, y - 16 + bounce, 28, 28);
+          // Alert badge: a boss still stands in this region.
+          const bossAlive = (allMaps[id]?.monsters || []).some(mo =>
+            mo.boss && !mo.defeated && !st.defeatedBosses[mo.id] &&
+            (!mo.requiresGems || st.gems.length >= mo.requiresGems) &&
+            (!mo.requiresDefeated || st.defeatedBosses[mo.requiresDefeated]));
+          if (bossAlive) ctx.drawIcon('marker_alert', x + 12, y - 28, 20, 20);
+          if (id === 'village') ctx.drawIcon('marker_shop', x - 34, y - 28, 20, 20);
         } else {
           ctx.drawIcon('icon_lock', x - 11, y - 13, 22, 26);
         }
@@ -574,20 +616,20 @@
       g.fillText(`Homestead stations: ${stText} · click a recipe to craft · Esc to close`, 92, 104);
       SSG.RECIPES.forEach((r, i) => {
         const col = i % 2, row = Math.floor(i / 2);
-        const x = 88 + col * 410, y = 122 + row * 36;
+        const x = 88 + col * 410, y = 116 + row * 31;
         const ok = sys().canCraft(r);
         const avail = sys().recipeAvailable(r);
         g.fillStyle = ok ? '#eafbe9' : avail ? '#f4f7fa' : '#f8ecec';
-        g.beginPath(); g.roundRect(x, y, 396, 31, 8); g.fill();
+        g.beginPath(); g.roundRect(x, y, 396, 28, 8); g.fill();
         g.strokeStyle = ok ? '#0f8a3d' : '#c8d4de'; g.lineWidth = 1.5; g.stroke();
         const def = SSG.ITEMS[r.out.item];
-        ctx.drawItemIcon(def, x + 5, y + 4, 23, 23);
+        ctx.drawItemIcon(def, x + 5, y + 3, 21, 21);
         g.fillStyle = ok ? '#0f6f31' : '#12365a'; g.font = 'bold 13px Nunito';
-        g.fillText(r.name, x + 34, y + 14);
+        g.fillText(r.name, x + 32, y + 12);
         g.font = '11px Nunito'; g.fillStyle = '#41576b';
         const ins = r.ins.map(([item, qty]) => `${qty} ${item} (${sys().countItem(item)})`).join(', ');
-        g.fillText(`${ins}${r.station ? ' · needs ' + r.station : ''}`, x + 34, y + 27);
-        hotspot(x, y, 396, 31, () => sys().craft(r));
+        g.fillText(`${ins}${r.station ? ' · needs ' + r.station : ''}`, x + 32, y + 24);
+        hotspot(x, y, 396, 28, () => sys().craft(r));
       });
     }
 
@@ -602,13 +644,13 @@
       button(660, 66, 90, 30, 'Sell', () => { shop.tab = 'sell'; }, shop.tab !== 'sell');
       if (shop.tab === 'buy') {
         sys().shopPrices().forEach((entry, i) => {
-          const y = 140 + i * 38;
-          g.fillStyle = '#f4f7fa'; g.beginPath(); g.roundRect(150, y, 560, 32, 8); g.fill();
+          const y = 132 + i * 29;
+          g.fillStyle = '#f4f7fa'; g.beginPath(); g.roundRect(150, y, 560, 26, 8); g.fill();
           const def = SSG.ITEMS[entry.item];
-          ctx.drawItemIcon(def, 156, y + 4, 24, 24);
-          g.fillStyle = '#12365a'; g.font = 'bold 14px Nunito';
-          g.fillText(`${entry.item} — ${entry.price} coins`, 190, y + 21);
-          button(620, y + 3, 80, 26, 'Buy', () => sys().buy(i));
+          ctx.drawItemIcon(def, 156, y + 3, 20, 20);
+          g.fillStyle = '#12365a'; g.font = 'bold 13px Nunito';
+          g.fillText(`${entry.item} — ${entry.price} coins`, 186, y + 18);
+          button(620, y + 2, 80, 22, 'Buy', () => sys().buy(i));
         });
       } else {
         const list = sys().sellables();

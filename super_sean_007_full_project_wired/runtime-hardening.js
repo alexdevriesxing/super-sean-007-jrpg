@@ -40,7 +40,7 @@
     window.SSGRuntimeInfo = Object.freeze({
       hardened: true,
       production,
-      version: document.body.dataset.siteVersion || '1.2.1'
+      version: document.body.dataset.siteVersion || '1.3.0'
     });
     return true;
   }

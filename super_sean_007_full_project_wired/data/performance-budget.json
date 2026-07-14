@@ -1,7 +1,7 @@
 {
   "baseline": {
     "measuredAt": "2026-07-13",
-    "release": "1.2.1",
+    "release": "1.3.0",
     "policy": "Production excludes development-only generated source art and internal asset-integration documentation. Total distribution size has limited release headroom, only the title key art may exceed two megabytes, and first-play code/assets remain tightly bounded."
   },
   "totalDistBytes": 30000000,

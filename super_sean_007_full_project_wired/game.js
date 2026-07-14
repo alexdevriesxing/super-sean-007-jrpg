@@ -759,6 +759,7 @@
     state.player.y = portal.spawn.y;
     AudioManager.playSfx('portal');
     AudioManager.playMusic(MAP_MUSIC[state.mapId] || 'village');
+    addFx('', {img: 'vfx_teleport', x: state.player.x + 16, y: state.player.y, size: 96, vy: -0.1, life: 45});
     showToast(`Entered ${maps[state.mapId].name}.`);
     save();
     if (portal.target === 'village') setTimeout(() => AdManager.maybeInterstitial('return_to_village'), 600);
@@ -766,13 +767,26 @@
 
   function openChest(chest) {
     if (state.chestsOpened[chest.id] && !chest.ad) { showToast('Already opened.'); return; }
+    if (chest.locked && !state.chestsOpened[chest.id]) {
+      if (systems.countItem('Old Key') <= 0) {
+        AudioManager.playSfx('menu_open');
+        showToast(`${chest.label} is sealed tight. An Old Key would open it.`);
+        return;
+      }
+      systems.removeItem('Old Key', 1);
+      systems.bumpStat('lockedChestsOpened');
+      showToast('The Old Key turns — the seal shatters!');
+    }
     const award = () => {
-      state.hero.coins += chest.reward.coins || 0;
+      const coins = chest.reward.coins || 0;
+      state.hero.coins += coins;
       if (chest.reward.item) systems.addItem(chest.reward.item, 1);
       if (!chest.ad) state.chestsOpened[chest.id] = true;
       AudioManager.playSfx('chest');
-      addFx(`+${chest.reward.coins || 0} coins`, {color: '#ffe98a'});
-      showToast(`${chest.label}: +${chest.reward.coins || 0} coins${chest.reward.item ? ', ' + chest.reward.item : ''}`);
+      const coinIcon = coins >= 100 ? 'icon_coin_gold' : coins >= 40 ? 'icon_coin_silver' : 'icon_coin_bronze';
+      addFx('', {img: coinIcon, y: state.player.y - 66, size: 34, vy: -0.4, life: 75});
+      addFx(`+${coins} coins`, {color: '#ffe98a'});
+      showToast(`${chest.label}: +${coins} coins${chest.reward.item ? ', ' + chest.reward.item : ''}`);
       save();
     };
     if (chest.ad) AdManager.showRewardedAd('daily_chest', award); else award();

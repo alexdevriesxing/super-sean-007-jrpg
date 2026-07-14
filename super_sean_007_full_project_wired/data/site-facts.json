@@ -1,18 +1,18 @@
 {
   "gameTitle": "Super Sean 007: Legend of the Seven Gems",
   "shortName": "Super Sean 007",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "officialUrl": "https://www.supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
     "url": "https://www.firedragoninteractive.com/"
   },
-  "lastModified": "2026-07-13",
+  "lastModified": "2026-07-14",
   "datePublished": "2026-07-09",
   "regionCount": 11,
   "mainChapters": 15,
   "mainBosses": 8,
-  "postgameBosses": 2,
+  "postgameBosses": 3,
   "playerMinimum": 1,
   "playerMaximum": 4,
   "regions": [
@@ -33,7 +33,8 @@
     "HTML5 Canvas browser play",
     "turn-based party battles",
     "fifteen-chapter campaign plus a four-quest postgame epilogue",
-    "resource gathering and nineteen crafting recipes",
+    "resource gathering and twenty-four crafting recipes",
+    "battle status effects with elemental enemies",
     "tile-based homestead building and blueprints",
     "real-time gardening",
     "remappable keyboard controls and standard gamepad support",

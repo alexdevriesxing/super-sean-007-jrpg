@@ -142,7 +142,12 @@
     {id:'frostpeak_clear',label:'Winter Breaker',      desc:'Defeat the Void Succubus Queen.',              badge:'icon_snowflake'},
     {id:'sunsand_clear',  label:'Tide Turner',         desc:'Defeat the Tide Spirit Sovereign.',            badge:'icon_water'},
     {id:'postgame_clear', label:'Beyond the Seven',    desc:'Complete the Frostpeak and Sunsand epilogue.', badge:'badge_10'},
-    {id:'ng_plus',        label:'Rebirth of Legends',  desc:'Begin New Game+.',                             badge:'badge_12'}
+    {id:'ng_plus',        label:'Rebirth of Legends',  desc:'Begin New Game+.',                             badge:'badge_12'},
+    {id:'chest_hunter',   label:'Chest Hunter',        desc:'Open 5 treasure chests.',                      badge:'badge_2'},
+    {id:'coin_500',       label:'Coin Collector',      desc:'Hold 500 coins at once.',                      badge:'badge_7'},
+    {id:'battles_25',     label:'Battle Veteran',      desc:'Win 25 battles.',                              badge:'badge_8'},
+    {id:'locksmith',      label:'Locksmith',           desc:'Open a sealed chest with an Old Key.',         badge:'badge_9'},
+    {id:'completionist',  label:'Living Legend',       desc:'Earn every other achievement.',                badge:'icon_trophy'}
   ];
 
   SSG.NPC_LINES = {

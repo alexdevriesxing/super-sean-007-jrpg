@@ -28,6 +28,11 @@
     'Courage Crumble':{type:'consumable', img:'icon_cake', icon:{sheet:'meadow', tile:14}, sell:20, heal:80, friendship:20, desc:'Grandma cake: 80 HP and +20 Friendship.'},
     'Guardian Shard':{type:'key', img:'icon_gem_blue', icon:{sheet:'cave', tile:3}, sell:0, desc:'Proof the Crystal Guardian was calmed.'},
 
+    'Honey Bread':   {type:'consumable', img:'icon_bread', icon:{sheet:'birthday', tile:13}, sell:9,  heal:60,  desc:'Warm bakery loaf. Restores 60 HP.'},
+    'Zest Soda':     {type:'consumable', img:'icon_potion_yellow', icon:{sheet:'meadow', tile:18}, sell:8, mana:30, desc:'Fizzy citrus pop. Restores 30 MP.'},
+    'Star Elixir':   {type:'consumable', img:'icon_potion_purple', icon:{sheet:'moon', tile:6}, sell:28, heal:200, desc:'Bottled starlight. Restores 200 HP.'},
+    'Old Key':       {type:'key', img:'icon_key', icon:{sheet:'ruins', tile:9}, sell:0, desc:'A heavy brass key. Opens one sealed chest in the far regions.'},
+
     'Sunfish':       {type:'consumable', icon:{sheet:'birthday', tile:16}, sell:6, heal:25, desc:'Fresh pond catch. Restores 25 HP.'},
     'Grilled Fish':  {type:'consumable', img:'icon_meat', icon:{sheet:'petro', tile:3}, sell:18, heal:150, desc:'Kitchen-grilled sunfish. Restores 150 HP.'},
     'Treasure Map':  {type:'treasure_map', img:'icon_scroll', icon:{sheet:'birthday', tile:14}, sell:10, desc:'A crinkled map. Use it from your bag to reveal a dig spot.'},
@@ -44,7 +49,9 @@
     'Moonweave Cloak':{type:'equipment', slot:'armor', icon:{sheet:'moon', tile:9},   sell:90, defense:14, desc:'Woven moonlight. +14 DEF.'},
     'Gadget Charm':  {type:'equipment', slot:'charm',  img:'icon_bolt', icon:{sheet:'petro', tile:4},  sell:40, maxMp:15, desc:'Dave-made charm. +15 max MP.'},
     'Moon Charm':    {type:'equipment', slot:'charm',  img:'icon_moon', icon:{sheet:'moon', tile:5},   sell:60, maxMp:25, desc:'Shrine token. +25 max MP.'},
-    'Relic Crown':   {type:'equipment', slot:'charm',  img:'icon_crown', icon:{sheet:'ruins', tile:9},  sell:140, attack:5, defense:5, maxMp:20, desc:'Crown of the old kings. +5 ATK, +5 DEF, +20 MP.'}
+    'Relic Crown':   {type:'equipment', slot:'charm',  img:'icon_crown', icon:{sheet:'ruins', tile:9},  sell:140, attack:5, defense:5, maxMp:20, desc:'Crown of the old kings. +5 ATK, +5 DEF, +20 MP.'},
+    'Sage Wand':     {type:'equipment', slot:'weapon', img:'icon_wand', icon:{sheet:'moon', tile:16},  sell:95, attack:14, maxMp:20, desc:'Moon-touched focus. +14 ATK, +20 max MP.'},
+    'Tome of Legends':{type:'equipment', slot:'charm', img:'icon_book', icon:{sheet:'ruins', tile:4},  sell:120, attack:4, defense:4, maxMp:25, desc:'Every hero\'s tale, annotated. +4 ATK, +4 DEF, +25 MP.'}
   };
 
   // station: null = craft anywhere; otherwise requires that homestead station piece.
@@ -61,6 +68,9 @@
     {id:'moontea', name:'Moon Tea',        out:{item:'Moon Tea', qty:1},     ins:[['Moon Herb',2]], station:'kitchen', cat:'food'},
     {id:'crumble', name:'Courage Crumble', out:{item:'Courage Crumble', qty:1}, ins:[['Berry',2],['Flower',1],['Mushroom Cap',1]], station:'kitchen', cat:'food'},
     {id:'grilledfish', name:'Grilled Fish', out:{item:'Grilled Fish', qty:1}, ins:[['Sunfish',2]], station:'kitchen', cat:'food'},
+    {id:'honeybread', name:'Honey Bread',   out:{item:'Honey Bread', qty:1}, ins:[['Berry',2],['Mushroom Cap',1]], station:'kitchen', cat:'food'},
+    {id:'zestsoda',  name:'Zest Soda',      out:{item:'Zest Soda', qty:1},   ins:[['Berry',1],['Flower',1]], station:'kitchen', cat:'food'},
+    {id:'starelixir', name:'Star Elixir',   out:{item:'Star Elixir', qty:1}, ins:[['Moon Herb',2],['Crystal Shard',2],['Berry',1]], station:'kitchen', cat:'food'},
 
     {id:'gadgetcharm', name:'Gadget Charm', out:{item:'Gadget Charm', qty:1}, ins:[['Gear Part',2],['Plank',1]], station:'workbench', cat:'gear'},
     {id:'sword1',  name:'Crystal Sword +1',out:{item:'Crystal Sword +1', qty:1}, ins:[['Crystal Shard',3],['Plank',2]], station:'forge', cat:'gear'},
@@ -69,7 +79,9 @@
     {id:'plate',   name:'Guardian Plate',  out:{item:'Guardian Plate', qty:1}, ins:[['Stone Brick',4],['Ore Chunk',2]], station:'forge', cat:'gear'},
     {id:'cloak',   name:'Moonweave Cloak', out:{item:'Moonweave Cloak', qty:1}, ins:[['Moon Herb',4],['Flower',3],['Crystal Shard',2]], station:'forge', cat:'gear'},
     {id:'mooncharm', name:'Moon Charm',    out:{item:'Moon Charm', qty:1},   ins:[['Moon Herb',2],['Crystal Shard',2]], station:'forge', cat:'gear'},
-    {id:'crown',   name:'Relic Crown',     out:{item:'Relic Crown', qty:1},  ins:[['Ancient Relic',3],['Crystal Shard',3],['Gear Part',2]], station:'forge', cat:'gear'}
+    {id:'crown',   name:'Relic Crown',     out:{item:'Relic Crown', qty:1},  ins:[['Ancient Relic',3],['Crystal Shard',3],['Gear Part',2]], station:'forge', cat:'gear'},
+    {id:'sagewand', name:'Sage Wand',      out:{item:'Sage Wand', qty:1},    ins:[['Plank',2],['Moon Herb',3],['Crystal Shard',2]], station:'forge', cat:'gear'},
+    {id:'tome',    name:'Tome of Legends', out:{item:'Tome of Legends', qty:1}, ins:[['Ancient Relic',2],['Plank',1],['Moon Herb',2]], station:'workbench', cat:'gear'}
   ];
 
   SSG.CROPS = {
@@ -87,6 +99,9 @@
     {item:'Wood', price:6},
     {item:'Stone', price:6},
     {item:'Mushroom Cap', price:8},
+    {item:'Honey Bread', price:20},
+    {item:'Zest Soda', price:18},
+    {item:'Old Key', price:60},
     {item:'Treasure Map', price:30}
   ];
 
@@ -106,7 +121,7 @@
     slime:    [['Berry', 0.6], ['Wood', 0.3]],
     mushroom: [['Mushroom Cap', 0.9], ['Flower', 0.3]],
     bat:      [['Berry', 0.4], ['Stone', 0.4]],
-    crystal:  [['Crystal Shard', 0.8], ['Ore Chunk', 0.4]],
-    xelar:    [['Moon Herb', 0.8], ['Ancient Relic', 0.5]]
+    crystal:  [['Crystal Shard', 0.8], ['Ore Chunk', 0.4], ['Old Key', 0.05]],
+    xelar:    [['Moon Herb', 0.8], ['Ancient Relic', 0.5], ['Old Key', 0.15]]
   };
 })();
