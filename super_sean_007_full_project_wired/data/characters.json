@@ -40,7 +40,7 @@
       "name": "Xelar the Bald Wizard",
       "role": "Arch enemy",
       "theme": "Vanity and conquest",
-      "sprite": "assets/characters/xelar_portrait.png"
+      "sprite": "assets/characters/xelar_sprite.png"
     }
   ],
   "frameOrder": [

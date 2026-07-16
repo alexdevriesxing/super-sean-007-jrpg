@@ -21,7 +21,7 @@ const plans = [
     ['mushroom', 'assets/characters/enemy_mushroom.png'],
     ['bat', 'assets/characters/enemy_bat.png'],
     ['crystal', 'assets/characters/enemy_crystal.png'],
-    ['xelar', 'assets/characters/xelar_portrait.png']
+    ['xelar', 'assets/characters/xelar_sprite.png']
   ].map(([id, source]) => ({
     id,
     type: 'enemy',

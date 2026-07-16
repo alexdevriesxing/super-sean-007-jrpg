@@ -94,11 +94,11 @@
     },
     "xelar": {
       "type": "enemy",
-      "source": "assets/characters/xelar_portrait.png",
-      "frameWidth": 256,
-      "frameHeight": 256,
-      "sourceWidth": 256,
-      "sourceHeight": 256,
+      "source": "assets/characters/xelar_sprite.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "sourceWidth": 128,
+      "sourceHeight": 128,
       "frameCount": 1,
       "output": "assets/sliced/enemies/xelar"
     },
@@ -760,8 +760,8 @@
       "index": 0,
       "x": 0,
       "y": 0,
-      "width": 256,
-      "height": 256,
+      "width": 128,
+      "height": 128,
       "file": "assets/sliced/enemies/xelar/frame_00.png"
     },
     {

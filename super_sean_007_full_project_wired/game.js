@@ -18,7 +18,7 @@
     petroman: 'assets/characters/petroman_strip.png',
     haraku: 'assets/characters/haraku_strip.png',
     ruush: 'assets/characters/ruush_strip.png',
-    xelar: 'assets/characters/xelar_portrait.png',
+    xelar: 'assets/characters/xelar_sprite.png',
     portrait_sean: 'assets/characters/sean_portrait.png',
     portrait_dave: 'assets/characters/dave_portrait.png',
     portrait_haraku: 'assets/characters/haraku_portrait.png',
@@ -1239,7 +1239,7 @@
     // Lazy-load the heavy title art after boot; drawTitle falls back to a gradient meanwhile.
     const keyArt = new Image();
     keyArt.onload = () => { img.keyArtMain = keyArt; };
-    keyArt.src = 'assets/key-art-main.png';
+    keyArt.src = 'assets/key-art-main.webp';
   }
 
   bootstrap();

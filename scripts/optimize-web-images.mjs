@@ -30,3 +30,11 @@ for (const name of images) {
   console.log(`${name}.webp ${(info.size / 1024).toFixed(0)} kB`);
 }
 console.log(`Wrote ${images.length} optimized WebP images to assets/web/`);
+
+// Title-screen key art: the raw PNG is ~2.8MB; serve a 1920-wide WebP instead
+// (drawn on a 960x540 canvas, so 1920 keeps it crisp on retina displays).
+const keyArtInfo = await sharp(path.join(projectRoot, 'assets', 'key-art-main.png'))
+  .resize(1920, null, { withoutEnlargement: true })
+  .webp({ quality: 80, effort: 6 })
+  .toFile(path.join(projectRoot, 'assets', 'key-art-main.webp'));
+console.log(`key-art-main.webp ${(keyArtInfo.size / 1024).toFixed(0)} kB`);

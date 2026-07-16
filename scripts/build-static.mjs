@@ -17,6 +17,9 @@ const entries = [
 
 const omittedProductionPaths = new Set([
   path.join(projectRoot, 'assets', 'characters', 'super_sean_friends_foundation_spritesheet.png'),
+  // The raw title key art stays in the repo as the WebP source, but only the
+  // optimized assets/key-art-main.webp ships to production.
+  path.join(projectRoot, 'assets', 'key-art-main.png'),
   path.join(projectRoot, 'data', 'asset-manifest.json')
 ]);
 const generatedSourceRoot = path.join(projectRoot, 'assets', 'generated');

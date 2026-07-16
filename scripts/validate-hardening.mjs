@@ -101,17 +101,17 @@ try {
   const meta = JSON.parse(metaText);
   const facts = JSON.parse(factsText);
   if (meta.version !== facts.version) errors.push('Build metadata version does not match canonical facts.');
-  if (facts.version !== '1.3.0') errors.push(`Expected release 1.3.0, found ${facts.version}.`);
+  if (facts.version !== '1.3.1') errors.push(`Expected release 1.3.1, found ${facts.version}.`);
   if (!facts.features.some(feature => /gamepad/i.test(feature))) errors.push('Canonical facts do not mention gamepad support.');
   if (!facts.features.some(feature => /postgame epilogue/i.test(feature))) errors.push('Canonical facts do not mention the postgame epilogue.');
   if (!facts.features.some(feature => /production monitoring/i.test(feature))) errors.push('Canonical facts do not mention production monitoring.');
 } catch (error) { errors.push('Build metadata or canonical facts are invalid JSON.'); }
 
-if (!health.includes("version: '1.3.0'")) errors.push('Health endpoint does not report version 1.3.0.');
+if (!health.includes("version: '1.3.1'")) errors.push('Health endpoint does not report version 1.3.1.');
 if (!statsHtml.includes('stats.js') || !statsHtml.includes('stats.css')) errors.push('Diagnostics still contains inline application code.');
 
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Version 1.3.0 validation passed: production-only assets, automated deployment, public status, live monitoring and commercial release protections.');
+console.log('Version 1.3.1 validation passed: production-only assets, automated deployment, public status, live monitoring and commercial release protections.');

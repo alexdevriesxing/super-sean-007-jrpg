@@ -1,7 +1,7 @@
 {
   "gameTitle": "Super Sean 007: Legend of the Seven Gems",
   "shortName": "Super Sean 007",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "officialUrl": "https://www.supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
@@ -16,19 +16,81 @@
   "playerMinimum": 1,
   "playerMaximum": 4,
   "regions": [
-    {"id":"village","name":"Birthday Village","type":"hub","summary":"The cozy hub with Elder Brightbeard, Dave, Bobo's shop, Grandma Berrybun and the village crystal."},
-    {"id":"homestead","name":"Sunrise Homestead","type":"buildable base","summary":"A claimable base for building, stations, gardens, Comfort perks, visitors and landmark structures."},
-    {"id":"meadow","name":"Mushroom Meadow","type":"campaign","summary":"The first field region, where Moldor guards the Meadow Gem and the homestead deed."},
-    {"id":"cave","name":"Crystal Cave","type":"campaign","summary":"A mining cavern rich in Crystal Shards and Ore Chunks, guarded by the Cracked Crystal Guardian."},
-    {"id":"petro","name":"Petro Plains","type":"campaign","summary":"Machine-strewn plains with Gear Parts, Petroman's recruitment quest and the Petro Titan."},
-    {"id":"ruushwood","name":"Ruushwood","type":"campaign","summary":"A deep pine forest where Ruush joins after the Elder Treeguard hunt."},
-    {"id":"moon","name":"Moon Shrine","type":"campaign","summary":"A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade."},
-    {"id":"ruins","name":"Ancient Ruins","type":"campaign","summary":"The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime."},
-    {"id":"tower","name":"Bald Moon Tower","type":"campaign finale","summary":"Xelar's fortress, containing Xelar's Echo and the final main-story confrontation."},
-    {"id":"frostpeak","name":"Frostpeak Reaches","type":"postgame","summary":"An icy postgame region with elite demons, rare materials, a dedicated quest arc and the Void Succubus Queen."},
-    {"id":"sunsand","name":"Sunsand Isle","type":"postgame","summary":"A warm postgame shore with corrupted guards, a dedicated quest arc, sea creatures and the Tide Spirit Sovereign."}
+    {
+      "id": "village",
+      "name": "Birthday Village",
+      "type": "hub",
+      "summary": "The cozy hub with Elder Brightbeard, Dave, Bobo's shop, Grandma Berrybun and the village crystal."
+    },
+    {
+      "id": "homestead",
+      "name": "Sunrise Homestead",
+      "type": "buildable base",
+      "summary": "A claimable base for building, stations, gardens, Comfort perks, visitors and landmark structures."
+    },
+    {
+      "id": "meadow",
+      "name": "Mushroom Meadow",
+      "type": "campaign",
+      "summary": "The first field region, where Moldor guards the Meadow Gem and the homestead deed."
+    },
+    {
+      "id": "cave",
+      "name": "Crystal Cave",
+      "type": "campaign",
+      "summary": "A mining cavern rich in Crystal Shards and Ore Chunks, guarded by the Cracked Crystal Guardian."
+    },
+    {
+      "id": "petro",
+      "name": "Petro Plains",
+      "type": "campaign",
+      "summary": "Machine-strewn plains with Gear Parts, Petroman's recruitment quest and the Petro Titan."
+    },
+    {
+      "id": "ruushwood",
+      "name": "Ruushwood",
+      "type": "campaign",
+      "summary": "A deep pine forest where Ruush joins after the Elder Treeguard hunt."
+    },
+    {
+      "id": "moon",
+      "name": "Moon Shrine",
+      "type": "campaign",
+      "summary": "A moonlit temple with Moon Herbs, Haraku's recruitment and the Lunar Shade."
+    },
+    {
+      "id": "ruins",
+      "name": "Ancient Ruins",
+      "type": "campaign",
+      "summary": "The collapsed Gem Guardian capital, filled with relics, mechanisms and Guardian Prime."
+    },
+    {
+      "id": "tower",
+      "name": "Bald Moon Tower",
+      "type": "campaign finale",
+      "summary": "Xelar's fortress, containing Xelar's Echo and the final main-story confrontation."
+    },
+    {
+      "id": "frostpeak",
+      "name": "Frostpeak Reaches",
+      "type": "postgame",
+      "summary": "An icy postgame region with elite demons, rare materials, a dedicated quest arc and the Void Succubus Queen."
+    },
+    {
+      "id": "sunsand",
+      "name": "Sunsand Isle",
+      "type": "postgame",
+      "summary": "A warm postgame shore with corrupted guards, a dedicated quest arc, sea creatures and the Tide Spirit Sovereign."
+    }
   ],
-  "characters": ["Super Sean", "Dave", "Petroman", "Haraku", "Ruush", "Xelar the Bald Wizard"],
+  "characters": [
+    "Super Sean",
+    "Dave",
+    "Petroman",
+    "Haraku",
+    "Ruush",
+    "Xelar the Bald Wizard"
+  ],
   "features": [
     "HTML5 Canvas browser play",
     "turn-based party battles",
