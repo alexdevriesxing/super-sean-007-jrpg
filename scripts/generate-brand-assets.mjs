@@ -38,4 +38,67 @@ await img.resize(192, 192, {fit: 'cover'}).png().toFile(path.join(projectRoot, '
 img = await cropFraction(mapSheet, 0.014, 0.605, 0.366, 0.898);
 await img.resize(1280).webp({quality: 80, effort: 6}).toFile(path.join(projectRoot, 'assets', 'ui', 'world_map_art.webp'));
 
+// 5) Region preview strip for world.html: five real battle-background crops
+//    (replaces the old collage of placeholder tilesets).
+const REGIONS = [
+  ['village', 'Birthday Village'],
+  ['meadow', 'Mushroom Meadow'],
+  ['crystalcave', 'Crystal Cave'],
+  ['arena_machine', 'Petro Plains'],
+  ['moonshrine', 'Moon Shrine']
+];
+const CARD = 224, GAP = 16, STRIP_W = REGIONS.length * CARD + (REGIONS.length - 1) * GAP;
+const roundedMask = Buffer.from(
+  `<svg width="${CARD}" height="${CARD}"><rect width="${CARD}" height="${CARD}" rx="16" fill="#fff"/></svg>`
+);
+const cards = [];
+const labels = [];
+for (let i = 0; i < REGIONS.length; i++) {
+  const [bg, label] = REGIONS[i];
+  const card = await sharp(path.join(projectRoot, 'assets', 'battle', `${bg}.webp`))
+    .resize(CARD, CARD, {fit: 'cover'})
+    .composite([{input: roundedMask, blend: 'dest-in'}])
+    .png().toBuffer();
+  const x = i * (CARD + GAP);
+  cards.push({input: card, left: x, top: 0});
+  labels.push(
+    `<text x="${x + CARD / 2}" y="${CARD - 16}" text-anchor="middle" font-family="Nunito, Arial, sans-serif" ` +
+    `font-size="21" font-weight="800" fill="#ffffff" stroke="#12365a" stroke-width="3.5" paint-order="stroke">${label}</text>`
+  );
+}
+cards.push({
+  input: Buffer.from(`<svg width="${STRIP_W}" height="${CARD}">${labels.join('')}</svg>`),
+  left: 0, top: 0
+});
+await sharp({create: {width: STRIP_W, height: CARD, channels: 4, background: {r: 0, g: 0, b: 0, alpha: 0}}})
+  .composite(cards)
+  .webp({quality: 82, effort: 6})
+  .toFile(path.join(projectRoot, 'assets', 'ui', 'region_preview_strip.webp'));
+
+// 6) favicon.ico from the real Sean-face icon: an ICO container holding
+//    PNG-compressed 48/32/16 entries (supported by every modern browser).
+async function icoFromPng(sizes) {
+  const source = path.join(projectRoot, 'assets', 'icon-192.png');
+  const pngs = [];
+  for (const size of sizes) {
+    pngs.push({size, data: await sharp(source).resize(size, size).png().toBuffer()});
+  }
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(pngs.length, 4);
+  const entries = [];
+  let offset = 6 + pngs.length * 16;
+  for (const {size, data} of pngs) {
+    const entry = Buffer.alloc(16);
+    entry.writeUInt8(size === 256 ? 0 : size, 0);
+    entry.writeUInt8(size === 256 ? 0 : size, 1);
+    entry.writeUInt16LE(1, 4); entry.writeUInt16LE(32, 6);
+    entry.writeUInt32LE(data.length, 8); entry.writeUInt32LE(offset, 12);
+    entries.push(entry);
+    offset += data.length;
+  }
+  return Buffer.concat([header, ...entries, ...pngs.map(p => p.data)]);
+}
+const {writeFile} = await import('node:fs/promises');
+await writeFile(path.join(projectRoot, 'favicon.ico'), await icoFromPng([48, 32, 16]));
+
 console.log('Brand assets generated from real pack art.');
