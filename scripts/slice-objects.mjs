@@ -120,7 +120,14 @@ const JOBS = [
   ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [124, 570, 76, 96], 'deco_pedestal'],
   ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [1314, 462, 91, 92], 'deco_portal'],
   ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [644, 17, 67, 88], 'deco_barrel'],
-  ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [1315, 17, 117, 90], 'deco_minecart']
+  ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [1315, 17, 117, 90], 'deco_minecart'],
+  // Townhouses + castle towers from the kingdom pack (village scenery + landmarks)
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [983, 890, 115, 100], 'obj_house_blue'],
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [1115, 891, 127, 99], 'obj_house_stone'],
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [1261, 890, 74, 100], 'obj_house_red'],
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [1349, 892, 87, 98], 'obj_house_shop'],
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [585, 15, 61, 115], 'obj_castle_tower'],
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [957, 15, 114, 115], 'obj_royal_castle']
 ];
 
 for (const [sheet, box, name] of JOBS) {

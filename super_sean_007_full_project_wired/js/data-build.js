@@ -48,7 +48,13 @@
     {id:'lm_snowlodge',  name:'Snow Lodge',   sprite:'obj_snowlodge',     cost:{'Plank':8,'Stone':5}, comfort:10},
     {id:'lm_fountain',   name:'Fountain',     sprite:'obj_fountain',      cost:{'Stone Brick':6,'Crystal Shard':2}, comfort:12},
     {id:'lm_gazebo',     name:'Gazebo',       sprite:'obj_gazebo',        cost:{'Plank':6,'Stone Brick':4}, comfort:10},
-    {id:'lm_well',       name:'Stone Well',   sprite:'obj_well',          cost:{'Stone Brick':5,'Wood':3}, comfort:7}
+    {id:'lm_well',       name:'Stone Well',   sprite:'obj_well',          cost:{'Stone Brick':5,'Wood':3}, comfort:7},
+    {id:'lm_bluemanor',  name:'Blue Manor',   sprite:'obj_house_blue',    cost:{'Plank':8,'Stone Brick':6}, comfort:12},
+    {id:'lm_townhouse',  name:'Stone Townhouse', sprite:'obj_house_stone',cost:{'Stone Brick':8,'Plank':5}, comfort:12},
+    {id:'lm_chalet',     name:'Red Chalet',   sprite:'obj_house_red',     cost:{'Plank':7,'Stone Brick':5}, comfort:11},
+    {id:'lm_emporium',   name:'Purple Emporium', sprite:'obj_house_shop', cost:{'Plank':8,'Berry':4,'Crystal Shard':2}, comfort:13},
+    {id:'lm_castletower',name:'Castle Tower', sprite:'obj_castle_tower',  cost:{'Stone Brick':10,'Ore Chunk':3}, comfort:13},
+    {id:'lm_royalcastle',name:'Royal Castle', sprite:'obj_royal_castle',  cost:{'Stone Brick':16,'Crystal Shard':5,'Ancient Relic':2}, comfort:22}
   ].map(p => ({...p, cat:'Landmarks', billboard:true, solid:true}));
 
   // solid: blocks walking. comfort: homestead score. cost: materials per tile.

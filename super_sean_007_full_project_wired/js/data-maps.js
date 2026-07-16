@@ -106,6 +106,14 @@
     rect(m, 14, 15, 18, 15, 5); m.tiles[15][16] = 5;
     m.tiles[6][14] = 14; m.tiles[10][23] = 14;
     scatter(m, rng, [8], 8); scatter(m, rng, [9], 5);
+    // Real building art over the solid house blocks (blocking comes from the tiles).
+    m.props = [
+      {sprite:'obj_house_blue',  tx:7,  ty:4,  size:150},   // elder hall row west
+      {sprite:'obj_house_stone', tx:9,  ty:4,  size:140},   // elder hall row middle
+      {sprite:'obj_house_red',   tx:11, ty:4,  size:145},   // elder hall row east
+      {sprite:'obj_bakery',      tx:17, ty:6,  size:150},   // bakery
+      {sprite:'obj_house_shop',  tx:4,  ty:13, size:190}    // Bobo's trading post
+    ];
     m.npcs = [
       {id:'elder', name:'Elder Brightbeard', char:'xelar', sprite:'npc_elder_man', x:9*T+32, y:5*T+20, role:'Keeper of village legends'},
       {id:'dave', name:'Dave', char:'dave', x:12*T+10, y:9*T+50, role:'Best friend and gadget genius', hideWhenParty:'dave'},

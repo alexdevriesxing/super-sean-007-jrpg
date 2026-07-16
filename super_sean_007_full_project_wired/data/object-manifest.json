@@ -47,6 +47,12 @@
     "deco_pedestal",
     "deco_portal",
     "deco_barrel",
-    "deco_minecart"
+    "deco_minecart",
+    "obj_house_blue",
+    "obj_house_stone",
+    "obj_house_red",
+    "obj_house_shop",
+    "obj_castle_tower",
+    "obj_royal_castle"
   ]
 }

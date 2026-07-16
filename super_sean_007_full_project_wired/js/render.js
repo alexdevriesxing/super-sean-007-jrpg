@@ -72,6 +72,10 @@
         ctx.drawTile(m.tileset, m.tiles[y][x], x * T - cam.x, y * T - cam.y);
       }
       if (m.id === 'homestead') drawHomesteadOverlays(m, cam);
+      // Static scenery billboards (real building art anchored over solid tile blocks).
+      for (const prop of m.props || []) {
+        drawBillboard(prop.sprite, prop.tx * T - cam.x, prop.ty * T - cam.y, prop.size || 120);
+      }
       drawNodes(m, cam);
       for (const portal of m.portals) {
         const x = portal.x - cam.x, y = portal.y - cam.y;
@@ -850,6 +854,9 @@
         for (let x = x0; x < Math.min(m.w, x0 + Math.ceil(GAME_W / T) + 2); x++) {
           ctx.drawTile(m.tileset, m.tiles[y][x], x * T - cam.x, y * T - cam.y);
         }
+      }
+      for (const prop of m.props || []) {
+        drawBillboard(prop.sprite, prop.tx * T - cam.x, prop.ty * T - cam.y, prop.size || 120);
       }
       const inactive = new Set(r.nodesInactive || []);
       for (const node of m.nodes || []) {
