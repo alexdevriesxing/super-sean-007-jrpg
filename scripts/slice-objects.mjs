@@ -107,7 +107,20 @@ const JOBS = [
   [B, [868, 1016, 62, 70], 'deco_flowerpot'],
   [B, [1382, 932, 52, 60], 'deco_signpost'],
   [B, [1190, 996, 60, 54], 'deco_marketstall'],
-  [B, [1340, 998, 56, 52], 'deco_bush']
+  [B, [1340, 998, 56, 52], 'deco_bush'],
+  // Props from the generated tileset packs (cozy collection, desert, ice, objects)
+  ['tilesets/gezellige_rpg_game_tileset_collectie.png', [946, 725, 74, 53], 'deco_bench'],
+  ['tilesets/gezellige_rpg_game_tileset_collectie.png', [774, 725, 75, 62], 'deco_cookpot'],
+  ['tilesets/gezellige_rpg_game_tileset_collectie.png', [548, 725, 56, 66], 'deco_stonelantern'],
+  ['tilesets/kleurrijke_desert_en_tropische_game_tileset.png', [13, 626, 101, 83], 'deco_tent'],
+  ['tilesets/kleurrijke_desert_en_tropische_game_tileset.png', [93, 420, 70, 76], 'deco_palm'],
+  ['tilesets/kleurrijke_desert_en_tropische_game_tileset.png', [941, 424, 57, 66], 'deco_cactus'],
+  ['tilesets/ijs_en_kristalbiome_tileset.png', [762, 740, 83, 66], 'deco_icearch'],
+  ['tilesets/ijs_en_kristalbiome_tileset.png', [858, 740, 51, 68], 'deco_froststatue'],
+  ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [124, 570, 76, 96], 'deco_pedestal'],
+  ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [1314, 462, 91, 92], 'deco_portal'],
+  ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [644, 17, 67, 88], 'deco_barrel'],
+  ['tilesets/spellenobjecten_en_terrein_voor_rpg.png', [1315, 17, 117, 90], 'deco_minecart']
 ];
 
 for (const [sheet, box, name] of JOBS) {

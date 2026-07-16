@@ -173,7 +173,11 @@ const TILESETS = {
       4: t('cozy', [14, 810, 56, 69], { brightness: 0.7, saturation: 0.8, hue: 215 }), // rock wall
       5: o('cozy', [1332, 555, 85, 65], { scale: 0.95 }),             // ore boulder pile
       6: o('ijs', [1244, 180, 63, 47], { scale: 0.95 }),              // geode pool
-      7: o('cozy', [1113, 725, 62, 58], { scale: 0.9 })               // stalagmite stack
+      7: o('cozy', [1113, 725, 62, 58], { scale: 0.9 }),              // stalagmite stack
+      8: o('cozy', [922, 565, 47, 58], { scale: 0.8 }),               // purple crystal
+      9: o('cozy', [988, 561, 49, 61], { scale: 0.8 }),               // green crystal
+      10: o('cozy', [1031, 646, 37, 46], { scale: 0.7 }),             // glow mushroom
+      11: o('cozy', [639, 577, 49, 45], { scale: 0.8 })               // scattered rocks
     }
   },
   petro: {
@@ -186,7 +190,11 @@ const TILESETS = {
       4: o('spellen', [745, 474, 82, 84], { scale: 0.92 }),           // scrap machine cannon
       5: PLANKS,
       6: o('spellen', [327, 475, 85, 80], { scale: 0.92 }),           // gear / saw block
-      7: o('spellen', [147, 474, 70, 76], { scale: 0.9 })             // hazard spikes
+      7: o('spellen', [147, 474, 70, 76], { scale: 0.9 }),            // hazard spikes
+      8: o('spellen', [557, 17, 71, 88], { scale: 0.85 }),            // oil barrel
+      9: o('spellen', [726, 20, 74, 83], { scale: 0.85 }),            // supply crate
+      10: o('spellen', [1315, 17, 117, 90], { scale: 0.95 }),         // mine cart
+      11: o('cozy', [1332, 555, 85, 65], { scale: 0.9 })              // rubble pile
     }
   },
   ruushwood: {
@@ -199,7 +207,11 @@ const TILESETS = {
       4: o('cozy', [177, 573, 74, 52], { scale: 0.9 }),               // fallen log
       5: o('cozy', [13, 354, 74, 88], { scale: 0.97 }),               // great hill cliff
       6: t('ijs', [82, 8, 67, 68]),                                   // cloud bank
-      7: o('cozy', [181, 452, 71, 102], { scale: 0.97 })              // great pine
+      7: o('cozy', [181, 452, 71, 102], { scale: 0.97 }),             // great pine
+      8: o('cozy', [95, 452, 79, 102], { scale: 0.97 }),              // round tree
+      9: o('cozy', [433, 451, 77, 102], { scale: 0.97 }),             // autumn tree
+      10: o('cozy', [1227, 476, 60, 67]),                             // berry bush
+      11: o('cozy', [976, 649, 37, 43], { scale: 0.7 })               // red mushroom
     }
   },
   moon: {
@@ -212,7 +224,11 @@ const TILESETS = {
       4: o('ijs', [15, 650, 50, 65], { scale: 0.85 }),                // dream tablet
       5: o('ijs', [1126, 342, 44, 64], { scale: 0.9 }),               // crystal sigil spire
       6: o('ijs', [1313, 180, 65, 49], { scale: 0.97 }),              // star pool
-      7: t('ijs', [1212, 563, 56, 64])                                // rune slab
+      7: t('ijs', [1212, 563, 56, 64]),                               // rune slab
+      8: o('ijs', [775, 343, 58, 62], { scale: 0.85 }),               // ice crystals
+      9: o('ijs', [844, 340, 56, 65], { scale: 0.85 }),               // frost bush
+      10: t('ijs', [165, 563, 57, 61]),                               // ornate floor variant
+      11: o('ijs', [923, 740, 51, 66], { scale: 0.9 })                // moon monument
     }
   },
   ruins: {
@@ -225,7 +241,11 @@ const TILESETS = {
       4: o('desert', [938, 967, 84, 88], { scale: 0.95 }),            // sun dial idol
       5: GRAVEL,                                                      // moss path
       6: o('desert', [542, 630, 47, 73], { scale: 0.95 }),            // gold pillar
-      7: o('desert', [964, 630, 63, 75], { scale: 0.95 })             // broken block
+      7: o('desert', [964, 630, 63, 75], { scale: 0.95 }),            // broken block
+      8: o('desert', [93, 420, 70, 76], { scale: 0.95 }),             // palm tree
+      9: o('desert', [941, 424, 57, 66], { scale: 0.9 }),             // cactus
+      10: o('spellen', [986, 22, 65, 76], { scale: 0.8 }),            // clay pot
+      11: o('desert', [13, 882, 67, 70], { scale: 0.85 })             // hibiscus flowers
     }
   },
   tower: {
@@ -238,7 +258,11 @@ const TILESETS = {
       4: o('kasteel', [838, 409, 44, 71], { scale: 0.95 }),           // dome statue
       5: o('spellen', [20, 570, 71, 96], { scale: 0.95 }),            // X sigil crystal
       6: t('kasteel', [105, 15, 70, 85]),                             // striped keep wall
-      7: o('kasteel', [663, 15, 65, 115], { scale: 0.98 })            // spire
+      7: o('kasteel', [663, 15, 65, 115], { scale: 0.98 }),           // spire
+      8: o('kasteel', [12, 311, 30, 77], { scale: 0.95 }),            // stone pillar
+      9: o('kasteel', [792, 320, 34, 75], { scale: 0.9 }),            // war banner variant
+      10: o('kasteel', [945, 410, 41, 71], { scale: 0.9 }),           // gargoyle statue
+      11: t('kasteel', [728, 491, 73, 73])                            // royal blue carpet
     }
   }
 };

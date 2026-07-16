@@ -35,6 +35,18 @@
     "deco_flowerpot",
     "deco_signpost",
     "deco_marketstall",
-    "deco_bush"
+    "deco_bush",
+    "deco_bench",
+    "deco_cookpot",
+    "deco_stonelantern",
+    "deco_tent",
+    "deco_palm",
+    "deco_cactus",
+    "deco_icearch",
+    "deco_froststatue",
+    "deco_pedestal",
+    "deco_portal",
+    "deco_barrel",
+    "deco_minecart"
   ]
 }

@@ -9,12 +9,12 @@
   SSG.SOLID_TILES = {
     birthday: new Set([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 20, 21, 22, 23, 24, 25, 26]),
     meadow:   new Set([5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19]),
-    cave:     new Set([3, 4, 5, 6, 7]),
-    petro:    new Set([3, 4, 6, 7]),
-    ruushwood:new Set([2, 4, 5, 6, 7]),
-    moon:     new Set([4, 5, 6, 7]),
-    ruins:    new Set([3, 4, 6, 7]),
-    tower:    new Set([4, 5, 6, 7])
+    cave:     new Set([3, 4, 5, 6, 7, 8, 9, 11]),
+    petro:    new Set([3, 4, 6, 7, 8, 9, 10, 11]),
+    ruushwood:new Set([2, 4, 5, 6, 7, 8, 9, 10]),
+    moon:     new Set([4, 5, 6, 7, 8, 9, 11]),
+    ruins:    new Set([3, 4, 6, 7, 8, 9, 10]),
+    tower:    new Set([4, 5, 6, 7, 8, 9, 10])
   };
 
   // Gatherable node types. yields: item -> [min,max]. respawn in ms, hits to break.
@@ -205,6 +205,7 @@
     rect(m, 8, 5, 9, 12, 4); rect(m, 18, 3, 19, 10, 4);   // rock ridges
     rect(m, 13, 14, 16, 15, 6);                            // geode pools
     scatter(m, rng, [7], 6);
+    scatter(m, rng, [8, 9], 7); scatter(m, rng, [10], 5); scatter(m, rng, [11], 4);
     node(m, 'crystal', 4, 4); node(m, 'crystal', 12, 9); node(m, 'crystal', 24, 5); node(m, 'crystal', 21, 14);
     node(m, 'ore', 6, 13); node(m, 'ore', 15, 4); node(m, 'ore', 26, 11); node(m, 'ore', 11, 15);
     node(m, 'rock', 17, 12);
@@ -231,6 +232,7 @@
     rect(m, 6, 8, 27, 8, 5); rect(m, 16, 8, 16, 16, 5);   // plank roads
     rect(m, 10, 3, 13, 4, 7); rect(m, 22, 13, 24, 14, 7); // hazard blocks
     m.tiles[5][28] = 3; m.tiles[15][6] = 3;               // furnace emblems
+    scatter(m, rng, [8, 9], 6); scatter(m, rng, [10], 2); scatter(m, rng, [11], 4);
     node(m, 'gear', 4, 5); node(m, 'gear', 19, 12); node(m, 'gear', 29, 16); node(m, 'gear', 8, 15);
     node(m, 'scrap', 14, 6); node(m, 'scrap', 25, 4); node(m, 'scrap', 30, 10);
     node(m, 'rock', 20, 16); node(m, 'rock', 5, 11);
@@ -256,6 +258,7 @@
     border(m, 5);
     rect(m, 12, 4, 12, 15, 2); rect(m, 13, 4, 14, 4, 2);  // stream
     scatter(m, rng, [3], 8); scatter(m, rng, [6], 5);
+    scatter(m, rng, [8, 9], 8); scatter(m, rng, [10], 5); scatter(m, rng, [11], 4);
     node(m, 'pine', 5, 5); node(m, 'pine', 9, 12); node(m, 'pine', 18, 7); node(m, 'pine', 24, 15); node(m, 'pine', 28, 5);
     node(m, 'logpile', 7, 16); node(m, 'logpile', 21, 11); node(m, 'logpile', 30, 12);
     node(m, 'mushroom', 16, 14); node(m, 'flower', 26, 9); node(m, 'berry', 10, 3);
@@ -288,6 +291,7 @@
     rect(m, 13, 5, 14, 7, 6);                            // star pools (shrine heart)
     m.tiles[6][13] = 0; m.tiles[6][14] = 0;
     scatter(m, rng, [4], 4);
+    scatter(m, rng, [8, 9], 6); scatter(m, rng, [10], 6); scatter(m, rng, [11], 3);
     node(m, 'moonherb', 4, 4); node(m, 'moonherb', 22, 5); node(m, 'moonherb', 7, 13); node(m, 'moonherb', 19, 14); node(m, 'moonherb', 24, 11);
     node(m, 'rock', 9, 9);
     mon(m, {id:'starslime', kind:'slime', name:'Star Slime', x:8*T, y:6*T, hp:150, atk:23, xp:65, coins:42, hue:300, sprite:'mob_fairy_moth'});
@@ -317,6 +321,7 @@
     rect(m, 10, 8, 19, 8, 5);                             // moss avenue
     m.tiles[3][14] = 3; m.tiles[3][15] = 3;               // sealed door slabs
     scatter(m, rng, [7], 5);
+    scatter(m, rng, [8], 4); scatter(m, rng, [10, 11], 5);
     node(m, 'relic', 4, 15); node(m, 'relic', 14, 5); node(m, 'relic', 26, 14); node(m, 'relic', 20, 12);
     node(m, 'rock', 9, 14); node(m, 'ore', 27, 4);
     mon(m, {id:'relicgolem', kind:'crystal', name:'Relic Golem', x:9*T, y:6*T, hp:200, atk:28, xp:85, coins:56, hue:120, sprite:'mob_skull_knight'});
@@ -345,6 +350,7 @@
     m.tiles[8][12] = 2; m.tiles[8][13] = 2;               // gate gaps
     m.tiles[2][3] = 3; m.tiles[13][22] = 3;               // banners
     scatter(m, rng, [5], 4); scatter(m, rng, [4], 3);
+    scatter(m, rng, [8], 4); scatter(m, rng, [9], 3); scatter(m, rng, [10], 3); scatter(m, rng, [11], 4);
     mon(m, {id:'shadowslime', kind:'slime', name:'Horned Imp', x:6*T, y:5*T, hp:220, atk:30, xp:95, coins:62, sprite:'mob_horned_imp'});
     mon(m, {id:'voidbat', kind:'bat', name:'Hellhound', x:8*T, y:12*T, hp:200, atk:31, xp:98, coins:64, sprite:'mob_hellhound'});
     mon(m, {id:'darkcrystal', kind:'crystal', name:'Void Succubus', x:17*T, y:5*T, hp:250, atk:33, xp:105, coins:70, sprite:'mob_void_succubus'});
@@ -372,6 +378,7 @@
     border(m, 5);
     rect(m, 10, 3, 10, 14, 2); rect(m, 11, 8, 20, 8, 2);   // icy paths
     scatter(m, rng, [3], 6);
+    scatter(m, rng, [8, 9], 8); scatter(m, rng, [11], 3);
     node(m, 'moonherb', 5, 5); node(m, 'moonherb', 24, 12);
     node(m, 'crystal', 8, 12); node(m, 'crystal', 22, 4);
     node(m, 'ore', 26, 7); node(m, 'rock', 4, 10);
@@ -404,6 +411,7 @@
     border(m, 6);
     rect(m, 4, 9, 26, 9, 5);   // sunlit shore strip
     scatter(m, rng, [7], 5);
+    scatter(m, rng, [8], 10); scatter(m, rng, [9], 5); scatter(m, rng, [11], 6);
     node(m, 'relic', 6, 5); node(m, 'relic', 24, 13);
     node(m, 'ore', 22, 5); node(m, 'rock', 8, 13); node(m, 'crystal', 14, 4);
     mon(m, {id:'ss_crab', kind:'crystal', name:'Shell Crab', x:8*T, y:6*T, hp:300, atk:36, xp:130, coins:85, sprite:'mob_shell_crab'});

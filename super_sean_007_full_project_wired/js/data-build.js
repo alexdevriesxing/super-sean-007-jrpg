@@ -5,12 +5,18 @@
                14 sign, 16-19 bridge planks, 20 chest, 21 crystal, 22-26 stone walls, 27-31 grass
      meadow:   4 dirt, 5 water, 6-9 mushrooms, 10 tree, 11 bush, 12 log, 13 stump,
                14 flower ring, 15 sprout, 16 rock, 17 lamp post, 18 potion block, 19 chest
-     cave:     3 crystal, 4 rock wall, 5 ore vein, 6 geode pool, 7 stalagmite
-     petro:    3 stove emblem, 4 machine, 5 plank floor, 6 gear block, 7 hazard block
-     ruushwood:3 wind arc, 4 log rail, 5 great hill, 6 cloud, 7 pine tree
-     moon:     3 moon emblem, 4 dream tablet, 5 pyramid sigil, 6 star pool, 7 rune slab
-     ruins:    2 moss floor, 3 door slab, 4 sun dial, 5 moss path, 6 gold pillars, 7 broken block
-     tower:    2 crimson floor, 3 banner, 4 dome statue, 5 X sigil, 6 striped wall, 7 spire */
+     cave:     3 crystal, 4 rock wall, 5 ore vein, 6 geode pool, 7 stalagmite,
+               8 purple crystal, 9 green crystal, 10 glow mushroom, 11 rocks
+     petro:    3 stove emblem, 4 machine, 5 plank floor, 6 gear block, 7 hazard block,
+               8 barrel, 9 crate, 10 mine cart, 11 rubble
+     ruushwood:3 wind arc, 4 log rail, 5 great hill, 6 cloud, 7 pine tree,
+               8 round tree, 9 autumn tree, 10 berry bush, 11 red mushroom
+     moon:     3 moon emblem, 4 dream tablet, 5 pyramid sigil, 6 star pool, 7 rune slab,
+               8 ice crystals, 9 frost bush, 10 ornate floor, 11 moon monument
+     ruins:    2 moss floor, 3 door slab, 4 sun dial, 5 moss path, 6 gold pillars, 7 broken block,
+               8 palm tree, 9 cactus, 10 clay pot, 11 hibiscus
+     tower:    2 crimson floor, 3 banner, 4 dome statue, 5 X sigil, 6 striped wall, 7 spire,
+               8 stone pillar, 9 war banner, 10 gargoyle statue, 11 blue carpet */
 (() => {
   'use strict';
   window.SSG = window.SSG || {};
@@ -111,7 +117,19 @@
     {id:'dc_campfire',    name:'Campfire',      sprite:'deco_campfire',     cost:{'Wood':2,'Stone':1}, comfort:3},
     {id:'dc_crystalblue', name:'Blue Crystal',  sprite:'deco_crystalblue',  cost:{'Crystal Shard':2}, comfort:4},
     {id:'dc_crystalpurple',name:'Moon Crystal', sprite:'deco_crystalpurple',cost:{'Crystal Shard':1,'Moon Herb':1}, comfort:4},
-    {id:'dc_rocks',       name:'Rock Pile',     sprite:'deco_rocks',        cost:{'Stone':2}, comfort:1}
+    {id:'dc_rocks',       name:'Rock Pile',     sprite:'deco_rocks',        cost:{'Stone':2}, comfort:1},
+    {id:'dc_bench',       name:'Park Bench',    sprite:'deco_bench',        cost:{'Plank':2}, comfort:3},
+    {id:'dc_cookpot',     name:'Camp Kitchen',  sprite:'deco_cookpot',      cost:{'Wood':2,'Ore Chunk':1}, comfort:3},
+    {id:'dc_stonelantern',name:'Stone Lantern', sprite:'deco_stonelantern', cost:{'Stone Brick':2}, comfort:3},
+    {id:'dc_tent',        name:'Camp Tent',     sprite:'deco_tent',         cost:{'Plank':2,'Wood':2}, comfort:4},
+    {id:'dc_palm',        name:'Palm Tree',     sprite:'deco_palm',         cost:{'Wood':3}, comfort:3},
+    {id:'dc_cactus',      name:'Desert Cactus', sprite:'deco_cactus',       cost:{'Wood':1,'Flower':1}, comfort:2},
+    {id:'dc_icearch',     name:'Ice Arch',      sprite:'deco_icearch',      cost:{'Crystal Shard':2,'Stone Brick':2}, comfort:5},
+    {id:'dc_froststatue', name:'Frost Statue',  sprite:'deco_froststatue',  cost:{'Stone Brick':2,'Crystal Shard':1}, comfort:4},
+    {id:'dc_pedestal',    name:'Crystal Pedestal', sprite:'deco_pedestal',  cost:{'Stone Brick':2,'Crystal Shard':2}, comfort:5},
+    {id:'dc_portal',      name:'Mystic Basin',  sprite:'deco_portal',       cost:{'Stone Brick':3,'Crystal Shard':2,'Moon Herb':1}, comfort:6},
+    {id:'dc_barrel',      name:'Storage Barrel',sprite:'deco_barrel',       cost:{'Plank':2}, comfort:1},
+    {id:'dc_minecart',    name:'Mine Cart',     sprite:'deco_minecart',     cost:{'Ore Chunk':2,'Plank':1}, comfort:3}
   ].map(p => ({...p, cat:'Decor', billboard:true, bsize:64, solid:true}));
 
   // Detailed billboard landmarks + decor join the piece list so build/comfort systems find them.
