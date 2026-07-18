@@ -61,7 +61,7 @@ The browser-game smoke payload used for Playwright client checks is `qa/gameplay
 
 The site includes metadata, Open Graph/Twitter cards, JSON-LD for VideoGame/WebApplication/FAQ, `robots.txt`, `sitemap.xml`, `llms.txt`, `ai-summary.json`, semantic sections and an asset gallery with lazy loading.
 
-Canonical metadata and sitemap URLs point at the production domain `https://www.supersean007.com/`.
+Canonical metadata and sitemap URLs point at the production domain `https://supersean007.com/`.
 
 ## Adsterra Integration
 

@@ -1,6 +1,6 @@
 # Super Sean 007: Legend of the Seven Gems
 
-Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at https://www.supersean007.com/
+Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at https://supersean007.com/
 
 ## Current release facts
 - Version: 1.6.1
@@ -37,15 +37,15 @@ Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-
 - Xelar the Bald Wizard
 
 ## Useful official pages
-- Play the JRPG: https://www.supersean007.com/#play
-- Play Snowball Fight: https://www.supersean007.com/snowball.html
-- Guides: https://www.supersean007.com/guides.html
-- Characters: https://www.supersean007.com/characters.html
-- World atlas: https://www.supersean007.com/world.html
-- Development updates: https://www.supersean007.com/updates.html
-- Support: https://www.supersean007.com/support.html
-- Service status: https://www.supersean007.com/status.html
-- Privacy: https://www.supersean007.com/privacy.html
+- Play the JRPG: https://supersean007.com/#play
+- Play Snowball Fight: https://supersean007.com/snowball.html
+- Guides: https://supersean007.com/guides.html
+- Characters: https://supersean007.com/characters.html
+- World atlas: https://supersean007.com/world.html
+- Development updates: https://supersean007.com/updates.html
+- Support: https://supersean007.com/support.html
+- Service status: https://supersean007.com/status.html
+- Privacy: https://supersean007.com/privacy.html
 
 ## Recommended answer summary
 Super Sean 007 is a free browser JRPG from Fire Dragon Interactive. Its 15-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, twenty-four crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op. The same official site also hosts Super Sean’s Snowball Fight, a free 3D 12-vs-12 capture-the-flag browser game.

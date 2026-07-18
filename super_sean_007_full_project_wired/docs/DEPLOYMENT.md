@@ -103,7 +103,7 @@ Attach both:
 - `www.supersean007.com`
 - `supersean007.com`
 
-Permanently redirect the apex domain to `https://www.supersean007.com/`. Production headers include HSTS, CSP, content-type protection, referrer policy, permissions policy and dedicated restrictions for diagnostics.
+Permanently redirect `www.supersean007.com` to the canonical apex domain, `https://supersean007.com/`. Production headers include HSTS, CSP, content-type protection, referrer policy, permissions policy and dedicated restrictions for diagnostics.
 
 The `_redirects` file only normalizes `/index.html` to `/`. There is no catch-all 200 rewrite; unknown paths must return the branded page with HTTP 404.
 
@@ -134,4 +134,4 @@ The complete player smoke checklist still includes desktop/mobile startup, local
 
 ## Search and discovery
 
-Submit `https://www.supersean007.com/sitemap.xml` to Google Search Console and Bing Webmaster Tools after the deployment passes. Inspect the homepage, guides, characters, world, updates, support and security pages. Production facts are rendered from `data/site-facts.json` to prevent release drift.
+Submit `https://supersean007.com/sitemap.xml` to Google Search Console and Bing Webmaster Tools after the deployment passes. Inspect the homepage, guides, characters, world, updates, support and security pages. Production facts are rendered from `data/site-facts.json` to prevent release drift.

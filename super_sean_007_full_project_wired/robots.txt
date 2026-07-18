@@ -13,4 +13,4 @@ Allow: /
 Disallow: /api/
 Disallow: /stats.html
 
-Sitemap: https://www.supersean007.com/sitemap.xml
+Sitemap: https://supersean007.com/sitemap.xml

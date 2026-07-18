@@ -3,7 +3,7 @@
   "short_name": "Super Sean 007",
   "software_version": "1.6.1",
   "last_updated": "2026-07-18",
-  "official_url": "https://www.supersean007.com/",
+  "official_url": "https://supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
     "url": "https://www.firedragoninteractive.com/"
@@ -155,15 +155,15 @@
   ],
   "privacy": "Progress is local by default. Cloud Sync is optional. Third-party banner and native ads load automatically inside sandboxed frames; the Adsterra Social Bar loads directly. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
   "key_pages": {
-    "play": "https://www.supersean007.com/#play",
-    "snowball": "https://www.supersean007.com/snowball.html",
-    "guides": "https://www.supersean007.com/guides.html",
-    "characters": "https://www.supersean007.com/characters.html",
-    "world": "https://www.supersean007.com/world.html",
-    "updates": "https://www.supersean007.com/updates.html",
-    "support": "https://www.supersean007.com/support.html",
-    "status": "https://www.supersean007.com/status.html",
-    "privacy": "https://www.supersean007.com/privacy.html",
-    "security": "https://www.supersean007.com/security-policy.html"
+    "play": "https://supersean007.com/#play",
+    "snowball": "https://supersean007.com/snowball.html",
+    "guides": "https://supersean007.com/guides.html",
+    "characters": "https://supersean007.com/characters.html",
+    "world": "https://supersean007.com/world.html",
+    "updates": "https://supersean007.com/updates.html",
+    "support": "https://supersean007.com/support.html",
+    "status": "https://supersean007.com/status.html",
+    "privacy": "https://supersean007.com/privacy.html",
+    "security": "https://supersean007.com/security-policy.html"
   }
 }

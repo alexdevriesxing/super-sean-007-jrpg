@@ -5,7 +5,7 @@ const args = Object.fromEntries(process.argv.slice(2).map(value => {
   return [key, rest.length ? rest.join('=') : 'true'];
 }));
 const pkg = JSON.parse(await readFile('package.json', 'utf8'));
-const baseUrl = String(args.url || process.env.PRODUCTION_URL || 'https://www.supersean007.com').replace(/\/$/, '');
+const baseUrl = String(args.url || process.env.PRODUCTION_URL || 'https://supersean007.com').replace(/\/$/, '');
 const expectedVersion = String(args.version || process.env.EXPECTED_VERSION || pkg.version);
 const expectedCommit = String(args.commit || process.env.EXPECTED_COMMIT || '').trim();
 const attempts = Math.max(1, Number(args.attempts || process.env.SMOKE_ATTEMPTS || 30));
@@ -103,11 +103,11 @@ check('statistics protected', stats.status === 401, {status: stats.status});
 check('error diagnostics protected', errors.status === 401, {status: errors.status});
 check('save API rejects invalid ID', badSave.status === 400, {status: badSave.status});
 
-const hostname = new URL(baseUrl).hostname;
-if (hostname.startsWith('www.')) {
-  const apexUrl = `${new URL(baseUrl).protocol}//${hostname.slice(4)}/`;
-  const apex = await request(apexUrl, {redirect: 'manual'});
-  check('apex redirects to canonical www', [301,302,307,308].includes(apex.status) && String(apex.headers.location || '').startsWith(baseUrl), {status: apex.status, location: apex.headers.location || ''});
+const canonicalUrl = new URL(baseUrl);
+if (!canonicalUrl.hostname.startsWith('www.')) {
+  const wwwUrl = `${canonicalUrl.protocol}//www.${canonicalUrl.hostname}/`;
+  const www = await request(wwwUrl, {redirect: 'manual'});
+  check('www redirects to canonical apex', [301,302,307,308].includes(www.status) && String(www.headers.location || '').startsWith(baseUrl), {status: www.status, location: www.headers.location || ''});
 }
 
 const failures = results.filter(result => !result.passed);

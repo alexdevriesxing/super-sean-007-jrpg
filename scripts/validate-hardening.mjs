@@ -36,7 +36,6 @@ await Promise.all([
   required('stats.js'), required('stats.css'), required('build-meta.json'), required('data/site-facts.json'),
   required('data/performance-budget.json'),
   required('api/health.js', functionRoot), required('api/turn.js', functionRoot),
-  required('_middleware.js', functionRoot),
   required('_lib/security.js', functionRoot), required('_lib/save-schema.js', functionRoot),
   required('scripts/clean-dist.mjs', path.resolve('.')), required('scripts/live-smoke.mjs', path.resolve('.')),
   required('.github/workflows/cloudflare-deploy.yml', path.resolve('.')),
@@ -49,7 +48,7 @@ const [
   index, redirects, headers, serviceWorker, sitemap, robots, statsHtml, statsJs, privacy,
   ads, runtime, preferences, preferenceCss, overlay, quests, saveCore, postgameSystems,
   statusHtml, statusJs, supportHtml, metaText, factsText, health, deployWorkflow,
-  monitorWorkflow, cleanDist, buildStatic, liveSmoke, middleware
+  monitorWorkflow, cleanDist, buildStatic, liveSmoke
 ] = await Promise.all([
   text('index.html'), text('_redirects'), text('_headers'), text('sw.js'), text('sitemap.xml'),
   text('robots.txt'), text('stats.html'), text('stats.js'), text('privacy.html'), text('ads.js'),
@@ -58,8 +57,7 @@ const [
   text('status.html'), text('status.js'), text('support.html'), text('build-meta.json'), text('data/site-facts.json'),
   text('api/health.js', functionRoot), text('.github/workflows/cloudflare-deploy.yml', path.resolve('.')),
   text('.github/workflows/production-monitor.yml', path.resolve('.')), text('scripts/clean-dist.mjs', path.resolve('.')),
-  text('scripts/build-static.mjs', path.resolve('.')), text('scripts/live-smoke.mjs', path.resolve('.')),
-  text('_middleware.js', functionRoot)
+  text('scripts/build-static.mjs', path.resolve('.')), text('scripts/live-smoke.mjs', path.resolve('.'))
 ]);
 
 if (/\/\*\s+\/index\.html\s+200/.test(redirects)) errors.push('Catch-all 200 rewrite still present.');
@@ -98,8 +96,7 @@ if (!supportHtml.includes('Support and troubleshooting') || !supportHtml.include
 if (!cleanDist.includes('rm(distRoot') || buildStatic.includes('rm(distRoot') || !buildStatic.includes("'assets', 'data', 'js'") || !buildStatic.includes('generatedSourceRoot')) errors.push('Production build does not clean before Vite and prune source assets while preserving compiled output.');
 if (!deployWorkflow.includes('cloudflare/wrangler-action@v3') || !deployWorkflow.includes('CLOUDFLARE_API_TOKEN') || !deployWorkflow.includes('npm run smoke:live') || !deployWorkflow.includes('steps.release.outputs.version')) errors.push('Cloudflare deployment workflow is incomplete.');
 if (!monitorWorkflow.includes("cron: '17 * * * *'") || !monitorWorkflow.includes('issues: write') || !monitorWorkflow.includes('Production smoke test failed')) errors.push('Production monitoring workflow is incomplete.');
-if (!liveSmoke.includes('/api/health') || !liveSmoke.includes('strict transport security') || !liveSmoke.includes('apex redirects to canonical www')) errors.push('Strict live smoke coverage is incomplete.');
-if (!middleware.includes("APEX_HOST = 'supersean007.com'") || !middleware.includes("CANONICAL_HOST = 'www.supersean007.com'") || !middleware.includes('Response.redirect')) errors.push('Apex-to-www redirect middleware is incomplete.');
+if (!liveSmoke.includes('/api/health') || !liveSmoke.includes('strict transport security') || !liveSmoke.includes('www redirects to canonical apex')) errors.push('Strict live smoke coverage is incomplete.');
 
 try {
   const meta = JSON.parse(metaText);

@@ -14,7 +14,7 @@ class MemoryKV {
 }
 
 function request(pathname, options = {}) {
-  return new Request(`https://www.supersean007.com${pathname}`, options);
+  return new Request(`https://supersean007.com${pathname}`, options);
 }
 
 test('unknown routes are not rewritten to the homepage', async () => {
@@ -80,7 +80,7 @@ test('error reports omit user-agent strings', async () => {
   const response = await errorPost({
     request: request('/api/err', {
       method: 'POST',
-      headers: {'content-type': 'application/json', origin: 'https://www.supersean007.com', 'user-agent': 'Secret Browser'},
+      headers: {'content-type': 'application/json', origin: 'https://supersean007.com', 'user-agent': 'Secret Browser'},
       body: JSON.stringify({msg: 'boom', url: '/game', line: 10})
     }),
     env

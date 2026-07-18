@@ -1,6 +1,6 @@
 # Adsterra Integration
 
-Production Adsterra ad units are live on www.supersean007.com. `ads.js` is the single loader that fills every placement.
+Production Adsterra ad units are live on `supersean007.com` and are reached from `www.supersean007.com` through its permanent redirect. `ads.js` is the single loader that fills every placement.
 
 ## Config Files
 

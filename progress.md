@@ -118,7 +118,7 @@ Built and shipped the full gap-analysis follow-up:
 
 ## Remaining manual notes
 
-- Production domain is `https://www.supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
+- Production domain is `https://supersean007.com/`; canonical metadata, sitemap, robots, llms.txt and ai-summary.json now use it.
 - Production Adsterra units (Social Bar, Native Banner, 728x90/468x60/320x50/300x250/160x600/160x300) are live via `ads.js`; `_headers` CSP allows the network's rotating HTTPS domains.
 - Footer credits © 2026 Fire Dragon Interactive (www.firedragoninteractive.com).
 
@@ -300,5 +300,6 @@ generated tilesets are intentionally left — no game-ready value).
 - Release checks: 46/46 Node tests, source/dist validation, v1.6.1 commercial
   hardening, 29.6 MB performance budget and packaged Chrome gameplay smoke all
   pass. Browser automation also confirmed a live Crystal Slash animation record.
-- Live smoke exposed the apex host returning 200; root Cloudflare middleware now
-  preserves path/query and 308-redirects `supersean007.com` to canonical `www`.
+- Production routing follows the existing Cloudflare edge policy: `www` permanently
+  redirects to canonical `supersean007.com`, with metadata and monitoring aligned
+  to the final host so there are no competing redirects or SEO signals.

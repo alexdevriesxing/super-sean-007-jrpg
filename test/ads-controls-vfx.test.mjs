@@ -43,22 +43,3 @@ test('active games own scroll keys and battles expose projectile VFX', async () 
   assert.match(render, /ssg-reduce-motion/);
   assert.match(styles, /@media \(max-width:900px\)/);
 });
-
-test('Cloudflare middleware redirects the apex domain to canonical www', async () => {
-  const {onRequest} = await import('../functions/_middleware.js');
-  let continued = false;
-  const redirect = await onRequest({
-    request:new Request('https://supersean007.com/guides.html?from=apex'),
-    next:async () => { continued = true; return new Response('next'); }
-  });
-  assert.equal(redirect.status, 308);
-  assert.equal(redirect.headers.get('location'), 'https://www.supersean007.com/guides.html?from=apex');
-  assert.equal(continued, false);
-
-  const canonical = await onRequest({
-    request:new Request('https://www.supersean007.com/'),
-    next:async () => { continued = true; return new Response('next'); }
-  });
-  assert.equal(await canonical.text(), 'next');
-  assert.equal(continued, true);
-});

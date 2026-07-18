@@ -13,9 +13,9 @@ class MemoryKV {
 
 function request(pathname, options = {}) {
   const {headers = {}, ...rest} = options;
-  return new Request(`https://www.supersean007.com${pathname}`, {
+  return new Request(`https://supersean007.com${pathname}`, {
     ...rest,
-    headers: {origin: 'https://www.supersean007.com', ...headers}
+    headers: {origin: 'https://supersean007.com', ...headers}
   });
 }
 

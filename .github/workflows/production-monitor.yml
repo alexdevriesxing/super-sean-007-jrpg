@@ -31,7 +31,7 @@ jobs:
         continue-on-error: true
         env:
           EXPECTED_COMMIT: ${{ github.sha }}
-          PRODUCTION_URL: https://www.supersean007.com
+          PRODUCTION_URL: https://supersean007.com
           SMOKE_ATTEMPTS: 6
           SMOKE_DELAY_MS: 10000
         run: |

@@ -2,7 +2,7 @@
 (() => {
   'use strict';
 
-  const SITE_URL = 'https://www.supersean007.com/';
+  const SITE_URL = 'https://supersean007.com/';
   const g = () => window.SuperSeanGame;
   const prefsApi = () => window.SSGPlayerPreferences;
 

@@ -1,4 +1,4 @@
 Contact: https://github.com/alexdevriesxing/super-sean-007-jrpg/issues
 Preferred-Languages: en
-Canonical: https://www.supersean007.com/security.txt
+Canonical: https://supersean007.com/security.txt
 Expires: 2027-07-09T00:00:00Z

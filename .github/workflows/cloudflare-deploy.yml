@@ -74,7 +74,7 @@ jobs:
         env:
           EXPECTED_COMMIT: ${{ github.sha }}
           EXPECTED_VERSION: ${{ steps.release.outputs.version }}
-          PRODUCTION_URL: https://www.supersean007.com
+          PRODUCTION_URL: https://supersean007.com
         run: |
           set -o pipefail
           npm run smoke:live -- --report=production-smoke-report.json 2>&1 | tee production-live-smoke.log

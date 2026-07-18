@@ -41,7 +41,7 @@ test('strict live smoke checks commercial release boundaries', async () => {
   const source = await read('scripts/live-smoke.mjs');
   for (const expected of [
     '/api/health', '/build-meta.json', '/performance-report.json', '/api/stat', '/api/err',
-    'strict transport security', 'real 404', 'apex redirects to canonical www'
+    'strict transport security', 'real 404', 'www redirects to canonical apex'
   ]) assert.ok(source.includes(expected), `live smoke must check ${expected}`);
 });
 

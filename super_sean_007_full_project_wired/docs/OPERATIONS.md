@@ -58,7 +58,7 @@ Use for isolated visual, content, controller or low-impact browser issues. Track
 Prefer Cloudflare Pages deployment rollback to a known-good production deployment. After rollback:
 
 1. verify `/api/health` and `/build-meta.json` show the selected release;
-2. run `node scripts/live-smoke.mjs --url=https://www.supersean007.com --version=<VERSION> --commit=<COMMIT>`;
+2. run `node scripts/live-smoke.mjs --url=https://supersean007.com --version=<VERSION> --commit=<COMMIT>`;
 3. test a disposable cloud save;
 4. confirm the service worker no longer serves the failed cache;
 5. document why the rollback was needed.
