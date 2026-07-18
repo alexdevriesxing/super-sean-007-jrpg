@@ -42,17 +42,41 @@ const now$ = () => performance.now() / 1000;
 /* ---------- roster cards (also used by the lore page sections) ---------- */
 export function buildRoster(gridEl) {
   const all = [...HEROES.map(k => ({ ...k, team: 0 })), ...BULLIES.map(k => ({ ...k, team: 1 }))];
+  
+  // heroes_portraits.webp is a 4x4 grid of 16 cells.
+  // We map the 12 heroes to 12 unique cells in the 4x4 grid.
+  const HERO_CELLS = [1, 3, 15, 5, 7, 2, 13, 14, 6, 4, 8, 12];
+
+  // bullies_portraits.webp is a 4x3 grid of 12 cells.
+  // We map the 12 bullies to 12 unique cells in the 4x3 grid.
+  const BULLY_CELLS = [6, 1, 2, 11, 5, 3, 9, 10, 0, 7, 8, 4];
+
   gridEl.innerHTML = all.map((k, i) => {
     const isBully = k.team === 1;
     const indexInTeam = isBully ? i - 12 : i;
     const imgUrl = isBully ? 'assets/snowball/bullies_portraits.webp' : 'assets/snowball/heroes_portraits.webp';
-    const col = indexInTeam % 4;
-    const row = Math.floor(indexInTeam / 4);
-    const bx = (col * 100) / 3;
-    const by = (row * 100) / 2;
+    
+    let bx, by, bgSize;
+    if (isBully) {
+      // 4x3 grid for bullies
+      const cellIndex = BULLY_CELLS[indexInTeam];
+      const col = cellIndex % 4;
+      const row = Math.floor(cellIndex / 4);
+      bx = (col * 100) / 3;
+      by = (row * 100) / 2;
+      bgSize = '400% 300%';
+    } else {
+      // 4x4 grid for heroes
+      const cellIndex = HERO_CELLS[indexInTeam];
+      const col = cellIndex % 4;
+      const row = Math.floor(cellIndex / 4);
+      bx = (col * 100) / 3;
+      by = (row * 100) / 3;
+      bgSize = '400% 400%';
+    }
     return `
     <article class="kid-card team-${k.team}">
-      <div class="portrait p${i % 8}" style="background-image: url('${imgUrl}'); background-position: ${bx}% ${by}%; background-size: 400% 300%;"></div>
+      <div class="portrait p${i % 8}" style="background-image: url('${imgUrl}'); background-position: ${bx}% ${by}%; background-size: ${bgSize};"></div>
       <div class="kid-info">
         <small>${k.nickname} • ${k.role}</small>
         <h3>${k.name}</h3>
