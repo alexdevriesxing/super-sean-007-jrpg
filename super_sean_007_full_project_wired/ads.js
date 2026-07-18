@@ -1,9 +1,9 @@
 (() => {
   'use strict';
 
-  // Every third-party ad executes inside a sandboxed opaque-origin iframe.
-  // The frame deliberately omits allow-same-origin, so ad scripts cannot read
-  // game localStorage, cloud-sync IDs, consent state or admin credentials.
+  // Every banner executes inside a sandboxed data: iframe. A data document has
+  // an opaque origin, so the ad can run without receiving access to game
+  // localStorage, cloud-sync IDs or first-party credentials.
   const AD_HOST = 'demolishwrestconclusions.com';
 
   const NATIVE_BANNER = {
@@ -29,8 +29,8 @@
 
   function pickLeaderboard(slot) {
     const width = slotWidth(slot);
-    if (width >= 760) return BANNER_UNITS.leaderboard728;
-    if (width >= 500) return BANNER_UNITS.banner468;
+    if (width >= 728) return BANNER_UNITS.leaderboard728;
+    if (width >= 468) return BANNER_UNITS.banner468;
     return BANNER_UNITS.mobile320;
   }
 
@@ -40,34 +40,48 @@
       : BANNER_UNITS.sky160x300;
   }
 
-  function createSandbox(slot, width, height) {
+  function createSandbox(slot, width, height, unitId, loading = 'lazy') {
+    const available = Math.max(1, slotWidth(slot));
+    const scale = Math.min(1, available / width);
+    const holder = document.createElement('div');
+    holder.className = 'ad-frame-holder';
+    holder.style.width = `${Math.ceil(width * scale)}px`;
+    holder.style.height = `${Math.ceil(height * scale)}px`;
+    holder.style.overflow = 'hidden';
+    holder.style.marginInline = 'auto';
+
     const frame = document.createElement('iframe');
     frame.width = String(width);
     frame.height = String(height);
     frame.title = 'Advertisement';
-    frame.loading = 'lazy';
-    frame.referrerPolicy = 'no-referrer';
+    frame.loading = loading;
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
     frame.setAttribute('scrolling', 'no');
     frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox');
     frame.style.border = '0';
-    frame.style.maxWidth = '100%';
     frame.style.display = 'block';
-    frame.style.marginInline = 'auto';
-    slot.replaceChildren(frame);
+    frame.style.transformOrigin = 'top left';
+    if (scale < 1) frame.style.transform = `scale(${scale})`;
+    holder.appendChild(frame);
+    slot.replaceChildren(holder);
     slot.dataset.adLoaded = 'true';
+    slot.dataset.adUnit = `${unitId}:${width}x${height}:${scale.toFixed(3)}`;
+    slot.dataset.adStatus = 'loading';
+    frame.addEventListener('load', () => { slot.dataset.adStatus = 'ready'; }, {once: true});
     return frame;
   }
 
   function writeFrame(frame, body) {
-    const doc = frame.contentWindow.document;
-    doc.open();
-    doc.write(`<!doctype html><html><head><meta name="referrer" content="no-referrer"><style>html,body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>${body}</body></html>`);
-    doc.close();
+    const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><base target="_blank"><style>html,body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>${body}</body></html>`;
+    frame.src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
   }
 
-  function renderBanner(slot, unit) {
+  function renderBanner(slot, unit, loading = 'lazy') {
     try {
-      const frame = createSandbox(slot, unit.width, unit.height);
+      const available = Math.max(1, slotWidth(slot));
+      const signature = `${unit.key}:${unit.width}x${unit.height}:${Math.min(1, available / unit.width).toFixed(3)}`;
+      if (slot.dataset.adUnit === signature && slot.querySelector('iframe')) return true;
+      const frame = createSandbox(slot, unit.width, unit.height, unit.key, loading);
       const options = JSON.stringify({
         key: unit.key,
         format: 'iframe',
@@ -88,8 +102,11 @@
 
   function renderNative(slot) {
     try {
-      const width = Math.min(NATIVE_BANNER.width, Math.max(320, Math.floor(slotWidth(slot))));
-      const frame = createSandbox(slot, width, NATIVE_BANNER.height);
+      const width = Math.min(NATIVE_BANNER.width, Math.max(300, Math.floor(slotWidth(slot))));
+      const available = Math.max(1, slotWidth(slot));
+      const signature = `${NATIVE_BANNER.containerId}:${width}x${NATIVE_BANNER.height}:${Math.min(1, available / width).toFixed(3)}`;
+      if (slot.dataset.adUnit === signature && slot.querySelector('iframe')) return true;
+      const frame = createSandbox(slot, width, NATIVE_BANNER.height, NATIVE_BANNER.containerId);
       writeFrame(frame,
         `<div id="${NATIVE_BANNER.containerId}"></div>` +
         `<script async data-cfasync="false" src="${NATIVE_BANNER.src}"><\/script>`
@@ -104,13 +121,14 @@
   function fillSlot(placement, slot) {
     switch (placement) {
       case 'top-banner-728x90':
+        return renderBanner(slot, pickLeaderboard(slot), 'eager');
       case 'below-game-responsive':
       case 'footer-banner-responsive':
         return renderBanner(slot, pickLeaderboard(slot));
       case 'game-sidebar-native':
-        return renderBanner(slot, BANNER_UNITS.box300);
+        return renderBanner(slot, BANNER_UNITS.box300, 'eager');
       case 'game-sidebar-skyscraper':
-        return renderBanner(slot, pickSkyscraper());
+        return renderBanner(slot, pickSkyscraper(), 'eager');
       case 'content-native-responsive':
         return renderNative(slot);
       default:
@@ -121,7 +139,7 @@
   function initAds() {
     document.querySelectorAll('[data-adsterra-placement]').forEach(slot => {
       const placement = slot.dataset.adsterraPlacement;
-      if (!placement || slot.dataset.adLoaded === 'true') return;
+      if (!placement) return;
       if (slot.offsetParent === null && getComputedStyle(slot).position !== 'fixed') return;
       fillSlot(placement, slot);
     });
@@ -133,11 +151,28 @@
       sb.defer = true;
       document.body.appendChild(sb);
     }
+    window.__ssgAdsLoaded = true;
   }
+
+  // The game uses the same isolated 300x250 renderer at safe reward breaks.
+  window.SuperSeanAds = Object.freeze({
+    renderBox(container) {
+      return container instanceof Element
+        ? renderBanner(container, BANNER_UNITS.box300, 'eager')
+        : false;
+    },
+    isLoaded() { return Boolean(window.__ssgAdsLoaded); }
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAds, {once: true});
   } else {
     initAds();
   }
+
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(initAds, 180);
+  }, {passive: true});
 })();

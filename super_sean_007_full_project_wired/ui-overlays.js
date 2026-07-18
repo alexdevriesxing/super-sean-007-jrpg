@@ -174,7 +174,6 @@
         <button class="ssg-btn" id="setShot">📸 Screenshot</button>
         <button class="ssg-btn" id="setHelp">❓ How to play</button>
         <button class="ssg-btn" id="setShare">🔗 Share game</button>
-        <button class="ssg-btn" id="setConsent">🍪 Ad choices</button>
       </div>
       <p class="ssg-note cloud-id-note" hidden>Sync ID: <code></code>. Treat it like a password.</p>
       <p class="ssg-cloud-status" role="status" aria-live="polite"></p>
@@ -201,7 +200,6 @@
     el.querySelector('#setShot').onclick = () => { g()?.screenshot(); el.dismiss(); };
     el.querySelector('#setHelp').onclick = () => { el.dismiss(); window.SSGOnboard(); };
     el.querySelector('#setShare').onclick = () => { el.dismiss(); window.SSGShare('game'); };
-    el.querySelector('#setConsent').onclick = () => { window.SSGConsent?.reset(); el.dismiss(); };
   };
 
   window.SSGOnboard = () => {

@@ -5,6 +5,7 @@ const projectRoot = path.resolve('super_sean_007_full_project_wired');
 const distRoot = path.resolve('dist');
 const functionRoot = path.resolve('functions');
 const errors = [];
+const expectedVersion = JSON.parse(await readFile(path.resolve('package.json'), 'utf8')).version;
 
 async function required(relative, base = distRoot) {
   try { await access(path.join(base, relative)); }
@@ -101,17 +102,17 @@ try {
   const meta = JSON.parse(metaText);
   const facts = JSON.parse(factsText);
   if (meta.version !== facts.version) errors.push('Build metadata version does not match canonical facts.');
-  if (facts.version !== '1.6.0') errors.push(`Expected release 1.6.0, found ${facts.version}.`);
+  if (facts.version !== expectedVersion) errors.push(`Expected release ${expectedVersion}, found ${facts.version}.`);
   if (!facts.features.some(feature => /gamepad/i.test(feature))) errors.push('Canonical facts do not mention gamepad support.');
   if (!facts.features.some(feature => /postgame epilogue/i.test(feature))) errors.push('Canonical facts do not mention the postgame epilogue.');
   if (!facts.features.some(feature => /production monitoring/i.test(feature))) errors.push('Canonical facts do not mention production monitoring.');
 } catch (error) { errors.push('Build metadata or canonical facts are invalid JSON.'); }
 
-if (!health.includes("version: '1.6.0'")) errors.push('Health endpoint does not report version 1.6.0.');
+if (!health.includes(`version: '${expectedVersion}'`)) errors.push(`Health endpoint does not report version ${expectedVersion}.`);
 if (!statsHtml.includes('stats.js') || !statsHtml.includes('stats.css')) errors.push('Diagnostics still contains inline application code.');
 
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Version 1.6.0 validation passed: production-only assets, automated deployment, public status, live monitoring and commercial release protections.');
+console.log(`Version ${expectedVersion} validation passed: production-only assets, automated deployment, public status, live monitoring and commercial release protections.`);

@@ -130,7 +130,7 @@ The strict live smoke test verifies:
 9. unauthenticated diagnostics return HTTP 401;
 10. invalid save IDs are rejected.
 
-The complete player smoke checklist still includes desktop/mobile startup, local and cloud saves, old-save migration, remapped controls, gamepad, accessibility preferences, TURN-backed Party Link, consented ads, service-worker updates and New Game+.
+The complete player smoke checklist still includes desktop/mobile startup, local and cloud saves, old-save migration, remapped controls, gamepad, accessibility preferences, TURN-backed Party Link, automatically loaded ads, service-worker updates and New Game+.
 
 ## Search and discovery
 

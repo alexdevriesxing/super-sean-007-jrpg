@@ -8,6 +8,7 @@
     const S = () => ctx.state();
     const sys = () => ctx.systems();
     let battle = null;
+    let visualId = 0;
 
     const PARTY_SKILLS = {
       dave:     {id:'gadget',  label:'Gadget Zap',    mp:8,  cd:3, desc:'Damage + stuns the enemy for a turn.'},
@@ -57,6 +58,7 @@
         log: [`${monster.name} appears!${st.ngPlus ? ` (NG+${st.ngPlus})` : ''}`],
         turn: 'player',
         lock: 0,
+        pendingWin: 0,
         guard: false,
         ironGuard: 0,
         stunned: 0,
@@ -71,6 +73,7 @@
         phase2: false,
         cooldowns: {},
         buttons: [],
+        visuals: [],
         backgroundKey: selectBackground(monster),
         // Cinematic name-card timer (frames) for boss encounters.
         intro: monster.boss ? (monster.final ? 150 : 100) : 0,
@@ -108,6 +111,23 @@
       return list;
     }
 
+    function animate(kind, options = {}) {
+      if (!battle) return;
+      battle.visuals.push({
+        id: ++visualId,
+        kind,
+        source: options.source || 'sean',
+        target: options.target || 'enemy',
+        sprite: options.sprite || null,
+        color: options.color || '#ffe37a',
+        size: options.size || 64,
+        arc: options.arc ?? 42,
+        age: -(options.delay || 0),
+        duration: options.duration || 520
+      });
+      if (battle.visuals.length > 12) battle.visuals.splice(0, battle.visuals.length - 12);
+    }
+
     function dealDamage(amount, source, fxName) {
       const e = battle.enemy;
       if (battle.inspired > 0) amount = Math.floor(amount * 1.25);
@@ -121,7 +141,8 @@
       e.hp = Math.max(0, e.hp - amount);
       battle.log.unshift(`${source} for ${amount} damage.`);
       ctx.fx(`-${amount}`, {screen: true, x: 690 + Math.random() * 60, y: 170 + Math.random() * 40, color: '#ffd76a', size: 22, life: 55});
-      hitFx(fxName || 'vfx_slash', 'enemy');
+      const animatedHit = battle.visuals?.some(visual => visual.target === 'enemy' && visual.age <= 0);
+      if (!animatedHit) hitFx(fxName || 'vfx_slash', 'enemy');
       if (e.hp <= 0) hitFx('vfx_explosion', 'enemy', 150);
     }
 
@@ -143,18 +164,20 @@
     }
 
     function action(id) {
-      if (!battle || battle.turn !== 'player' || battle.lock > 0) return;
+      if (!battle || battle.turn !== 'player' || battle.lock > 0 || battle.intro > 0) return;
       const st = S();
       const h = st.hero;
       const stats = sys().heroStats();
       const e = battle.enemy;
       let acted = true;
       if (id === 'attack') {
+        animate('melee', {sprite:'vfx_slash', color:'#fff0a8', size:72, duration:430});
         dealDamage(Math.max(3, Math.floor(stats.attack + Math.random() * 8 - 2)), 'Sean attacks');
         ctx.sfx('hit');
       } else if (id === 'slash') {
         if (h.mp < 6) { battle.log.unshift('Not enough MP for Crystal Slash.'); return; }
         h.mp -= 6;
+        animate('crystal', {sprite:'vfx_crit', color:'#8eeaff', size:92, arc:64, duration:560});
         dealDamage(Math.max(8, Math.floor(stats.attack * 1.8 + h.level * 3 + Math.random() * 12)), 'Crystal Slash shines', 'vfx_crit');
         h.friendship = Math.min(100, h.friendship + 4);
         ctx.sfx('slash');
@@ -162,6 +185,7 @@
         if (h.friendship < 40) { battle.log.unshift('Friendship meter needs 40 power.'); return; }
         h.friendship -= 40;
         ctx.showCard('card_crit', 54);
+        animate('burst', {sprite:'vfx_stars', color:'#ffe37a', size:118, arc:78, duration:680});
         dealDamage(Math.max(30, Math.floor(stats.attack * 2.7 + h.level * 8)), 'Friendship Burst hits', 'vfx_stars');
         battle.inspired = 3;
         battle.log.unshift('Sean is Inspired — attacks hit 25% harder!');
@@ -171,9 +195,11 @@
         if (!name) { battle.log.unshift('No snacks left! Craft food at your kitchen.'); return; }
         sys().useConsumable(name);
         ctx.showCard('card_item', 48);
+        animate('aura', {source:'sean', target:'sean', sprite:'vfx_heal', color:'#8effb5', size:100, duration:620});
         battle.log.unshift(`Sean uses ${name}.`);
       } else if (id === 'guard') {
         battle.guard = true;
+        animate('guard', {source:'sean', target:'sean', sprite:'vfx_shield', color:'#9edcff', size:106, duration:560});
         h.friendship = Math.min(100, h.friendship + 6);
         battle.log.unshift('Sean guards and builds friendship power.');
         ctx.sfx('menu_open');
@@ -190,6 +216,7 @@
         h.mp -= 8;
         battle.cooldowns.gadget = 3;
         battle.stunned = 1;
+        animate('projectile', {source:'dave', sprite:'vfx_zap', color:'#77e8ff', size:78, arc:28, duration:540});
         dealDamage(Math.max(10, Math.floor(stats.attack * 1.4 + Math.random() * 10)), 'Dave\'s Gadget Zap crackles', 'vfx_zap');
         battle.log.unshift(`${e.name} is stunned!`);
         ctx.sfx('slash');
@@ -197,14 +224,16 @@
         if ((battle.cooldowns.ironguard || 0) > 0) { battle.log.unshift('Iron Guard recharging.'); return; }
         battle.cooldowns.ironguard = 4;
         battle.ironGuard = 2;
+        animate('guard', {source:'petroman', target:'sean', sprite:'vfx_shield', color:'#b8d9ff', size:120, duration:620});
         battle.log.unshift('Petroman plants his shield — damage halved for 2 turns.');
-        hitFx('vfx_shield', 'player', 110);
         ctx.sfx('menu_open');
       } else if (id === 'arrows') {
         if ((battle.cooldowns.arrows || 0) > 0) { battle.log.unshift('Ruush is repositioning.'); return; }
         if (h.mp < 6) { battle.log.unshift('Not enough MP for Twin Arrows.'); return; }
         h.mp -= 6;
         battle.cooldowns.arrows = 2;
+        animate('projectile', {source:'ruush', sprite:'vfx_arrows', color:'#d3ff9a', size:66, arc:54, duration:480});
+        animate('projectile', {source:'ruush', sprite:'vfx_arrows', color:'#d3ff9a', size:66, arc:30, duration:480, delay:140});
         dealDamage(Math.max(6, Math.floor(stats.attack * 0.9 + Math.random() * 6)), 'Ruush\'s first arrow strikes', 'vfx_arrows');
         if (battle.enemy.hp > 0) dealDamage(Math.max(6, Math.floor(stats.attack * 0.9 + Math.random() * 6)), 'The second arrow strikes', 'vfx_arrows');
         ctx.sfx('slash');
@@ -216,15 +245,19 @@
         const heal = Math.floor(h.maxHp * 0.35);
         h.hp = Math.min(h.maxHp, h.hp + heal);
         battle.regen = 2;
+        animate('aura', {source:'haraku', target:'sean', sprite:'vfx_heal', color:'#d8b4ff', size:124, duration:720});
         battle.log.unshift(`Haraku's Moon Blessing restores ${heal} HP and grants Regen (2 turns).`);
-        hitFx('vfx_heal', 'player', 120);
-        hitFx('vfx_nature', 'player', 90);
         ctx.sfx('reward');
       } else {
         acted = false;
       }
       if (!acted) return;
-      if (battle.enemy.hp <= 0) return win();
+      if (battle.enemy.hp <= 0) {
+        battle.turn = 'victory';
+        battle.pendingWin = 650;
+        battle.log.unshift(`${battle.enemy.name} is defeated!`);
+        return;
+      }
       battle.turn = 'enemy';
       battle.lock = 45;
     }
@@ -245,20 +278,21 @@
         const heal = Math.max(5, Math.floor(h.maxHp * 0.06));
         h.hp = Math.min(h.maxHp, h.hp + heal);
         battle.log.unshift(`Regen mends Sean for ${heal} HP.`);
-        hitFx('vfx_nature', 'player', 70);
+        animate('aura', {source:'sean', target:'sean', sprite:'vfx_nature', color:'#7ff0a8', size:76, duration:460});
       }
       if (battle.poison > 0) {
         battle.poison -= 1;
         const tick = Math.max(4, Math.floor(h.maxHp * 0.04));
         h.hp = Math.max(1, h.hp - tick);
         battle.log.unshift(`Spores sting Sean for ${tick} poison damage (${battle.poison} turns left).`);
+        animate('impact', {source:'enemy', target:'sean', sprite:'vfx_poison', color:'#a6e56c', size:72, duration:400});
       }
       if (battle.burn > 0) {
         battle.burn -= 1;
         const tick = Math.max(5, Math.floor(h.maxHp * 0.05));
         h.hp = Math.max(1, h.hp - tick);
         battle.log.unshift(`Flames sear Sean for ${tick} burn damage (${battle.burn} turns left).`);
-        hitFx('vfx_fire', 'player', 80);
+        animate('impact', {source:'enemy', target:'sean', sprite:'vfx_fire', color:'#ff9b52', size:78, duration:420});
       }
       if (battle.stunned > 0) {
         battle.stunned -= 1;
@@ -272,7 +306,7 @@
         e.atk = Math.floor(e.atk * 1.3);
         e.hp = Math.min(e.maxHp, e.hp + Math.floor(e.maxHp * 0.15));
         battle.log.unshift(`${e.name} gleams with true bald power — stronger and partly restored!`);
-        hitFx('vfx_spirit', 'enemy', 210);
+        animate('aura', {source:'enemy', target:'enemy', sprite:'vfx_spirit', color:'#c18cff', size:190, duration:800});
         ctx.sfx('portal');
         battle.turn = 'player';
         return;
@@ -281,7 +315,7 @@
       if (e.element === 'fire' && battle.burn === 0 && Math.random() < 0.25) {
         battle.burn = 3;
         battle.log.unshift(`${e.name} breathes fire — Sean is burning!`);
-        hitFx('vfx_fire', 'player', 110);
+        animate('projectile', {source:'enemy', target:'sean', sprite:'vfx_fire', color:'#ff774d', size:92, arc:52, duration:600});
         ctx.sfx('hit');
         battle.turn = 'player';
         return;
@@ -289,7 +323,7 @@
       if (e.element === 'ice' && battle.frozen === 0 && Math.random() < 0.22) {
         battle.frozen = 2;
         battle.log.unshift(`${e.name} exhales frost — Sean's attacks are halved for 2 turns!`);
-        hitFx('vfx_ice', 'player', 110);
+        animate('projectile', {source:'enemy', target:'sean', sprite:'vfx_ice', color:'#8eeaff', size:88, arc:38, duration:620});
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -299,7 +333,7 @@
         const splash = Math.max(3, Math.floor(e.atk * 0.4));
         h.hp = Math.max(1, h.hp - splash);
         battle.log.unshift(`${e.name} crashes a wave — ${splash} damage and skills recover slower!`);
-        hitFx('vfx_water', 'player', 110);
+        animate('projectile', {source:'enemy', target:'sean', sprite:'vfx_water', color:'#59c8ff', size:104, arc:62, duration:660});
         ctx.sfx('hit');
         battle.turn = 'player';
         return;
@@ -308,7 +342,7 @@
       if (e.kind === 'mushroom' && Math.random() < 0.25) {
         battle.poison = 3;
         battle.log.unshift(`${e.name} bursts with toxic spores — Sean is poisoned!`);
-        hitFx('vfx_poison', 'player');
+        animate('projectile', {source:'enemy', target:'sean', sprite:'vfx_poison', color:'#a6e56c', size:88, arc:76, duration:700});
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -316,7 +350,7 @@
       if (e.kind === 'bat' && Math.random() < 0.25) {
         battle.weakened = 2;
         battle.log.unshift(`${e.name} screeches — Sean's attack drops for 2 turns!`);
-        hitFx('vfx_daze', 'player');
+        animate('wave', {source:'enemy', target:'sean', sprite:'vfx_daze', color:'#d2a6ff', size:92, duration:620});
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -324,7 +358,7 @@
       if (e.kind === 'crystal' && Math.random() < 0.25 && battle.enemyGuard === 0) {
         battle.enemyGuard = 2;
         battle.log.unshift(`${e.name} hardens — your next 2 hits are halved!`);
-        hitFx('vfx_ice', 'enemy');
+        animate('guard', {source:'enemy', target:'enemy', sprite:'vfx_ice', color:'#a4efff', size:116, duration:600});
         ctx.sfx('menu_open');
         battle.turn = 'player';
         return;
@@ -342,7 +376,10 @@
       const strikeFx = e.element === 'water' ? 'vfx_water'
         : e.element === 'fire' ? 'vfx_fire'
         : e.kind === 'xelar' ? 'vfx_zap' : 'vfx_claw';
-      hitFx(strikeFx, 'player');
+      animate(e.kind === 'xelar' ? 'projectile' : 'melee', {
+        source:'enemy', target:'sean', sprite:strikeFx,
+        color:e.kind === 'xelar' ? '#c28cff' : '#ff9d89', size:e.boss ? 100 : 78, arc:38, duration:560
+      });
       ctx.sfx('hit');
       battle.turn = h.hp <= 0 ? 'defeat' : 'player';
       if (battle.turn === 'defeat') battle.log.unshift('Sean falls! Choose: reward revive or return home.');
@@ -459,8 +496,16 @@
       }
     }
 
-    function update() {
+    function update(dt = 16.67) {
       if (battle && battle.intro > 0) battle.intro -= 1;
+      if (battle?.visuals?.length) {
+        battle.visuals.forEach(visual => { visual.age += dt; });
+        battle.visuals = battle.visuals.filter(visual => visual.age < visual.duration);
+      }
+      if (battle?.pendingWin > 0) {
+        battle.pendingWin -= dt;
+        if (battle.pendingWin <= 0) { win(); return; }
+      }
       if (battle && battle.lock > 0) {
         battle.lock -= 1;
         if (battle.lock === 0 && battle.turn === 'enemy') enemyTurn();

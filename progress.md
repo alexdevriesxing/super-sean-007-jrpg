@@ -277,3 +277,26 @@ generated tilesets are intentionally left — no game-ready value).
   ui-manifest cover it. Full build + validate green, 18/18 tests, zero console
   errors. Verified in preview: transition card, status shield, party formation,
   new villagers all render.
+
+## 2026-07-18 — Version 1.6.1 ad, controls, discovery and battle polish
+- Replaced the non-loading `srcdoc` ad frames with sandboxed opaque-origin
+  `data:` frames, added the CSP allowance, and wired all eight supplied Adsterra
+  units into responsive desktop/tablet/mobile placements. Social Bar remains a
+  direct provider script; page banners, native inventory and the in-game 300x250
+  unit share one loader. Removed the consent gate and stale Ad Choices UI/copy.
+- Verified real browser requests for 728x90, 468x60, 320x50, 300x250, 160x600,
+  160x300, native and Social Bar scripts. At 390px, 820px and 1440px every active
+  slot produced a frame and the page had zero horizontal overflow.
+- Arrow/Space keys now prevent page scrolling only while the RPG or Snowball
+  game owns input. Browser QA measured 0px scroll during active RPG battles and
+  Snowball play, while normal off-game scrolling remained available.
+- RPG battle actions now expose timed animation state and render arcing
+  projectiles, trails, slash/spell sprites, impact rings, actor lunges/recoil,
+  auras and elemental effects. Reduced-motion and disabled-screen-effect
+  preferences are respected; victory waits briefly so finishing VFX remain seen.
+- Added tablet navigation/sidebar breakpoints and Snowball `dvh`/short-landscape
+  sizing. Expanded canonical, Open Graph, Twitter, structured data, sitemap,
+  llms.txt and AI summary coverage across both games and all indexable pages.
+- Release checks: 46/46 Node tests, source/dist validation, v1.6.1 commercial
+  hardening, 29.6 MB performance budget and packaged Chrome gameplay smoke all
+  pass. Browser automation also confirmed a live Crystal Slash animation record.

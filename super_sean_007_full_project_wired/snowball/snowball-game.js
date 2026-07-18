@@ -746,10 +746,18 @@ export function startSnowball() {
 
   /* input: keyboard + mouse */
   const SCROLL_KEYS = new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space']);
+  const gameOwnsScrollKeys = () => {
+    if (mode !== 'playing') return false;
+    const rect = playWrap.getBoundingClientRect();
+    const visible = Math.max(0, Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0));
+    return document.pointerLockElement === renderer.domElement || visible >= Math.min(120, rect.height * .25);
+  };
   const onKeyDown = (e) => {
-    keys.add(e.code);
-    if (SCROLL_KEYS.has(e.code)) e.preventDefault();
-    if (e.code === 'KeyR') reload();
+    const scrollKey = SCROLL_KEYS.has(e.code);
+    if (scrollKey && !gameOwnsScrollKeys()) { keys.delete(e.code); return; }
+    if (mode === 'playing') keys.add(e.code);
+    if (scrollKey) e.preventDefault();
+    if (e.code === 'KeyR' && mode === 'playing') reload();
     if (e.code === 'KeyM') { muted = !muted; localStorage.setItem('ssb-muted', muted ? '1' : '0'); syncSound(); }
     if (e.code === 'Escape' && mode === 'playing') setMode('paused');
     else if (e.code === 'Escape' && mode === 'paused') { setMode('playing'); setTimeout(() => renderer.domElement.requestPointerLock?.(), 30); }

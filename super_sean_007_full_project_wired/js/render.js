@@ -368,6 +368,103 @@
       });
     }
 
+    function battleAnchor(actor, allies, enemy) {
+      if (actor === 'enemy') {
+        const size = enemy.boss ? 220 : 160;
+        return {x: 620 + size / 2, y: 105 + size / 2};
+      }
+      if (actor === 'sean') return {x: 215, y: 286};
+      const index = Math.max(0, allies.indexOf(actor));
+      return {x: 56 + (index % 2) * 50, y: 314 + Math.floor(index / 2) * 54};
+    }
+
+    function visualProgress(visual) {
+      return Math.max(0, Math.min(1, visual.age / Math.max(1, visual.duration)));
+    }
+
+    function battleMotion(battle, actor, allies, enemy) {
+      if (document.body.classList.contains('ssg-reduce-motion')) return {x: 0, y: 0};
+      let x = 0, y = 0;
+      for (const visual of battle.visuals || []) {
+        if (visual.age < 0) continue;
+        const p = visualProgress(visual);
+        if (['aura', 'guard', 'impact'].includes(visual.kind)) continue;
+        const from = battleAnchor(visual.source, allies, enemy);
+        const to = battleAnchor(visual.target, allies, enemy);
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const length = Math.max(1, Math.hypot(dx, dy));
+        const ux = dx / length, uy = dy / length;
+        if (visual.source === actor) {
+          const lunge = Math.sin(Math.min(1, p / 0.62) * Math.PI) * (visual.kind === 'melee' ? 40 : 13);
+          x += ux * lunge; y += uy * lunge;
+        }
+        if (visual.target === actor && p > 0.55) {
+          const recoil = Math.sin(Math.min(1, (p - 0.55) / 0.45) * Math.PI) * 16;
+          x += ux * recoil; y += uy * recoil;
+        }
+      }
+      return {x, y};
+    }
+
+    function drawBattleVisuals(battle, allies, enemy) {
+      const reduced = document.body.classList.contains('ssg-reduce-motion');
+      const simple = document.body.classList.contains('ssg-no-screen-effects');
+      for (const visual of battle.visuals || []) {
+        if (visual.age < 0) continue;
+        const p = visualProgress(visual);
+        const from = battleAnchor(visual.source, allies, enemy);
+        const to = battleAnchor(visual.target, allies, enemy);
+        const stationary = ['aura', 'guard', 'impact'].includes(visual.kind);
+        const travel = reduced ? 1 : Math.max(0, Math.min(1, (p - 0.06) / 0.58));
+        const x = stationary ? to.x : from.x + (to.x - from.x) * travel;
+        const y = stationary ? to.y : from.y + (to.y - from.y) * travel - Math.sin(travel * Math.PI) * visual.arc;
+        const image = visual.sprite && ctx.img[visual.sprite];
+
+        g.save();
+        g.globalCompositeOperation = simple ? 'source-over' : 'lighter';
+        if (!simple && !stationary) {
+          for (let i = 5; i >= 1; i--) {
+            const q = Math.max(0, travel - i * 0.055);
+            const tx = from.x + (to.x - from.x) * q;
+            const ty = from.y + (to.y - from.y) * q - Math.sin(q * Math.PI) * visual.arc;
+            g.globalAlpha = (6 - i) * 0.055;
+            g.fillStyle = visual.color;
+            g.beginPath(); g.arc(tx, ty, Math.max(3, visual.size * (0.12 - i * 0.009)), 0, Math.PI * 2); g.fill();
+          }
+        }
+
+        const pulse = stationary ? 0.78 + Math.sin(p * Math.PI) * 0.28 : 1;
+        const size = visual.size * pulse;
+        g.globalAlpha = p < 0.12 ? p / 0.12 : Math.max(0, Math.min(1, (1 - p) / 0.18));
+        if (image && image.complete && image.naturalWidth) {
+          g.translate(x, y);
+          if (!stationary && !reduced) g.rotate(Math.atan2(to.y - from.y, to.x - from.x));
+          g.drawImage(image, -size / 2, -size / 2, size, size);
+          g.setTransform(1, 0, 0, 1, 0, 0);
+        } else {
+          g.fillStyle = visual.color;
+          g.beginPath(); g.arc(x, y, size * 0.22, 0, Math.PI * 2); g.fill();
+        }
+
+        if (!simple && (stationary || p > 0.52)) {
+          const impact = stationary ? p : Math.max(0, Math.min(1, (p - 0.52) / 0.48));
+          g.globalAlpha = Math.max(0, 1 - impact);
+          g.strokeStyle = visual.color; g.lineWidth = 5 - impact * 3;
+          g.beginPath(); g.arc(to.x, to.y, 18 + impact * visual.size * 0.58, 0, Math.PI * 2); g.stroke();
+          for (let i = 0; i < 8; i++) {
+            const angle = i * Math.PI / 4 + visual.id * 0.37;
+            const r1 = 12 + impact * visual.size * 0.25;
+            const r2 = r1 + 12 + impact * 16;
+            g.beginPath();
+            g.moveTo(to.x + Math.cos(angle) * r1, to.y + Math.sin(angle) * r1);
+            g.lineTo(to.x + Math.cos(angle) * r2, to.y + Math.sin(angle) * r2);
+            g.stroke();
+          }
+        }
+        g.restore();
+      }
+    }
+
     /* ---------- battle ---------- */
     function drawBattle() {
       const battle = ctx.battleApi().current;
@@ -385,23 +482,27 @@
         grd.addColorStop(0, '#1b4669'); grd.addColorStop(1, '#74d8a0');
         g.fillStyle = grd; g.fillRect(0, 0, GAME_W, GAME_H);
       }
-      ctx.drawCharacterFrame('sean', 0, 140, 225, 150, 150);
       // Recruited friends stand with Sean — a little formation to his lower-left.
       const allies = S().party.filter(c => ALLY_SPRITES[c]);
+      const seanMotion = battleMotion(battle, 'sean', allies, e);
+      ctx.drawCharacterFrame('sean', 0, 140 + seanMotion.x, 225 + seanMotion.y, 150, 150);
       allies.slice(0, 4).forEach((c, i) => {
         const ax = 30 + (i % 2) * 50, ay = 288 + Math.floor(i / 2) * 54;
-        const bob = Math.sin(Date.now() / 360 + i) * 2;
-        ctx.drawIcon(ALLY_SPRITES[c], ax, ay + bob, 52, 52);
+        const bob = document.body.classList.contains('ssg-reduce-motion') ? 0 : Math.sin(Date.now() / 360 + i) * 2;
+        const motion = battleMotion(battle, c, allies, e);
+        ctx.drawIcon(ALLY_SPRITES[c], ax + motion.x, ay + bob + motion.y, 52, 52);
       });
       const custom = e.sprite && ctx.img[e.sprite];
       const useCustom = custom && custom.complete && custom.naturalWidth;
       const enemyImg = useCustom ? custom : (e.kind === 'xelar' ? ctx.img.xelar : ctx.img[e.kind]);
       if (enemyImg && enemyImg.complete && enemyImg.naturalWidth) {
+        const motion = battleMotion(battle, 'enemy', allies, e);
         g.save();
         if (e.hue && !useCustom) g.filter = `hue-rotate(${e.hue}deg)`;
-        g.drawImage(enemyImg, 620, 105, e.boss ? 220 : 160, e.boss ? 220 : 160);
+        g.drawImage(enemyImg, 620 + motion.x, 105 + motion.y, e.boss ? 220 : 160, e.boss ? 220 : 160);
         g.restore();
       }
+      drawBattleVisuals(battle, allies, e);
       g.fillStyle = '#fff'; g.font = 'bold 24px Nunito'; g.fillText(e.name, 610, 82);
       // Element badge next to the enemy name (fire/ice/water/wind/light/void).
       const ELEMENT_ICONS = {fire:'icon_fire', ice:'icon_ice', water:'icon_water', wind:'icon_wind', light:'icon_light', void:'icon_void'};
@@ -438,9 +539,10 @@
       panel(60, 388, 840, 132, 'rgba(255,255,255,.94)');
       const cmds = ctx.battleApi().commands();
       battle.buttons = [];
+      const canAct = battle.turn === 'player' && battle.lock <= 0 && battle.intro <= 0;
       cmds.forEach((c, i) => {
         const x = 80 + (i % 3) * 205, y = 402 + Math.floor(i / 3) * 36;
-        button(x, y, 192, 29, c.label, () => ctx.battleApi().action(c.id));
+        button(x, y, 192, 29, c.label, () => ctx.battleApi().action(c.id), canAct);
         battle.buttons.push({...c, x, y, w: 192, h: 29});
       });
       g.fillStyle = '#12365a'; g.font = '12px Nunito';

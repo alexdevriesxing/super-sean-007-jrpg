@@ -30,6 +30,7 @@ expect(ai.operations?.includes('public service status'), 'AI summary is missing 
 expect(ai.key_pages?.support?.endsWith('/support.html'), 'AI summary is missing the support page');
 expect(ai.key_pages?.status?.endsWith('/status.html'), 'AI summary is missing the service status page');
 expect(ai.key_pages?.security?.endsWith('/security-policy.html'), 'AI summary is missing the security policy page');
+expect(ai.key_pages?.snowball?.endsWith('/snowball.html'), 'AI summary is missing Snowball Fight');
 expect(ai.privacy?.includes('sandboxed frames'), 'AI summary does not describe isolated advertising');
 
 expect(llms.includes(`Version: ${facts.version}`), 'llms.txt version is stale');
@@ -40,7 +41,7 @@ expect(llms.includes('standard gamepad support'), 'llms.txt is missing gamepad s
 expect(llms.includes('automated production monitoring'), 'llms.txt is missing production monitoring');
 for (const region of facts.regions) expect(llms.includes(region.name), `llms.txt is missing ${region.name}`);
 
-for (const page of ['', 'guides.html', 'characters.html', 'world.html', 'updates.html', 'support.html', 'privacy.html', 'terms.html', 'security-policy.html']) {
+for (const page of ['', 'snowball.html', 'guides.html', 'characters.html', 'world.html', 'updates.html', 'support.html', 'privacy.html', 'terms.html', 'security-policy.html']) {
   expect(sitemap.includes(`<loc>${facts.officialUrl}${page}</loc>`), `sitemap is missing ${page || 'homepage'}`);
 }
 expect(syncScript.includes("process.argv.includes('--dist')"), 'production fact synchronization is not configured for dist');

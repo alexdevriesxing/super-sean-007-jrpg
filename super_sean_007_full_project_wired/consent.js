@@ -1,18 +1,6 @@
-/* Super Sean 007 — versioned consent, cookieless analytics and privacy-safe diagnostics. */
+/* Super Sean 007 — cookieless analytics and privacy-safe diagnostics. */
 (() => {
   'use strict';
-
-  const CONSENT_KEY = 'super-sean-007-consent';
-  const CONSENT_VERSION = '2026-07-13-v2';
-  const CONSENT_MAX_AGE = 180 * 24 * 60 * 60 * 1000;
-
-  const consent = {
-    read() {
-      return {choice: 'accepted', version: CONSENT_VERSION, at: Date.now()};
-    },
-    write(choice) {},
-    clear() {}
-  };
 
   const Stats = {
     sent: new Set(), queue: [], timer: null,
@@ -73,23 +61,4 @@
     reportError(`unhandledrejection: ${reason && (reason.message || reason)}`, location.pathname, 0, reason?.stack);
   });
 
-  function loadAds() {
-    if (window.__ssgAdsLoaded) return;
-    window.__ssgAdsLoaded = true;
-    const script = document.createElement('script');
-    script.src = 'ads.js';
-    script.defer = true;
-    document.body.appendChild(script);
-  }
-
-  function removeBanner() {}
-  function showBanner() {}
-
-  window.SSGConsent = {
-    reset() {},
-    status: () => 'accepted',
-    version: CONSENT_VERSION
-  };
-
-  loadAds();
 })();

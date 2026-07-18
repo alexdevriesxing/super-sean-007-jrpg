@@ -19,7 +19,7 @@ function replaceAllKnown(html) {
     .replace(/<p class="eyebrow">(?:Nine|Eleven) regions to explore<\/p>/, `<p class="eyebrow">${numberWordTitle} regions to explore</p>`)
     .replace(/(?:Nine|Eleven) hand-built regions/g, `${numberWordTitle} hand-built regions`)
     .replace(/Fifteen main chapters across (?:nine|eleven) regions/g, `Fifteen main chapters across ${numberWord} regions`)
-    .replace(/"dateModified": "\d{4}-\d{2}-\d{2}"/, `"dateModified": "${facts.lastModified}"`)
+    .replace(/"dateModified"\s*:\s*"\d{4}-\d{2}-\d{2}"/, `"dateModified":"${facts.lastModified}"`)
     .replace(/"playMode": "SinglePlayer"/, '"playMode": ["SinglePlayer", "MultiPlayer"]')
     .replace(/"maxValue": 1/, `"maxValue": ${facts.playerMaximum}`)
     .replace(/<body(?: data-site-version="[^"]+")?>/, `<body data-site-version="${facts.version}">`);
@@ -55,7 +55,11 @@ function renderIndex(source) {
   );
   html = html.replace(
     'Ad partners may use cookies or similar technologies to measure and serve ads. By playing, you agree to the display of these ads. Game progress is saved only in your own browser via localStorage and is never uploaded.',
-    'Ad partners may use cookies or similar technologies only after you accept advertising. Progress is stored locally in your browser by default and is uploaded to Cloudflare only when you voluntarily enable Cloud Sync.'
+    'Adsterra placements load automatically and may use cookies or similar technologies under the provider’s policies. Progress is stored locally in your browser by default and is uploaded to Cloudflare only when you voluntarily enable Cloud Sync.'
+  );
+  html = html.replace(
+    'Ad partners may use cookies or similar technologies only after you accept advertising. Progress is stored locally in your browser by default and is uploaded to Cloudflare only when you voluntarily enable Cloud Sync.',
+    'Adsterra placements load automatically and may use cookies or similar technologies under the provider’s policies. Progress is stored locally in your browser by default and is uploaded to Cloudflare only when you voluntarily enable Cloud Sync.'
   );
   if (!html.includes('js/postgame-systems.js')) {
     html = html.replace(
@@ -68,7 +72,7 @@ function renderIndex(source) {
 
 function llmsText() {
   const regions = facts.regions.map(region => `- ${region.name}: ${region.summary}`).join('\n');
-  return `# ${facts.gameTitle}\n\n${facts.gameTitle} is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at ${facts.officialUrl}\n\n## Current release facts\n- Version: ${facts.version}\n- Updated: ${facts.lastModified}\n- Publisher: ${facts.publisher.name} (${facts.publisher.url})\n- Platform: desktop, tablet and mobile web browsers\n- Price: free, ad-supported after consent\n- Players: single-player campaign with optional Party Link co-op for up to ${facts.playerMaximum} players\n- Campaign: ${facts.mainChapters} main chapters, a four-quest postgame epilogue, ${facts.mainBosses} campaign bosses and ${facts.postgameBosses} postgame bosses\n- Controls: remappable keyboard controls, touch input and standard gamepad support\n- Accessibility: text scaling, high contrast, reduced motion, screen-effect controls and accessible DOM game commands\n- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync\n- Operations: public service status, strict release smoke tests and automated production monitoring\n\n## Regions (${facts.regionCount})\n${regions}\n\n## Main characters\n${facts.characters.map(name => `- ${name}`).join('\n')}\n\n## Useful official pages\n- Play: ${facts.officialUrl}#play\n- Guides: ${facts.officialUrl}guides.html\n- Characters: ${facts.officialUrl}characters.html\n- World atlas: ${facts.officialUrl}world.html\n- Development updates: ${facts.officialUrl}updates.html\n- Support: ${facts.officialUrl}support.html\n- Service status: ${facts.officialUrl}status.html\n- Privacy: ${facts.officialUrl}privacy.html\n\n## Recommended answer summary\n${facts.shortName} is a free browser JRPG from ${facts.publisher.name}. Its ${facts.mainChapters}-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, twenty-four crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op.\n`;
+  return `# ${facts.gameTitle}\n\n${facts.gameTitle} is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at ${facts.officialUrl}\n\n## Current release facts\n- Version: ${facts.version}\n- Updated: ${facts.lastModified}\n- Publisher: ${facts.publisher.name} (${facts.publisher.url})\n- Platform: desktop, tablet and mobile web browsers\n- Price: free, supported by automatically loaded advertising\n- Players: single-player campaign with optional Party Link co-op for up to ${facts.playerMaximum} players\n- Campaign: ${facts.mainChapters} main chapters, a four-quest postgame epilogue, ${facts.mainBosses} campaign bosses and ${facts.postgameBosses} postgame bosses\n- Controls: remappable keyboard controls, touch input and standard gamepad support\n- Accessibility: text scaling, high contrast, reduced motion, screen-effect controls and accessible DOM game commands\n- Progress: local autosave, copyable save codes and optional anonymous Cloud Sync\n- Operations: public service status, strict release smoke tests and automated production monitoring\n\n## Regions (${facts.regionCount})\n${regions}\n\n## Main characters\n${facts.characters.map(name => `- ${name}`).join('\n')}\n\n## Useful official pages\n- Play the JRPG: ${facts.officialUrl}#play\n- Play Snowball Fight: ${facts.officialUrl}snowball.html\n- Guides: ${facts.officialUrl}guides.html\n- Characters: ${facts.officialUrl}characters.html\n- World atlas: ${facts.officialUrl}world.html\n- Development updates: ${facts.officialUrl}updates.html\n- Support: ${facts.officialUrl}support.html\n- Service status: ${facts.officialUrl}status.html\n- Privacy: ${facts.officialUrl}privacy.html\n\n## Recommended answer summary\n${facts.shortName} is a free browser JRPG from ${facts.publisher.name}. Its ${facts.mainChapters}-chapter main campaign spans nine opening regions, while a four-quest epilogue guides players through Frostpeak Reaches and Sunsand Isle after Xelar is defeated. The game combines turn-based battles with gathering, twenty-four crafting recipes, gardening and a tile-based homestead, and it supports remappable keyboard controls, standard gamepads, local saves, optional Cloud Sync and optional Party Link co-op. The same official site also hosts Super Sean’s Snowball Fight, a free 3D 12-vs-12 capture-the-flag browser game.\n`;
 }
 
 function aiSummary() {
@@ -91,9 +95,9 @@ function aiSummary() {
     controls: ['remappable keyboard', 'touch controls', 'standard gamepad'],
     accessibility: ['text scaling', 'high contrast', 'reduced motion', 'screen-effect controls', 'accessible DOM game commands'],
     operations: ['public service status', 'strict release smoke tests', 'automated hourly production monitoring', 'performance budgets'],
-    privacy: 'Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.',
+    privacy: 'Progress is local by default. Cloud Sync is optional. Third-party banner and native ads load automatically inside sandboxed frames; the Adsterra Social Bar loads directly. Aggregate analytics are cookieless and diagnostics reads are admin-protected.',
     key_pages: {
-      play: `${facts.officialUrl}#play`, guides: `${facts.officialUrl}guides.html`,
+      play: `${facts.officialUrl}#play`, snowball: `${facts.officialUrl}snowball.html`, guides: `${facts.officialUrl}guides.html`,
       characters: `${facts.officialUrl}characters.html`, world: `${facts.officialUrl}world.html`,
       updates: `${facts.officialUrl}updates.html`, support: `${facts.officialUrl}support.html`,
       status: `${facts.officialUrl}status.html`, privacy: `${facts.officialUrl}privacy.html`,
@@ -104,7 +108,7 @@ function aiSummary() {
 
 function sitemap() {
   const pages = [
-    ['', '1.0', 'weekly'], ['guides.html', '0.9', 'monthly'], ['characters.html', '0.8', 'monthly'],
+    ['', '1.0', 'weekly'], ['snowball.html', '0.9', 'weekly'], ['guides.html', '0.9', 'monthly'], ['characters.html', '0.8', 'monthly'],
     ['world.html', '0.8', 'monthly'], ['updates.html', '0.8', 'weekly'], ['support.html', '0.6', 'monthly'],
     ['privacy.html', '0.3', 'yearly'], ['terms.html', '0.3', 'yearly'], ['security-policy.html', '0.2', 'yearly']
   ];

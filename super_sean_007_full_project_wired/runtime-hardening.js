@@ -26,7 +26,7 @@
       const originalReward = ads.showRewardedAd?.bind(ads);
       ads.showRewardedAd = (type, onSuccess) => {
         if (!ads.adsAvailable?.()) {
-          const message = 'Rewarded ads are unavailable because advertising was declined, blocked or could not load. Use the normal return-home option instead.';
+          const message = 'Rewarded ads are unavailable because advertising was blocked or could not load. Use the normal return-home option instead.';
           announce(message);
           window.alert(message);
           return false;

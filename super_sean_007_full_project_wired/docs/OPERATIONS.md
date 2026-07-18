@@ -123,6 +123,6 @@ Review:
 - production artifact size and first-play budget;
 - Cloud Sync and Party Link failure rates;
 - controller/mobile/browser coverage;
-- advertising consent, fill, quality and revenue;
+- advertising fill, placement quality and revenue;
 - privacy/security requests;
 - dependency, token and asset-licence changes.

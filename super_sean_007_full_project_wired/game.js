@@ -294,7 +294,7 @@
       const slot = this.findSlot(placement);
       if (!slot) return false;
       slot.hidden = false;
-      slot.dataset.adStatus = this.config?.enabled ? 'ready-for-script' : 'placeholder';
+      if (!slot.querySelector('iframe')) slot.dataset.adStatus = this.config?.enabled ? 'ready-for-script' : 'placeholder';
       return true;
     },
     hideBanner(placement) {
@@ -304,28 +304,11 @@
       return true;
     },
     adsAvailable() {
-      // Third-party ads only run after the visitor accepted consent.
-      return Boolean(this.config?.enabled) && Boolean(window.__ssgAdsLoaded);
+      return Boolean(this.config?.enabled) && Boolean(window.SuperSeanAds?.isLoaded?.());
     },
     // Render a real 300x250 Adsterra unit inside an isolated iframe.
     renderUnit(container) {
-      const unit = {key: this.config?.units?.banner300x250?.key, width: 300, height: 250};
-      if (!unit.key) return false;
-      try {
-        const frame = document.createElement('iframe');
-        frame.width = '300'; frame.height = '250'; frame.title = 'Advertisement';
-        frame.setAttribute('scrolling', 'no'); frame.style.border = '0';
-        container.appendChild(frame);
-        const doc = frame.contentWindow.document;
-        const options = JSON.stringify({key: unit.key, format: 'iframe', height: 250, width: 300, params: {}});
-        doc.open();
-        doc.write('<!doctype html><html><head><style>html,body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
-          '<scr' + 'ipt>atOptions=' + options + ';</scr' + 'ipt>' +
-          '<scr' + 'ipt src="https://' + this.config.adHost + '/' + unit.key + '/invoke.js"></scr' + 'ipt>' +
-          '</body></html>');
-        doc.close();
-        return true;
-      } catch (e) { return false; }
+      return Boolean(window.SuperSeanAds?.renderBox?.(container));
     },
     showInterstitial(reason, onClose) {
       const safeReasons = this.config?.safeInterstitialReasons || [];
@@ -393,7 +376,7 @@
         if (onSuccess) onSuccess();
         save();
       };
-      // Show a real ad if the visitor opted in; otherwise grant directly (they chose no ads).
+      // Show a real ad when the network loader is available; gameplay remains resilient if it is blocked.
       if (this.adsAvailable()) {
         this.showInterstitial('reward', grant);
       } else {
@@ -875,7 +858,7 @@
     if (state.scene !== 'title') state.playMinutes += dt / 60000;
     coop.update(dt);
     if (state.scene === 'coopGuest' || state.scene === 'party') return;
-    if (state.scene === 'battle') { battleApi.update(); return; }
+    if (state.scene === 'battle') { battleApi.update(dt); return; }
     if (state.scene === 'fishing') { systems.updateFishing(dt); return; }
     if (state.scene !== 'explore') return;
     const p = state.player;
@@ -944,6 +927,7 @@
   }
 
   canvas.addEventListener('click', e => {
+    canvas.focus({preventScroll: true});
     AudioManager.unlock();
     const {x, y} = canvasPos(e);
     renderer.click(x, y);
@@ -974,14 +958,26 @@
     renderer.click((t0.clientX - r.left) * GAME_W / r.width, (t0.clientY - r.top) * GAME_H / r.height);
   }, {passive: false});
 
+  function gameOwnsScrollKeys() {
+    if (state.scene === 'title') return false;
+    const active = document.activeElement;
+    if (active && /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(active.tagName)) return false;
+    const rect = canvas.getBoundingClientRect();
+    const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+    return visible >= Math.min(120, rect.height * 0.25);
+  }
+
   window.addEventListener('keydown', e => {
+    const scrollKey = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code);
+    if (scrollKey && !gameOwnsScrollKeys()) {
+      keys[e.code] = false;
+      return;
+    }
     AudioManager.unlock();
     keys[e.code] = true;
-    // Stop arrows/space from scrolling the page while the game is on screen.
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.bottom > 60 && rect.top < window.innerHeight - 60) e.preventDefault();
-    }
+    // Gameplay owns movement keys only while a meaningful part of the active
+    // canvas is visible; elsewhere those keys keep their normal page behavior.
+    if (scrollKey) e.preventDefault();
     if (state.scene === 'title') {
       if (e.code === 'Enter') startGame();
       if (e.code === 'KeyN') resetGame();
@@ -1104,6 +1100,7 @@
       battle: battleApi.current ? {
         enemy: {id: battleApi.current.enemy.id, name: battleApi.current.enemy.name, hp: battleApi.current.enemy.hp, maxHp: battleApi.current.enemy.maxHp},
         turn: battleApi.current.turn,
+        animations: (battleApi.current.visuals || []).map(visual => ({kind: visual.kind, source: visual.source, target: visual.target, sprite: visual.sprite})),
         commands: battleApi.commands().map(c => c.id),
         log: battleApi.current.log.slice(0, 4)
       } : null,

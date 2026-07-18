@@ -1,7 +1,7 @@
 {
   "game_title": "Super Sean 007: Legend of the Seven Gems",
   "short_name": "Super Sean 007",
-  "software_version": "1.6.0",
+  "software_version": "1.6.1",
   "last_updated": "2026-07-18",
   "official_url": "https://www.supersean007.com/",
   "publisher": {
@@ -153,9 +153,10 @@
     "automated hourly production monitoring",
     "performance budgets"
   ],
-  "privacy": "Progress is local by default. Cloud Sync is optional. Third-party ads run only after consent and inside sandboxed frames. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
+  "privacy": "Progress is local by default. Cloud Sync is optional. Third-party banner and native ads load automatically inside sandboxed frames; the Adsterra Social Bar loads directly. Aggregate analytics are cookieless and diagnostics reads are admin-protected.",
   "key_pages": {
     "play": "https://www.supersean007.com/#play",
+    "snowball": "https://www.supersean007.com/snowball.html",
     "guides": "https://www.supersean007.com/guides.html",
     "characters": "https://www.supersean007.com/characters.html",
     "world": "https://www.supersean007.com/world.html",

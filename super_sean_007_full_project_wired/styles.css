@@ -53,7 +53,7 @@ body.ssg-maximize .mobile-controls{display:flex}
 @keyframes ssgspin{to{transform:rotate(360deg)}}
 
 /* DOM overlays: settings, onboarding, share */
-.ssg-overlay{position:fixed;inset:0;z-index:1100;display:grid;place-items:center;background:rgba(8,22,40,.72);backdrop-filter:blur(4px);animation:consentUp .2s ease;padding:16px}
+.ssg-overlay{position:fixed;inset:0;z-index:1100;display:grid;place-items:center;background:rgba(8,22,40,.72);backdrop-filter:blur(4px);animation:overlayUp .2s ease;padding:16px}
 .ssg-panel{position:relative;background:#fff;border-radius:22px;padding:26px;width:min(460px,100%);max-height:88vh;overflow-y:auto;box-shadow:0 30px 90px rgba(0,0,0,.45)}
 .ssg-panel h2{margin:0 0 16px;color:#12365a;font-size:1.5rem}
 .ssg-x{position:absolute;top:14px;right:16px;border:0;background:transparent;font-size:1.7rem;line-height:1;color:#8aa0b5;cursor:pointer}
@@ -80,25 +80,14 @@ body.ssg-maximize .mobile-controls{display:flex}
 @media (max-width:720px){.community-cards{grid-template-columns:1fr}}
 
 /* Interstitial ad overlay */
-#adOverlay{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;background:rgba(8,22,40,.86);backdrop-filter:blur(4px);animation:consentUp .25s ease}
+#adOverlay{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;background:rgba(8,22,40,.86);backdrop-filter:blur(4px);animation:overlayUp .25s ease}
+@keyframes overlayUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .ad-overlay-card{background:#fff;border-radius:20px;padding:18px;max-width:340px;text-align:center;box-shadow:0 30px 90px rgba(0,0,0,.5)}
 .ad-overlay-label{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#8aa0b5;font-weight:800;margin-bottom:8px}
 .ad-overlay-unit{width:300px;height:250px;margin:0 auto;background:#eef7ff;border-radius:12px;overflow:hidden}
 .ad-overlay-headline{font-weight:800;color:#12365a;margin:12px 0}
 .ad-overlay-close{border:0;border-radius:999px;padding:11px 22px;font-weight:800;font-family:inherit;background:linear-gradient(135deg,#ff9c2f,#ff6f3b);color:#fff;cursor:pointer}
 .ad-overlay-close:disabled{background:#c3cfda;cursor:default}
-
-/* Consent banner */
-#consentBanner{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:rgba(13,37,63,.97);color:#eafaff;box-shadow:0 -8px 32px rgba(0,0,0,.35);backdrop-filter:blur(8px);animation:consentUp .35s ease}
-@keyframes consentUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.consent-inner{width:min(1180px,calc(100% - 32px));margin:auto;padding:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:space-between}
-.consent-inner p{margin:0;font-size:.92rem;max-width:760px;line-height:1.5}
-.consent-actions{display:flex;gap:10px;flex-wrap:wrap}
-.consent-btn{border:0;border-radius:999px;padding:11px 18px;font-weight:800;font-size:.9rem;cursor:pointer;font-family:inherit}
-.consent-btn.accept{background:linear-gradient(135deg,#ff9c2f,#ff6f3b);color:#fff}
-.consent-btn.decline{background:rgba(255,255,255,.14);color:#eafaff;border:1px solid rgba(255,255,255,.3)}
-.consent-btn:hover{transform:translateY(-1px)}
-@media (max-width:720px){.consent-inner{gap:12px}.consent-inner p{font-size:.84rem}.consent-btn{flex:1;text-align:center}}
 
 /* Real painted brand art */
 .brand img{width:150px;border-radius:12px;box-shadow:0 4px 14px rgba(18,54,90,.25)}
@@ -126,6 +115,13 @@ body.theater .game-sidebar .ad-slot-sky{min-height:160px}
 .game-frame:fullscreen #gameCanvas{max-height:calc(100vh - 140px);width:auto;max-width:100%;margin:0 auto}
 .game-frame:fullscreen .mobile-controls{display:flex}
 @media (max-width:1060px){body.theater .game-sidebar{grid-template-columns:1fr 1fr}}
+@media (max-width:900px){
+  .nav{height:70px}.nav-toggle{display:block}
+  .nav-links{display:none;position:absolute;top:70px;left:12px;right:12px;background:#fff;border-radius:22px;padding:18px;box-shadow:var(--shadow);grid-template-columns:1fr 1fr}
+  .nav-open .nav-links{display:grid}
+  .game-sidebar,body.theater .game-sidebar{grid-template-columns:1fr;position:static;max-height:none;overflow:visible}
+  .game-sidebar>*{min-width:0}
+}
 @media (max-width:720px){
   .game-section>.container{width:100%}
   .game-frame{border-radius:0;border-left:0;border-right:0;padding:6px}
