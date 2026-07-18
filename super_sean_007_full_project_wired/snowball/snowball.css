@@ -11,7 +11,7 @@
 
 /* hero */
 .snow-hero { position: relative; min-height: 72vh; display: flex; align-items: flex-end; overflow: hidden; }
-.snow-hero-art { position: absolute; inset: 0; background: url('assets/snowball/key-art.webp') center 30% / cover no-repeat; }
+.snow-hero-art { position: absolute; inset: 0; background: url('../assets/snowball/key-art.webp') center 30% / cover no-repeat; }
 .snow-hero-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,28,51,.15) 30%, rgba(7,28,51,.92) 88%); }
 .snow-hero-copy { position: relative; padding: 90px 0 56px; max-width: 760px; }
 .snow-hero h1 { display: flex; flex-direction: column; line-height: .94; margin: 8px 0 14px; text-shadow: 0 4px 24px rgba(2, 16, 32, .8); }
@@ -82,10 +82,17 @@
 
 /* ---------- game frame ---------- */
 .game-section .wrap { position: relative; }
+.snow-game-shell { max-width: 1440px; }
+.snow-game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; align-items: start; }
+.snow-game-main { min-width: 0; }
+.snow-ad-rail { position: sticky; top: 18px; display: grid; justify-items: center; gap: 18px; }
+.snow-ad-rail .ad-slot { width: 100%; }
+.snow-ad-rail .ad-slot-box { min-height: 250px; }
+.snow-ad-rail .ad-slot-sky { min-height: 600px; }
 .game-frame-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .game-frame-head h2 { margin: 0; font-size: 1.3rem; }
 .frame-btn { background: rgba(12, 48, 78, .9); color: #bfe9ff; border: 1px solid rgba(127, 214, 255, .45); border-radius: 10px; padding: 8px 14px; font-weight: 800; cursor: pointer; margin-left: 8px; }
-#playWrap { position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 420px; max-height: 86vh; border-radius: 18px; overflow: hidden; background: #0a2c47 url('assets/snowball/arena-art.webp') center / cover; box-shadow: 0 18px 60px rgba(2, 14, 28, .6), 0 0 0 1px rgba(127, 214, 255, .25); user-select: none; -webkit-user-select: none; }
+#playWrap { position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 420px; max-height: 86vh; border-radius: 18px; overflow: hidden; background: #0a2c47 url('../assets/snowball/arena-art.webp') center / cover; box-shadow: 0 18px 60px rgba(2, 14, 28, .6), 0 0 0 1px rgba(127, 214, 255, .25); user-select: none; -webkit-user-select: none; }
 #playWrap:fullscreen { aspect-ratio: auto; max-height: none; border-radius: 0; }
 #gameStage, #gameStage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; touch-action: none; }
 @media (max-width: 760px) { #playWrap { aspect-ratio: auto; height: min(74dvh, 620px); min-height: min(380px, 68dvh); } }
@@ -99,12 +106,12 @@
 #playWrap .hud { display: none; }
 #playWrap[data-mode="playing"] .hud { display: block; }
 .scr-title { background: linear-gradient(180deg, rgba(6, 24, 44, .2), rgba(6, 24, 44, .78) 82%); }
-.scr-loading { background: rgba(5, 20, 38, .92) url('assets/snowball/loading-art.webp') center / cover; }
+.scr-loading { background: rgba(5, 20, 38, .92) url('../assets/snowball/loading-art.webp') center / cover; }
 .scr-loading::before { content: ''; position: absolute; inset: 0; background: rgba(5, 20, 38, .68); }
 .scr-briefing, .scr-paused { background: rgba(5, 20, 38, .88); overflow: auto; }
 .scr-over { background: rgba(5, 20, 38, .55); }
-#screenOver[data-result="victory"] { background: rgba(5, 20, 38, .45) url('assets/snowball/victory-art.webp') center / cover; }
-#screenOver[data-result="defeat"] { background: rgba(5, 20, 38, .45) url('assets/snowball/defeat-art.webp') center / cover; }
+#screenOver[data-result="victory"] { background: rgba(5, 20, 38, .45) url('../assets/snowball/victory-art.webp') center / cover; }
+#screenOver[data-result="defeat"] { background: rgba(5, 20, 38, .45) url('../assets/snowball/defeat-art.webp') center / cover; }
 .brand-super { letter-spacing: .3em; font-weight: 800; color: #bfe9ff; font-size: clamp(.7rem, 1.6vw, 1rem); }
 .scr h2 { line-height: .92; margin: 6px 0 8px; }
 .scr h2 b { display: block; font-size: clamp(2.2rem, 6vw, 4.2rem); color: #fff; text-shadow: 0 4px 20px rgba(2, 16, 32, .9); }
@@ -250,3 +257,12 @@
 .ad-slot { display: flex; align-items: center; justify-content: center; min-height: 90px; width: 100%; max-width: 728px; border-radius: 12px; background: rgba(9, 34, 60, .5); border: 1px dashed rgba(127, 214, 255, .25); color: rgba(159, 196, 221, .6); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; overflow: hidden; }
 .ad-slot iframe { border-radius: 8px; }
 .ad-slot.small { min-height: 120px; }
+@media (max-width: 1100px) {
+  .snow-game-layout { grid-template-columns: 1fr; }
+  .snow-ad-rail { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .snow-ad-rail .ad-slot-sky { min-height: 300px; }
+}
+@media (max-width: 720px) {
+  .snow-ad-rail { grid-template-columns: 1fr; }
+  .snow-ad-rail .desktop-only { display: none; }
+}

@@ -337,3 +337,20 @@ generated tilesets are intentionally left — no game-ready value).
 - Live control QA confirmed the RPG owns arrow keys during exploration (0px page
   movement) while normal off-game ArrowDown scrolling remains 40px. Snowball
   likewise measured 40px scrolling before deployment and 0px while playing.
+
+## 2026-07-18 — Snowball ad visibility follow-up
+- Reproduced the public `/snowball` report in headed Chrome. The existing top and
+  below-game banners served real creatives, while the native/footer frames were
+  delayed and the page omitted the 300x250 and skyscraper inventory entirely.
+- Moved the leaderboard directly below the navigation, added a responsive sticky
+  300x250 + 160x600/300 arena ad rail, and changed isolated frames from lazy to
+  eager loading so off-screen Snowball inventory starts filling immediately.
+- Found and repaired five Snowball CSS image paths that incorrectly resolved under
+  `/snowball/assets/...`; hero, arena, loading, victory and defeat art now resolve
+  from `../assets/snowball/` as required by the stylesheet location.
+- Verification: 49/49 tests and the full production build/hardening/performance
+  pipeline pass. Headed Chrome served real creatives in all six Snowball placement
+  groups. At 1440px the 300x250 and 160x600 units sit beside the live arena; at
+  390px the 320x50 and 300x250 units render, the skyscraper hides, and measured
+  document overflow is 0px. A full Play -> Deploy flow reached live gameplay with
+  the arena canvas and HUD intact.

@@ -24,6 +24,7 @@ test('Adsterra loader contains every supplied unit and uses dedicated responsive
     '978406dc84c1b710ab8635624db3beb4', 'a4157228f205b7d03d165ecf28a4b3c8'
   ]) assert.ok(ads.includes(id), `missing Adsterra unit ${id}`);
   assert.match(ads, /AD_FRAME_PATH = '\/ad-frame'/);
+  assert.match(ads, /loading = 'eager'/);
   assert.match(ads, /allow-scripts allow-same-origin/);
   assert.match(await read('_headers'), /frame-src 'self' data: blob: https:/);
 });
@@ -40,6 +41,16 @@ test('ad frame serves known units and rejects arbitrary unit IDs', async () => {
 
   const unknown = await onRequestGet({request: new Request('https://super-sean-007-jrpg.pages.dev/ad-frame?unit=unknown')});
   assert.equal(unknown.status, 400);
+});
+
+test('Snowball exposes complete eager game-page ad inventory and valid CSS artwork paths', async () => {
+  const [html, styles] = await Promise.all([read('snowball.html'), read('snowball/snowball.css')]);
+  for (const placement of [
+    'top-banner-728x90', 'game-sidebar-native', 'game-sidebar-skyscraper',
+    'below-game-responsive', 'content-native-responsive', 'footer-banner-responsive'
+  ]) assert.match(html, new RegExp(`data-adsterra-placement="${placement}"`), `Snowball is missing ${placement}`);
+  assert.doesNotMatch(styles, /url\(['"]?assets\//, 'Snowball CSS assets must resolve from the snowball/ stylesheet directory');
+  assert.match(styles, /url\('\.\.\/assets\/snowball\/key-art\.webp'\)/);
 });
 
 test('packaged browser smoke runs through Cloudflare Pages Functions', async () => {

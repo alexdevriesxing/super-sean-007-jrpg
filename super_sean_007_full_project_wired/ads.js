@@ -41,7 +41,7 @@
       : BANNER_UNITS.sky160x300;
   }
 
-  function createSandbox(slot, width, height, unitId, loading = 'lazy') {
+  function createSandbox(slot, width, height, unitId, loading = 'eager') {
     const available = Math.max(1, slotWidth(slot));
     const scale = Math.min(1, available / width);
     const holder = document.createElement('div');
@@ -76,7 +76,7 @@
     frame.src = `${AD_FRAME_PATH}?unit=${encodeURIComponent(unitId)}`;
   }
 
-  function renderBanner(slot, unit, loading = 'lazy') {
+  function renderBanner(slot, unit, loading = 'eager') {
     try {
       const available = Math.max(1, slotWidth(slot));
       const signature = `${unit.key}:${unit.width}x${unit.height}:${Math.min(1, available / unit.width).toFixed(3)}`;
