@@ -1,16 +1,16 @@
 {
-  "checkedAt": "2026-07-18T14:20:00.143Z",
-  "baseUrl": "https://www.supersean007.com",
-  "expectedVersion": "1.6.0",
-  "expectedCommit": "19564a3cea339af331283f0078f52e2d9a29508d",
+  "checkedAt": "2026-07-18T18:39:52.347Z",
+  "baseUrl": "https://supersean007.com",
+  "expectedVersion": "1.6.1",
+  "expectedCommit": "9c6789129b35cb46462f2a914209e49a51f3e973",
   "deployment": {
     "branch": "main",
-    "commit": "19564a3cea339af331283f0078f52e2d9a29508d",
-    "buildCommit": "19564a3cea339af331283f0078f52e2d9a29508d",
-    "builtAt": "2026-07-18T14:18:25.094Z",
+    "commit": "9c6789129b35cb46462f2a914209e49a51f3e973",
+    "buildCommit": "9c6789129b35cb46462f2a914209e49a51f3e973",
+    "builtAt": "2026-07-18T18:38:30.670Z",
     "convergenceAttempt": 1
   },
-  "passed": false,
+  "passed": true,
   "results": [
     {
       "name": "health endpoint",
@@ -18,31 +18,31 @@
       "detail": {
         "ok": true,
         "service": "super-sean-007",
-        "version": "1.6.0",
+        "version": "1.6.1",
         "deployment": "main",
-        "commit": "19564a3cea339af331283f0078f52e2d9a29508d",
-        "checkedAt": "2026-07-18T14:19:59.617Z"
+        "commit": "9c6789129b35cb46462f2a914209e49a51f3e973",
+        "checkedAt": "2026-07-18T18:39:52.175Z"
       }
     },
     {
       "name": "health version",
       "passed": true,
-      "detail": "1.6.0"
+      "detail": "1.6.1"
     },
     {
       "name": "health commit",
       "passed": true,
-      "detail": "19564a3cea339af331283f0078f52e2d9a29508d"
+      "detail": "9c6789129b35cb46462f2a914209e49a51f3e973"
     },
     {
       "name": "build metadata version",
       "passed": true,
-      "detail": "1.6.0"
+      "detail": "1.6.1"
     },
     {
       "name": "build metadata commit",
       "passed": true,
-      "detail": "19564a3cea339af331283f0078f52e2d9a29508d"
+      "detail": "9c6789129b35cb46462f2a914209e49a51f3e973"
     },
     {
       "name": "homepage",
@@ -59,7 +59,7 @@
     {
       "name": "content security policy",
       "passed": true,
-      "detail": "default-src 'self'; script-src 'self' 'unsafe-inline' https://demolishwrestconclusions.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' stun: turn: turns: https://demolishwrestconclusions.com; frame-src 'self' https:; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+      "detail": "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; font-src 'self' data: https:; connect-src 'self' stun: turn: turns: https:; frame-src 'self' data: blob: https:; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
     },
     {
       "name": "content type protection",
@@ -71,7 +71,7 @@
       "passed": true,
       "detail": {
         "status": 404,
-        "url": "https://www.supersean007.com/production-smoke-missing-1784384399896"
+        "url": "https://supersean007.com/production-smoke-missing-1784399991933"
       }
     },
     {
@@ -98,7 +98,7 @@
     {
       "name": "AI release facts",
       "passed": true,
-      "detail": "1.6.0"
+      "detail": "1.6.1"
     },
     {
       "name": "security contact",
@@ -111,11 +111,11 @@
       "name": "performance budget",
       "passed": true,
       "detail": {
-        "files": 826,
-        "bytes": 29809284,
-        "javascriptBytes": 1127433,
-        "cssBytes": 84415,
-        "criticalBytes": 903766,
+        "files": 829,
+        "bytes": 29632666,
+        "javascriptBytes": 1135433,
+        "cssBytes": 84327,
+        "criticalBytes": 907964,
         "filesOverTwoMb": 0
       }
     },
@@ -155,22 +155,13 @@
       }
     },
     {
-      "name": "apex redirects to canonical www",
-      "passed": false,
+      "name": "www redirects to canonical apex",
+      "passed": true,
       "detail": {
-        "status": 200,
-        "location": ""
+        "status": 301,
+        "location": "https://supersean007.com/"
       }
     }
   ],
-  "failures": [
-    {
-      "name": "apex redirects to canonical www",
-      "passed": false,
-      "detail": {
-        "status": 200,
-        "location": ""
-      }
-    }
-  ]
+  "failures": []
 }
