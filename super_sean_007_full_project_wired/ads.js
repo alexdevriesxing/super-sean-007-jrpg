@@ -1,10 +1,11 @@
 (() => {
   'use strict';
 
-  // Every banner executes inside a sandboxed data: iframe. A data document has
-  // an opaque origin, so the ad can run without receiving access to game
-  // localStorage, cloud-sync IDs or first-party credentials.
+  // Banners execute on the project's stable pages.dev origin. That gives the
+  // provider the cookie-capable document it requires while keeping it
+  // cross-origin from game localStorage, cloud-sync IDs and credentials.
   const AD_HOST = 'demolishwrestconclusions.com';
+  const AD_FRAME_ORIGIN = 'https://super-sean-007-jrpg.pages.dev';
 
   const NATIVE_BANNER = {
     src: `https://${AD_HOST}/ce88b3be674af35280aa2502234d5353/invoke.js`,
@@ -57,7 +58,7 @@
     frame.loading = loading;
     frame.referrerPolicy = 'strict-origin-when-cross-origin';
     frame.setAttribute('scrolling', 'no');
-    frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox');
+    frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation');
     frame.style.border = '0';
     frame.style.display = 'block';
     frame.style.transformOrigin = 'top left';
@@ -71,9 +72,8 @@
     return frame;
   }
 
-  function writeFrame(frame, body) {
-    const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><base target="_blank"><style>html,body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>${body}</body></html>`;
-    frame.src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+  function loadFrame(frame, unitId) {
+    frame.src = `${AD_FRAME_ORIGIN}/ad-frame?unit=${encodeURIComponent(unitId)}`;
   }
 
   function renderBanner(slot, unit, loading = 'lazy') {
@@ -82,17 +82,7 @@
       const signature = `${unit.key}:${unit.width}x${unit.height}:${Math.min(1, available / unit.width).toFixed(3)}`;
       if (slot.dataset.adUnit === signature && slot.querySelector('iframe')) return true;
       const frame = createSandbox(slot, unit.width, unit.height, unit.key, loading);
-      const options = JSON.stringify({
-        key: unit.key,
-        format: 'iframe',
-        height: unit.height,
-        width: unit.width,
-        params: {}
-      }).replace(/</g, '\\u003c');
-      writeFrame(frame,
-        `<script>window.atOptions=${options};<\/script>` +
-        `<script src="https://${AD_HOST}/${unit.key}/invoke.js"><\/script>`
-      );
+      loadFrame(frame, unit.key);
       return true;
     } catch (error) {
       console.warn('[Ads] Sandboxed banner failed', error);
@@ -107,10 +97,7 @@
       const signature = `${NATIVE_BANNER.containerId}:${width}x${NATIVE_BANNER.height}:${Math.min(1, available / width).toFixed(3)}`;
       if (slot.dataset.adUnit === signature && slot.querySelector('iframe')) return true;
       const frame = createSandbox(slot, width, NATIVE_BANNER.height, NATIVE_BANNER.containerId);
-      writeFrame(frame,
-        `<div id="${NATIVE_BANNER.containerId}"></div>` +
-        `<script async data-cfasync="false" src="${NATIVE_BANNER.src}"><\/script>`
-      );
+      loadFrame(frame, 'native');
       return true;
     } catch (error) {
       console.warn('[Ads] Sandboxed native unit failed', error);

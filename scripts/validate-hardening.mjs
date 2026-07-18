@@ -35,7 +35,7 @@ await Promise.all([
   required('cloud-controls.js'), required('runtime-hardening.js'), required('turn-config.js'),
   required('stats.js'), required('stats.css'), required('build-meta.json'), required('data/site-facts.json'),
   required('data/performance-budget.json'),
-  required('api/health.js', functionRoot), required('api/turn.js', functionRoot),
+  required('api/health.js', functionRoot), required('api/turn.js', functionRoot), required('ad-frame.js', functionRoot),
   required('_lib/security.js', functionRoot), required('_lib/save-schema.js', functionRoot),
   required('scripts/clean-dist.mjs', path.resolve('.')), required('scripts/live-smoke.mjs', path.resolve('.')),
   required('.github/workflows/cloudflare-deploy.yml', path.resolve('.')),
@@ -48,7 +48,7 @@ const [
   index, redirects, headers, serviceWorker, sitemap, robots, statsHtml, statsJs, privacy,
   ads, runtime, preferences, preferenceCss, overlay, quests, saveCore, postgameSystems,
   statusHtml, statusJs, supportHtml, metaText, factsText, health, deployWorkflow,
-  monitorWorkflow, cleanDist, buildStatic, liveSmoke
+  monitorWorkflow, cleanDist, buildStatic, liveSmoke, adFrame
 ] = await Promise.all([
   text('index.html'), text('_redirects'), text('_headers'), text('sw.js'), text('sitemap.xml'),
   text('robots.txt'), text('stats.html'), text('stats.js'), text('privacy.html'), text('ads.js'),
@@ -57,7 +57,8 @@ const [
   text('status.html'), text('status.js'), text('support.html'), text('build-meta.json'), text('data/site-facts.json'),
   text('api/health.js', functionRoot), text('.github/workflows/cloudflare-deploy.yml', path.resolve('.')),
   text('.github/workflows/production-monitor.yml', path.resolve('.')), text('scripts/clean-dist.mjs', path.resolve('.')),
-  text('scripts/build-static.mjs', path.resolve('.')), text('scripts/live-smoke.mjs', path.resolve('.'))
+  text('scripts/build-static.mjs', path.resolve('.')), text('scripts/live-smoke.mjs', path.resolve('.')),
+  text('ad-frame.js', functionRoot)
 ]);
 
 if (/\/\*\s+\/index\.html\s+200/.test(redirects)) errors.push('Catch-all 200 rewrite still present.');
@@ -77,7 +78,8 @@ if (/localStorage|sessionStorage/.test(statsJs)) errors.push('Diagnostics client
 if (!/Content-Security-Policy: default-src 'none'/.test(headers)) errors.push('Diagnostics does not have a dedicated restrictive CSP.');
 if (!privacy.includes('Short-lived SHA-256 network fingerprints')) errors.push('Privacy policy does not disclose abuse-prevention hashing.');
 if (!privacy.includes('permanently delete the stored cloud copy')) errors.push('Privacy policy does not disclose cloud deletion.');
-if (!ads.includes("sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox'")) errors.push('Advertising is not sandboxed.');
+if (!ads.includes("sandbox', 'allow-scripts allow-same-origin") || !ads.includes('super-sean-007-jrpg.pages.dev') || !ads.includes('/ad-frame?unit=')) errors.push('Advertising is not isolated in the cross-origin sandbox.');
+if (!adFrame.includes('frame-ancestors https://supersean007.com https://www.supersean007.com') || !adFrame.includes("x-robots-tag") || !adFrame.includes('BANNERS[unit]')) errors.push('Cross-origin ad-frame allowlist or response hardening is incomplete.');
 if (/SOCIAL_BAR_SRC|injectSocialBar/.test(ads)) errors.push('Top-level Social Bar code is still present.');
 if (!runtime.includes('delete game.debug')) errors.push('Production QA controls are not removed.');
 if (!runtime.includes('startNewGamePlus')) errors.push('Safe New Game+ action is not preserved after debug removal.');

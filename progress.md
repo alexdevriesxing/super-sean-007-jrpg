@@ -303,3 +303,6 @@ generated tilesets are intentionally left — no game-ready value).
 - Production routing follows the existing Cloudflare edge policy: `www` permanently
   redirects to canonical `supersean007.com`, with metadata and monitoring aligned
   to the final host so there are no competing redirects or SEO signals.
+- Live-browser ad QA found Adsterra's banner runtime requires cookie access. Banner
+  frames now run on the cross-origin Pages host via `/ad-frame`, keeping game
+  storage isolated while allowing the provider creatives to render.

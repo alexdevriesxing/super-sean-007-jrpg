@@ -19,7 +19,7 @@ The HTML uses `data-adsterra-placement` attributes; `ads.js` picks the banner si
 - `below-game-responsive` - responsive leaderboard below the game.
 - `footer-banner-responsive` - responsive leaderboard above the footer.
 
-The Social Bar script is injected once per page load and handles desktop and mobile automatically. Each `atOptions` banner is rendered inside its own sandboxed, opaque-origin `data:` iframe so multiple units never clash or receive access to first-party game storage. Banner sizes swap on resize and scale down safely on very narrow screens.
+The Social Bar script is injected once per page load and handles desktop and mobile automatically. Each banner is rendered in a sandboxed frame on the stable `super-sean-007-jrpg.pages.dev` origin. The cross-origin boundary protects first-party game storage while giving the provider the cookie-capable document its runtime requires. Banner sizes swap on resize and scale down safely on very narrow screens.
 
 ## In-Game Reward Hooks
 
@@ -53,4 +53,4 @@ Do not show interstitials:
 
 ## CSP Notes
 
-Adsterra serves from rotating domains, so `_headers` allows `https:` for `script-src`, `frame-src`, `img-src`, `connect-src`, `style-src` and `font-src`, plus `data:` for the isolated banner frames, while keeping `default-src 'self'` and strict `base-uri`. Media stays self-hosted.
+Adsterra serves from rotating domains, so `_headers` allows `https:` for `script-src`, `frame-src`, `img-src`, `connect-src`, `style-src` and `font-src` while keeping `default-src 'self'` and strict `base-uri`. The dedicated `/ad-frame` function is noindex, only accepts known unit IDs, allows framing from the two production hosts, and sends no game credentials or storage. Media stays self-hosted.
