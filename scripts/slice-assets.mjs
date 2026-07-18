@@ -39,7 +39,8 @@ const plans = [
     'ruushwood_tiles',
     'moon_shrine_tiles',
     'ancient_ruins_tiles',
-    'bald_moon_tower_tiles'
+    'bald_moon_tower_tiles',
+    'interior_tiles'
   ].map((id) => ({
     id,
     type: 'tileset',

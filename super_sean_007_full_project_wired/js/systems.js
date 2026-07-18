@@ -465,7 +465,9 @@
     const shop = {open: false, tab: 'buy', idx: 0};
     function shopPrices() {
       const mult = perkActive('discount') ? 0.85 : 1;
-      return SSG.SHOP_STOCK.map(s => ({...s, price: Math.ceil(s.price * mult)}));
+      return SSG.SHOP_STOCK
+        .filter(s => !s.requires || S().defeatedBosses[s.requires])
+        .map(s => ({...s, price: Math.ceil(s.price * mult)}));
     }
     function sellables() {
       return Object.keys(S().items)
@@ -502,7 +504,43 @@
       if (npc.requiresPiece && !hasPiece(npc.requiresPiece)) return false;
       return true;
     }
+    // Paid rest service: the innkeeper restores the whole party for 15 coins.
+    function innRest(npc) {
+      const st = S();
+      const h = st.hero;
+      const stats = heroStats();
+      if (h.hp >= h.maxHp && h.mp >= stats.maxMp) {
+        ctx.showDialogue(npc.name, ['You look fresh as a daisy already! Come rest after your next big adventure.'], npc.char);
+        return;
+      }
+      if (h.coins < 15) {
+        ctx.showDialogue(npc.name, ['A warm bed and hot stew is 15 coins, dear. Come back when your pouch jingles!'], npc.char);
+        return;
+      }
+      h.coins -= 15;
+      h.hp = h.maxHp;
+      h.mp = stats.maxMp;
+      ctx.sfx('heal');
+      ctx.showDialogue(npc.name, ['Sweet dreams, hero…', 'You wake up warm and fully rested! HP and MP restored. (-15 coins)'], npc.char);
+      ctx.save();
+    }
+    // Mount whistle/horn: hop on or off; game.js applies the speed bonus.
+    function toggleMount(itemName) {
+      const def = SSG.ITEMS[itemName];
+      if (!def?.mount) return;
+      const st = S();
+      if (st.mount === def.mount) {
+        st.mount = null;
+        ctx.showToast('You hop off. Thanks for the ride!');
+      } else {
+        st.mount = def.mount;
+        ctx.showToast(`You hop on! Riding is much faster. Use the ${itemName} again to dismount.`);
+      }
+      ctx.sfx('menu_open');
+      ctx.save();
+    }
     function talk(npc) {
+      if (npc.service === 'inn') { innRest(npc); return; }
       if (npc.shop) { shop.open = true; shop.tab = 'buy'; shop.idx = 0; ctx.setScene('shop'); ctx.sfx('menu_open'); return; }
       if (questDelivery(npc.id)) return;
       const q = currentQuest();
@@ -718,7 +756,7 @@
     return {
       addItem, removeItem, countItem, hasCost, payCost, costText,
       equipBonuses, heroStats, equipItem, useConsumable,
-      currentQuest, advanceMain, sideQuestFor, talk, npcVisible,
+      currentQuest, advanceMain, sideQuestFor, talk, npcVisible, toggleMount,
       nodeActive, nodeAt, nearestNode, harvest, nodeHits,
       stationsBuilt, recipeAvailable, canCraft, craft,
       build, claimRect, inClaim, pieceAt, piecesInCategory, selectedPiece,

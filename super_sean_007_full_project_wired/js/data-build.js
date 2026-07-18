@@ -16,7 +16,9 @@
      ruins:    2 moss floor, 3 door slab, 4 sun dial, 5 moss path, 6 gold pillars, 7 broken block,
                8 palm tree, 9 cactus, 10 clay pot, 11 hibiscus
      tower:    2 crimson floor, 3 banner, 4 dome statue, 5 X sigil, 6 striped wall, 7 spire,
-               8 stone pillar, 9 war banner, 10 gargoyle statue, 11 blue carpet */
+               8 stone pillar, 9 war banner, 10 gargoyle statue, 11 blue carpet
+     interior: 0 wood floor, 1 herringbone floor, 2 rug, 3 wall, 4 bed, 5 table,
+               6 bookshelf, 7 fireplace, 8 bar counter, 9 plant, 10 potion shelf, 11 grand chair */
 (() => {
   'use strict';
   window.SSG = window.SSG || {};

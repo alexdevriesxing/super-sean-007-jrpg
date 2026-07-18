@@ -56,11 +56,47 @@ function keepLargestComponent(data, w, h) {
   for (let p = 0; p < w * h; p++) if (label[p] !== -1 && label[p] !== best) data[p * 4 + 3] = 0;
 }
 
-async function sliceOne(sheet, box, name, size = 160) {
+// Flood-fill variant for dark panel sheets: the background colour is sampled
+// from the crop's corners instead of assuming a light backdrop.
+function keyOutSampledBackground(data, w, h) {
+  const px = (x, y) => { const i = (y * w + x) * 4; return [data[i], data[i + 1], data[i + 2]]; };
+  // Reference = the modal colour along the crop border (robust when a corner
+  // clips a neighbouring sprite or a dark panel divider).
+  const counts = new Map();
+  const tally = (x, y) => {
+    const [r, g, b] = px(x, y);
+    const key = `${r >> 4},${g >> 4},${b >> 4}`;
+    const e = counts.get(key) || { n: 0, r: 0, g: 0, b: 0 };
+    e.n++; e.r += r; e.g += g; e.b += b;
+    counts.set(key, e);
+  };
+  for (let x = 0; x < w; x++) { tally(x, 0); tally(x, h - 1); }
+  for (let y = 0; y < h; y++) { tally(0, y); tally(w - 1, y); }
+  const top = [...counts.values()].sort((a, b) => b.n - a.n)[0];
+  const ref = [top.r / top.n, top.g / top.n, top.b / top.n];
+  const isBg = (x, y) => {
+    const [r, g, b] = px(x, y);
+    return Math.abs(r - ref[0]) + Math.abs(g - ref[1]) + Math.abs(b - ref[2]) < 90;
+  };
+  const stack = [];
+  const seen = new Uint8Array(w * h);
+  const push = (x, y) => { if (x >= 0 && y >= 0 && x < w && y < h && !seen[y * w + x]) { seen[y * w + x] = 1; stack.push(x, y); } };
+  for (let x = 0; x < w; x += 2) { push(x, 0); push(x, h - 1); }
+  for (let y = 0; y < h; y += 2) { push(0, y); push(w - 1, y); }
+  while (stack.length) {
+    const y = stack.pop(), x = stack.pop();
+    if (!isBg(x, y)) continue;
+    data[(y * w + x) * 4 + 3] = 0;
+    push(x + 1, y); push(x - 1, y); push(x, y + 1); push(x, y - 1);
+  }
+}
+
+async function sliceOne(sheet, box, name, size = 160, opts = {}) {
   const src = path.join(root, sheet);
   const raw = await sharp(src).extract({ left: box[0], top: box[1], width: box[2], height: box[3] })
     .ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  keyOutBackground(raw.data, raw.info.width, raw.info.height);
+  if (opts.autoKey) keyOutSampledBackground(raw.data, raw.info.width, raw.info.height);
+  else keyOutBackground(raw.data, raw.info.width, raw.info.height);
   keepLargestComponent(raw.data, raw.info.width, raw.info.height);
   await sharp(raw.data, { raw: { width: raw.info.width, height: raw.info.height, channels: 4 } })
     .png().trim({ threshold: 1 })
@@ -127,11 +163,13 @@ const JOBS = [
   ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [1261, 890, 74, 100], 'obj_house_red'],
   ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [1349, 892, 87, 98], 'obj_house_shop'],
   ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [585, 15, 61, 115], 'obj_castle_tower'],
-  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [957, 15, 114, 115], 'obj_royal_castle']
+  ['tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png', [957, 15, 114, 115], 'obj_royal_castle'],
+  // Golden dragon mount from the ultimate pack's VEHICLES & MOUNTS panel (dark bg)
+  ['spritesheets/a_huge_highly_detailed_sprite_sheet_game_asset.png', [1133, 533, 51, 48], 'mount_dragonling', 160, {autoKey: true}]
 ];
 
-for (const [sheet, box, name] of JOBS) {
-  try { await sliceOne(sheet, box, name); } catch (e) { console.error('FAILED', name, e.message); }
+for (const [sheet, box, name, size, opts] of JOBS) {
+  try { await sliceOne(sheet, box, name, size, opts); } catch (e) { console.error('FAILED', name, e.message); }
 }
 const names = JOBS.map(j => j[2]);
 await writeFile(

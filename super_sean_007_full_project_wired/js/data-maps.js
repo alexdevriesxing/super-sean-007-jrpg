@@ -10,11 +10,13 @@
     birthday: new Set([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 20, 21, 22, 23, 24, 25, 26]),
     meadow:   new Set([5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19]),
     cave:     new Set([3, 4, 5, 6, 7, 8, 9, 11]),
-    petro:    new Set([3, 4, 6, 7, 8, 9, 10, 11]),
+    petro:    new Set([3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14]),
     ruushwood:new Set([2, 4, 5, 6, 7, 8, 9, 10]),
-    moon:     new Set([4, 5, 6, 7, 8, 9, 11]),
-    ruins:    new Set([3, 4, 6, 7, 8, 9, 10]),
-    tower:    new Set([4, 5, 6, 7, 8, 9, 10])
+    moon:     new Set([4, 5, 6, 7, 8, 9, 11, 12]),
+    ruins:    new Set([3, 4, 6, 7, 8, 9, 10, 12, 13]),
+    tower:    new Set([4, 5, 6, 7, 8, 9, 10]),
+    interior: new Set([3, 4, 5, 6, 7, 8, 9, 10, 11]),
+    interior: new Set([3, 4, 5, 6, 7, 8, 9, 10, 11])
   };
 
   // Gatherable node types. yields: item -> [min,max]. respawn in ms, hits to break.
@@ -107,6 +109,8 @@
     m.tiles[6][14] = 14; m.tiles[10][23] = 14;
     scatter(m, rng, [8], 8); scatter(m, rng, [9], 5);
     // Real building art over the solid house blocks (blocking comes from the tiles).
+    portal(m, 'inn_door', 7, 5, 'inn_interior', 7, 7, "Hero's Rest Inn");
+    portal(m, 'hall_door', 9, 5, 'elder_hall', 7, 7, "Elder's Hall");
     m.props = [
       {sprite:'obj_house_blue',  tx:7,  ty:4,  size:150},   // elder hall row west
       {sprite:'obj_house_stone', tx:9,  ty:4,  size:140},   // elder hall row middle
@@ -241,6 +245,7 @@
     rect(m, 10, 3, 13, 4, 7); rect(m, 22, 13, 24, 14, 7); // hazard blocks
     m.tiles[5][28] = 3; m.tiles[15][6] = 3;               // furnace emblems
     scatter(m, rng, [8, 9], 6); scatter(m, rng, [10], 2); scatter(m, rng, [11], 4);
+    scatter(m, rng, [12], 2); scatter(m, rng, [13], 2); scatter(m, rng, [14], 3);
     node(m, 'gear', 4, 5); node(m, 'gear', 19, 12); node(m, 'gear', 29, 16); node(m, 'gear', 8, 15);
     node(m, 'scrap', 14, 6); node(m, 'scrap', 25, 4); node(m, 'scrap', 30, 10);
     node(m, 'rock', 20, 16); node(m, 'rock', 5, 11);
@@ -300,6 +305,7 @@
     m.tiles[6][13] = 0; m.tiles[6][14] = 0;
     scatter(m, rng, [4], 4);
     scatter(m, rng, [8, 9], 6); scatter(m, rng, [10], 6); scatter(m, rng, [11], 3);
+    scatter(m, rng, [12], 2); scatter(m, rng, [13], 4);
     node(m, 'moonherb', 4, 4); node(m, 'moonherb', 22, 5); node(m, 'moonherb', 7, 13); node(m, 'moonherb', 19, 14); node(m, 'moonherb', 24, 11);
     node(m, 'rock', 9, 9);
     mon(m, {id:'starslime', kind:'slime', name:'Star Slime', x:8*T, y:6*T, hp:150, atk:23, xp:65, coins:42, hue:300, sprite:'mob_fairy_moth'});
@@ -330,6 +336,7 @@
     m.tiles[3][14] = 3; m.tiles[3][15] = 3;               // sealed door slabs
     scatter(m, rng, [7], 5);
     scatter(m, rng, [8], 4); scatter(m, rng, [10, 11], 5);
+    scatter(m, rng, [12], 3); scatter(m, rng, [13], 2);
     node(m, 'relic', 4, 15); node(m, 'relic', 14, 5); node(m, 'relic', 26, 14); node(m, 'relic', 20, 12);
     node(m, 'rock', 9, 14); node(m, 'ore', 27, 4);
     mon(m, {id:'relicgolem', kind:'crystal', name:'Relic Golem', x:9*T, y:6*T, hp:200, atk:28, xp:85, coins:56, hue:120, sprite:'mob_skull_knight'});
@@ -438,8 +445,52 @@
     return m;
   }
 
+  // Enterable interiors, built from the interior tileset (see data-build.js
+  // header for tile roles: 0/1 floors, 2 rug, 3 wall, 4 bed, 5 table,
+  // 6 bookshelf, 7 fireplace, 8 bar, 9 plant, 10 potion shelf, 11 grand chair).
+  function innInteriorMap() {
+    const m = blank('inn_interior', "Hero's Rest Inn", 'interior', 15, 9, 0); // 15×9 fills the viewport exactly
+    border(m, 3);
+    rect(m, 1, 1, 13, 1, 3);                               // thick back wall
+    m.tiles[1][4] = 7;                                     // hearth on the wall
+    m.tiles[2][1] = 8;                                     // bar counter
+    m.tiles[2][12] = 4; m.tiles[2][13] = 4;                // guest beds
+    rect(m, 5, 4, 9, 5, 2);                                // common-room rug
+    m.tiles[4][4] = 5; m.tiles[5][10] = 5;                 // tavern tables
+    m.tiles[7][1] = 9; m.tiles[7][13] = 9;                 // potted plants
+    m.tiles[8][7] = 0;                                     // doorway gap
+    m.npcs = [
+      {id:'innkeeper_rosie', name:'Innkeeper Rosie', char:'haraku', sprite:'npc_innkeeper',
+        x:2*T+40, y:4*T+10, role:'Rest here — 15 coins restores the whole party', service:'inn'}
+    ];
+    portal(m, 'inn_exit', 7, 8, 'village', 7, 6, 'Birthday Village');
+    return m;
+  }
+
+  function elderHallMap() {
+    const m = blank('elder_hall', "Elder's Hall", 'interior', 15, 9, 1);
+    border(m, 3);
+    rect(m, 1, 1, 13, 1, 3);
+    m.tiles[1][2] = 6; m.tiles[1][3] = 6; m.tiles[1][4] = 6; // library wall
+    m.tiles[1][7] = 7;                                       // hearth
+    m.tiles[1][9] = 10; m.tiles[1][10] = 10;                 // archive potion shelves
+    rect(m, 4, 3, 10, 5, 2);                                 // reading rug
+    m.tiles[3][2] = 11;                                      // the Elder's grand chair
+    m.tiles[6][13] = 9; m.tiles[6][1] = 9;                   // plants
+    m.chests = [{id:'hall_chest', x:12*T, y:2*T, reward:{coins:120, item:'Ancient Relic'}, label:"Archivist's keepsake chest"}];
+    m.npcs = [
+      {id:'archivist_lyra', name:'Archivist Lyra', char:'haraku', sprite:'npc_teacher',
+        x:7*T, y:3*T+10, role:'Keeper of Asteria-007 lore'}
+    ];
+    portal(m, 'hall_exit', 7, 8, 'village', 9, 6, 'Birthday Village');
+    m.tiles[8][7] = 1;                                       // doorway gap
+    return m;
+  }
+
   SSG.buildMaps = () => ({
     village: villageMap(),
+    inn_interior: innInteriorMap(),
+    elder_hall: elderHallMap(),
     homestead: homesteadMap(),
     meadow: meadowMap(),
     cave: caveMap(),

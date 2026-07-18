@@ -23,6 +23,8 @@
 
     'Berry Juice':   {type:'consumable', img:'icon_potion_red', icon:{sheet:'meadow', tile:18}, sell:6,  heal:45,  desc:'Restores 45 HP.'},
     'Crystal Candy': {type:'consumable', img:'icon_potion_blue', icon:{sheet:'birthday', tile:21}, sell:8, mana:20, desc:'Restores 20 MP.'},
+    'Deer Whistle': {type:'mount', mount:'animal_deerling', img:'icon_leaf', icon:{sheet:'meadow', tile:17}, sell:40, desc:'Call (or dismiss) a friendly deerling to ride. Riding is 55% faster!'},
+    'Dragon Horn': {type:'mount', mount:'mount_dragonling', img:'icon_star_gold', icon:{sheet:'moon', tile:5}, sell:120, desc:'Summon the golden dragonling you befriended after saving Asteria-007.'},
     'Mushroom Stew': {type:'consumable', img:'icon_jar', icon:{sheet:'meadow', tile:7},  sell:14, heal:120, desc:'Hearty stew. Restores 120 HP.'},
     'Moon Tea':      {type:'consumable', img:'icon_potion_green', icon:{sheet:'moon', tile:6},   sell:16, mana:999, desc:'Restores all MP. Haraku loves it.'},
     'Courage Crumble':{type:'consumable', img:'icon_cake', icon:{sheet:'meadow', tile:14}, sell:20, heal:80, friendship:20, desc:'Grandma cake: 80 HP and +20 Friendship.'},
@@ -91,6 +93,8 @@
   };
 
   SSG.SHOP_STOCK = [
+    {item:'Deer Whistle', price:140},
+    {item:'Dragon Horn', price:400, requires:'xelar_final'},
     {item:'Berry Juice', price:12},
     {item:'Crystal Candy', price:16},
     {item:'Berry Seed', price:5},

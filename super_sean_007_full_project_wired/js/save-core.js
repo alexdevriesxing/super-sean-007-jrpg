@@ -29,6 +29,7 @@
     achievements: {},
     daily: null,
     treasure: null,
+    mount: null,
     ngPlus: 0,
     playMinutes: 0,
     savedAt: 0,
@@ -59,6 +60,7 @@
     merged.stats = {...base.stats, ...(raw.stats || {})};
     merged.gems = Array.isArray(raw.gems) ? raw.gems : [];
     merged.party = Array.isArray(raw.party) && raw.party.length ? raw.party : base.party;
+    merged.mount = ['animal_deerling', 'mount_dragonling'].includes(raw.mount) ? raw.mount : null;
     if (sourceQuestId) merged.quest.id = sourceQuestId;
     const quests = SSG.MAIN_QUESTS || [];
     if (!quests.some(q => q.id === merged.quest.id)) merged.quest = base.quest;

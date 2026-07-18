@@ -152,6 +152,12 @@
 
   SSG.NPC_LINES = {
     cook_nadia: ['Smell that? Mushroom stew, hero-sized portions!', 'Bring me fresh caps and I\'ll teach you a recipe someday.'],
+    innkeeper_rosie: ['Welcome to the Hero\'s Rest! A bed and a bowl of stew works wonders.'],
+    archivist_lyra: [
+      'Shh — the books are sleeping. Welcome to the Elder\'s Hall.',
+      'Long before Xelar, the Seven Gems chose seven guardians. Their stories live on these shelves.',
+      'That keepsake chest? Elder Brightbeard said a true hero may open it.'
+    ],
     teacher_opal: ['Study your maps, Sean — every region hides a lesson.', 'The Seven Gems were a school project once. True story!'],
     bard_lio: ['♪ Sean, Sean, the gem-bright hero… ♪ still working on the rhyme.', 'A song for the road? On the house, for a friend of the village.'],
     animal_deer: ['The deerling blinks up at you and nuzzles your hand. ✿'],

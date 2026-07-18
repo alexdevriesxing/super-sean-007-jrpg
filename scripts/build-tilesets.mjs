@@ -23,6 +23,9 @@ const SHEETS = {
   desert: 'tilesets/kleurrijke_desert_en_tropische_game_tileset.png',
   kasteel: 'tilesets/kasteel_en_koninkrijk_pixel_art_tegelset.png',
   spellen: 'tilesets/spellenobjecten_en_terrein_voor_rpg.png',
+  interieur: 'tilesets/gedetailleerde_rpg_interieur_tileset.png',
+  fort: 'tilesets/middeleeuws_fort_en_kamp_tileset.png',
+  tempel: 'tilesets/fantasy_tempel_tileset_en_decoraties.png',
   friends: 'spritesheets/super_sean_friends_spritesheets.png'
 };
 
@@ -194,7 +197,10 @@ const TILESETS = {
       8: o('spellen', [557, 17, 71, 88], { scale: 0.85 }),            // oil barrel
       9: o('spellen', [726, 20, 74, 83], { scale: 0.85 }),            // supply crate
       10: o('spellen', [1315, 17, 117, 90], { scale: 0.95 }),         // mine cart
-      11: o('cozy', [1332, 555, 85, 65], { scale: 0.9 })              // rubble pile
+      11: o('cozy', [1332, 555, 85, 65], { scale: 0.9 }),             // rubble pile
+      12: o('fort', [14, 405, 108, 125], { scale: 0.97 }),            // work-camp tent
+      13: o('fort', [682, 405, 80, 125], { scale: 0.97 }),            // watch tower
+      14: o('fort', [14, 782, 125, 68], { scale: 0.95 })              // spike palisade
     }
   },
   ruushwood: {
@@ -228,7 +234,9 @@ const TILESETS = {
       8: o('ijs', [775, 343, 58, 62], { scale: 0.85 }),               // ice crystals
       9: o('ijs', [844, 340, 56, 65], { scale: 0.85 }),               // frost bush
       10: t('ijs', [165, 563, 57, 61]),                               // ornate floor variant
-      11: o('ijs', [923, 740, 51, 66], { scale: 0.9 })                // moon monument
+      11: o('ijs', [923, 740, 51, 66], { scale: 0.9 }),               // moon monument
+      12: o('tempel', [1147, 203, 82, 112], { scale: 0.97 }),         // bell shrine
+      13: o('tempel', [545, 240, 92, 82], { scale: 0.92 })            // glowing moon sigil
     }
   },
   ruins: {
@@ -245,7 +253,9 @@ const TILESETS = {
       8: o('desert', [93, 420, 70, 76], { scale: 0.95 }),             // palm tree
       9: o('desert', [941, 424, 57, 66], { scale: 0.9 }),             // cactus
       10: o('spellen', [986, 22, 65, 76], { scale: 0.8 }),            // clay pot
-      11: o('desert', [13, 882, 67, 70], { scale: 0.85 })             // hibiscus flowers
+      11: o('desert', [13, 882, 67, 70], { scale: 0.85 }),            // hibiscus flowers
+      12: o('tempel', [12, 488, 82, 88], { scale: 0.95 }),            // guardian lion statue
+      13: o('tempel', [706, 608, 112, 92], { scale: 0.97 })           // sacred torii gate
     }
   },
   tower: {
@@ -264,6 +274,23 @@ const TILESETS = {
       10: o('kasteel', [945, 410, 41, 71], { scale: 0.9 }),           // gargoyle statue
       11: t('kasteel', [728, 491, 73, 73])                            // royal blue carpet
     }
+  },
+  interior: {
+    base: t('interieur', [12, 788, 90, 68]),
+    tiles: {
+      0: t('interieur', [12, 788, 90, 68]),                           // wooden plank floor
+      1: t('interieur', [122, 795, 115, 65]),                         // herringbone floor
+      2: t('interieur', [1250, 795, 105, 55]),                        // red carpet
+      3: t('interieur', [135, 712, 90, 50]),                          // cream brick wall
+      4: o('interieur', [216, 84, 52, 90], { scale: 0.92 }),          // cozy bed
+      5: o('interieur', [312, 608, 100, 60], { scale: 0.95 }),        // tavern table
+      6: o('interieur', [686, 334, 90, 125], { scale: 0.95 }),        // bookshelf
+      7: o('interieur', [549, 143, 95, 150], { scale: 0.95 }),        // stone fireplace
+      8: o('interieur', [14, 485, 220, 125], { scale: 0.97 }),        // bar counter
+      9: o('interieur', [268, 244, 40, 55], { scale: 0.7 }),          // potted plant
+      10: o('interieur', [22, 316, 120, 78], { scale: 0.95 }),        // potion shelf
+      11: o('interieur', [742, 573, 55, 80], { scale: 0.9 })          // grand chair
+    }
   }
 };
 
@@ -275,7 +302,8 @@ const FILES = {
   ruushwood: 'ruushwood_tiles.png',
   moon: 'moon_shrine_tiles.png',
   ruins: 'ancient_ruins_tiles.png',
-  tower: 'bald_moon_tower_tiles.png'
+  tower: 'bald_moon_tower_tiles.png',
+  interior: 'interior_tiles.png'
 };
 
 async function renderTile(spec, base) {

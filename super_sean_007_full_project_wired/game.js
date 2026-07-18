@@ -48,12 +48,14 @@
     ruushwood: 'ruushwood_tiles',
     moon: 'moon_shrine_tiles',
     ruins: 'ancient_ruins_tiles',
-    tower: 'bald_moon_tower_tiles'
+    tower: 'bald_moon_tower_tiles',
+    interior: 'interior_tiles'
   };
 
   const MAP_MUSIC = {
     village: 'village', homestead: 'village', meadow: 'forest', ruushwood: 'forest',
-    petro: 'forest', cave: 'cave', ruins: 'cave', moon: 'moon', tower: 'moon'
+    petro: 'forest', cave: 'cave', ruins: 'cave', moon: 'moon', tower: 'moon',
+    inn_interior: 'village', elder_hall: 'village'
   };
 
   const img = {};
@@ -83,6 +85,9 @@
       Object.entries(runtime.assetWiring?.battleBackgrounds || {}).forEach(([key, file]) => {
         deferred[`bg_${key}`] = file; // only shown once a battle starts
       });
+      // Interior tileset streams in after boot; it is first needed when the
+      // player walks into a building, never on the opening frame.
+      deferred.interior = 'assets/tilesets/interior_tiles.png';
       // Distinct sliced creature/NPC sprites, loaded under their manifest name.
       if (mobManifest?.sprites) {
         mobManifest.sprites.forEach(name => { deferred[name] = `${mobManifest.base}${name}.png`; });
@@ -881,8 +886,9 @@
     if (keys.ArrowRight || keys.KeyD || activeTouches.right) dx += 1;
     if (dx || dy) {
       const len = Math.hypot(dx, dy); dx /= len; dy /= len;
-      const nx = p.x + dx * p.speed * dt / 16.67;
-      const ny = p.y + dy * p.speed * dt / 16.67;
+      const speed = p.speed * (state.mount ? 1.55 : 1); // mounted heroes ride faster
+      const nx = p.x + dx * speed * dt / 16.67;
+      const ny = p.y + dy * speed * dt / 16.67;
       if (canMoveTo(nx, p.y)) p.x = nx;
       if (canMoveTo(p.x, ny)) p.y = ny;
       p.frameTimer += dt;

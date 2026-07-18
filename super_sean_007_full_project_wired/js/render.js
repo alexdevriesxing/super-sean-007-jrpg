@@ -256,7 +256,11 @@
         }
       });
       const frame = ctx.isMoving() ? (2 + p.frame % 2) : 0;
-      drawCharacter('sean', p.x - cam.x, p.y - cam.y, frame, '');
+      // Riding: draw the mount under Sean and lift him into the saddle.
+      const mountImg = S().mount && ctx.img[S().mount];
+      const riding = mountImg && mountImg.complete && mountImg.naturalWidth;
+      if (riding) drawSprite(mountImg, p.x - cam.x, p.y - cam.y + 18, 64);
+      drawCharacter('sean', p.x - cam.x, p.y - cam.y - (riding ? 16 : 0), frame, '');
     }
 
     /* ---------- HUD ---------- */
@@ -503,6 +507,7 @@
         hotspot(x, y - 8, 280, 26, () => {
           if (def?.type === 'equipment') sys().equipItem(name);
           else if (def?.type === 'consumable') sys().useConsumable(name);
+          else if (def?.type === 'mount') sys().toggleMount(name);
           else if (def?.type === 'treasure_map') sys().useTreasureMap();
           else ctx.showToast(def?.desc || name);
         });
