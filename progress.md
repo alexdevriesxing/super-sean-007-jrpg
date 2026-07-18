@@ -300,3 +300,5 @@ generated tilesets are intentionally left — no game-ready value).
 - Release checks: 46/46 Node tests, source/dist validation, v1.6.1 commercial
   hardening, 29.6 MB performance budget and packaged Chrome gameplay smoke all
   pass. Browser automation also confirmed a live Crystal Slash animation record.
+- Live smoke exposed the apex host returning 200; root Cloudflare middleware now
+  preserves path/query and 308-redirects `supersean007.com` to canonical `www`.
