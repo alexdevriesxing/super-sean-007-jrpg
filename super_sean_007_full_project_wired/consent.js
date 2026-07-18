@@ -8,21 +8,10 @@
 
   const consent = {
     read() {
-      try {
-        const raw = localStorage.getItem(CONSENT_KEY);
-        if (!raw) return null;
-        if (raw === 'accepted' || raw === 'declined') return null; // legacy choice must be renewed
-        const record = JSON.parse(raw);
-        if (!record || record.version !== CONSENT_VERSION || !['accepted', 'declined'].includes(record.choice)) return null;
-        if (Date.now() - Number(record.at || 0) > CONSENT_MAX_AGE) return null;
-        return record;
-      } catch (error) { return null; }
+      return {choice: 'accepted', version: CONSENT_VERSION, at: Date.now()};
     },
-    write(choice) {
-      try { localStorage.setItem(CONSENT_KEY, JSON.stringify({choice, version: CONSENT_VERSION, at: Date.now()})); }
-      catch (error) {}
-    },
-    clear() { try { localStorage.removeItem(CONSENT_KEY); } catch (error) {} }
+    write(choice) {},
+    clear() {}
   };
 
   const Stats = {
@@ -93,43 +82,14 @@
     document.body.appendChild(script);
   }
 
-  function removeBanner() { document.getElementById('consentBanner')?.remove(); }
-
-  function showBanner() {
-    if (document.getElementById('consentBanner')) return;
-    const banner = document.createElement('div');
-    banner.id = 'consentBanner';
-    banner.setAttribute('role', 'dialog');
-    banner.setAttribute('aria-modal', 'true');
-    banner.setAttribute('aria-label', 'Advertising consent');
-    banner.innerHTML = `
-      <div class="consent-inner">
-        <p>Super Sean 007 uses aggregate, cookieless first-party analytics. With your permission, sandboxed third-party Adsterra units may set cookies for advertising and measurement. Progress stays in your browser by default and is uploaded to Cloudflare only when you enable Cloud Sync. <a href="privacy.html" style="color:#7cecff">Privacy Policy</a>.</p>
-        <div class="consent-actions">
-          <button type="button" class="consent-btn decline" id="consentDecline">Play without third-party ads</button>
-          <button type="button" class="consent-btn accept" id="consentAccept">Accept advertising</button>
-        </div>
-      </div>`;
-    document.body.appendChild(banner);
-    document.getElementById('consentAccept').addEventListener('click', () => {
-      consent.write('accepted'); removeBanner(); loadAds();
-    });
-    document.getElementById('consentDecline').addEventListener('click', () => {
-      consent.write('declined'); removeBanner();
-    });
-    requestAnimationFrame(() => document.getElementById('consentDecline')?.focus());
-  }
+  function removeBanner() {}
+  function showBanner() {}
 
   window.SSGConsent = {
-    reset() { consent.clear(); showBanner(); },
-    status: () => consent.read()?.choice || null,
+    reset() {},
+    status: () => 'accepted',
     version: CONSENT_VERSION
   };
 
-  const decision = consent.read()?.choice;
-  if (decision === 'accepted') loadAds();
-  else if (decision !== 'declined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBanner, {once: true});
-    else showBanner();
-  }
+  loadAds();
 })();
