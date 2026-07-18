@@ -354,3 +354,7 @@ generated tilesets are intentionally left — no game-ready value).
   390px the 320x50 and 300x250 units render, the skyscraper hides, and measured
   document overflow is 0px. A full Play -> Deploy flow reached live gameplay with
   the arena canvas and HUD intact.
+- After the first deployment, a returning production browser remained on the old
+  Snowball CSS through its service-worker/cache lifecycle even though direct live
+  requests returned the corrected file. Added an explicit stylesheet revision so
+  the fixed art paths and arena ad rail take effect on the first reload.

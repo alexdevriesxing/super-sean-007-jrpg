@@ -45,6 +45,7 @@ test('ad frame serves known units and rejects arbitrary unit IDs', async () => {
 
 test('Snowball exposes complete eager game-page ad inventory and valid CSS artwork paths', async () => {
   const [html, styles] = await Promise.all([read('snowball.html'), read('snowball/snowball.css')]);
+  assert.match(html, /snowball\/snowball\.css\?v=\d{8}-\d+/);
   for (const placement of [
     'top-banner-728x90', 'game-sidebar-native', 'game-sidebar-skyscraper',
     'below-game-responsive', 'content-native-responsive', 'footer-banner-responsive'
