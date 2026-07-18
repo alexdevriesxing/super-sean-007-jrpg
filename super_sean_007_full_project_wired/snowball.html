@@ -1,0 +1,189 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Super Sean's Snowball Fight! — Free 3D Capture-the-Flag Browser Game</title>
+<meta name="description" content="Play Super Sean's Snowball Fight free in your browser: a 3D 12-vs-12 capture-the-flag battle in a destructible winter park. Eight power-ups, squad AI, mobile and desktop controls — part of the Super Sean universe.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://www.supersean007.com/snowball.html">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
+<link rel="stylesheet" href="content.css">
+<link rel="stylesheet" href="snowball/snowball.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Super Sean's Snowball Fight! — 3D Snow Battle in Your Browser">
+<meta property="og:description" content="24 kids, 2 flags, 1 extremely confused dog. Free 3D capture-the-flag snow combat, on desktop and mobile.">
+<meta property="og:image" content="https://www.supersean007.com/assets/snowball/key-art.webp">
+<meta property="og:url" content="https://www.supersean007.com/snowball.html">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"VideoGame","name":"Super Sean's Snowball Fight!","url":"https://www.supersean007.com/snowball.html","image":"https://www.supersean007.com/assets/snowball/key-art.webp","description":"A 3D 12-vs-12 capture-the-flag snowball battle in a destructible winter park, playable free in the browser.","genre":["Action","Arcade","Shooter"],"gamePlatform":["Web browser","Mobile web"],"playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"Fire Dragon Interactive","url":"https://www.firedragoninteractive.com"},"isPartOf":{"@type":"CreativeWorkSeries","name":"The Super Sean Universe","url":"https://www.supersean007.com/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.supersean007.com/"},{"@type":"ListItem","position":2,"name":"Snowball Fight","item":"https://www.supersean007.com/snowball.html"}]}]}</script>
+</head><body class="snow-page">
+<header class="top"><nav class="nav"><a href="/"><img src="assets/ui/super_sean_logo.webp" alt="Super Sean 007" width="150" height="107"></a><div class="links"><a href="/#play">RPG</a><a href="snowball.html" class="active">Snowball Fight</a><a href="guides.html">Guides</a><a href="characters.html">Characters</a><a href="updates.html">Updates</a></div></nav></header>
+
+<section class="snow-hero">
+  <div class="snow-hero-art" role="img" aria-label="Super Sean's squad mid snowball battle in a winter park"></div>
+  <div class="snowfall" aria-hidden="true"></div>
+  <div class="wrap snow-hero-copy">
+    <p class="eyebrow">A SUPER SEAN UNIVERSE GAME · FREE IN YOUR BROWSER</p>
+    <h1><span>SUPER SEAN'S</span><b>SNOWBALL</b> <em>FIGHT!</em></h1>
+    <p class="lede">Winter hit Maple Hollow overnight — and so did Rick's crew. Twelve heroes, twelve bullies, two flags, a frozen lake and an extremely confused dog. Grab your mittens: the park won't defend itself.</p>
+    <div class="hero-cta">
+      <a class="snow-cta" href="#play-snowball">❄ PLAY NOW — FREE</a>
+      <a class="snow-cta ghost" href="#roster">Meet all 24 kids</a>
+    </div>
+    <ul class="hero-badges"><li>3D · 12 v 12 CTF</li><li>8 power-ups</li><li>Desktop + mobile</li><li>No install</li></ul>
+  </div>
+</section>
+
+<div class="wrap ad-row"><div class="ad-slot ad-slot-wide" data-adsterra-placement="top-banner-728x90" aria-label="Advertisement">Advertisement</div></div>
+
+<section id="play-snowball" class="section game-section"><div class="wrap wide">
+  <div class="game-frame-head"><h2>❄ The Frosty Park Arena</h2><div><button id="btnFull" class="frame-btn" type="button">⛶ Fullscreen</button><button id="btnSound" class="frame-btn" type="button" aria-label="Toggle sound">🔊</button></div></div>
+  <div id="playWrap" data-mode="title">
+    <div id="gameStage" aria-label="3D snowball capture-the-flag arena"></div>
+
+    <section class="scr scr-title" aria-labelledby="sb-title">
+      <header class="brand-mark"><span class="brand-super">SUPER SEAN'S</span><h2 id="sb-title"><b>SNOWBALL</b><em>FIGHT!</em></h2><p>24 kids · 2 flags · 1 extremely confused dog</p></header>
+      <div class="title-actions">
+        <button id="btnPlay" class="primary-btn" type="button"><span>PLAY NOW</span><small>Capture the flag</small></button>
+        <p class="title-hint">WASD move · mouse aim · click throw · right-click focus</p>
+      </div>
+    </section>
+
+    <section class="scr scr-briefing">
+      <button id="btnBackTitle" class="back-btn" type="button">← Back</button>
+      <div class="eyebrow">MATCH BRIEFING</div>
+      <h2>Operation: <span>Flag Nab</span></h2>
+      <p class="brief-lede">Cross the winter park, steal the bullies' orange flag, and carry it home to the blue fort. First to three captures wins.</p>
+      <div class="difficulty-row" role="group" aria-label="Difficulty">
+        <button type="button" data-diff="rookie"><b>rookie</b><span>Chill AI</span></button>
+        <button type="button" data-diff="classic" class="active"><b>classic</b><span>Smart &amp; silly</span></button>
+        <button type="button" data-diff="blizzard"><b>blizzard</b><span>Mean mittens</span></button>
+      </div>
+      <div class="sean-card"><div class="portrait-s">S</div><div><small>YOU ARE</small><b>SUPER SEAN</b><span>Speed 86 · Strength 78 · Accuracy 88</span></div><i>Captain</i></div>
+      <button id="btnDeploy" class="primary-btn deploy-btn" type="button">DEPLOY TO THE PARK <span>→</span></button>
+    </section>
+
+    <section class="scr scr-loading" aria-live="polite">
+      <div class="loading-copy">
+        <span class="brand-super">SUPER SEAN'S</span><h2><b>SNOWBALL</b><em>FIGHT!</em></h2>
+        <p id="loadLine">Building forts and waking the dog…</p>
+        <div class="loading-meter"><i id="loadBar"></i><span id="loadPct">0%</span></div>
+        <div class="loading-tip"><b>SNOW DAY TIP</b><span id="loadTip">Blue rings are friends. Orange rings are targets.</span></div>
+      </div>
+    </section>
+
+    <section class="hud" aria-label="Game status">
+      <div class="scoreboard">
+        <div class="team-score blue"><span>SEAN'S SQUAD</span><b id="hudBlueScore">0</b><small id="hudBlueAlive">12/12 UP</small></div>
+        <div class="match-time"><small>FIRST TO 3</small><b id="hudTime">6:00</b><span>CTF · FROSTY PARK</span></div>
+        <div class="team-score orange"><b id="hudOrangeScore">0</b><span>THE BULLIES</span><small id="hudOrangeAlive">12/12 UP</small></div>
+      </div>
+      <div class="mission-strip"><span id="hudMsg">Protect your flag. Pinch theirs.</span></div>
+      <div class="objective-tracker"><div><small>OBJECTIVE</small><b id="hudObjLabel">CAPTURE ORANGE FLAG</b></div><strong id="hudObjDist">136m</strong></div>
+      <div id="killFeed" class="kill-feed" aria-live="polite"></div>
+      <div id="crosshair" class="crosshair"><i></i><i></i><i></i><i></i><b></b><span class="hit-x">×</span></div>
+      <div id="targetCard" class="target-card"><small id="targetTag">TARGET LOCK</small><b id="targetName"></b><span id="targetHp"></span></div>
+      <div class="health-panel"><div class="sean-mini">S</div><div><small>SUPER SEAN</small><div id="hudHearts" class="hearts"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></div></div><div id="flagCarry" class="flag-carry">🚩 FLAG!</div></div>
+      <div id="weaponPanel" class="weapon-panel" data-weapon="regular"><div><small id="hudWeaponName">CLASSIC SNOW</small><b><span id="hudAmmo">6</span><em id="hudAmmoMax">/6</em></b><span id="reloadWrap" class="reload-meter"><i id="reloadBar"></i>PACKING…</span></div><kbd>R</kbd></div>
+      <div id="hudBuffs" class="active-buffs"></div>
+      <div id="streakPop" class="streak-pop"><b id="streakN">2×</b><span>SNOW STREAK!</span></div>
+      <canvas id="minimapCanvas" class="minimap" width="150" height="104"></canvas>
+      <div class="hud-help"><kbd>WASD</kbd> MOVE <kbd>SHIFT</kbd> SPRINT <kbd>CLICK</kbd> THROW <kbd>R-CLICK</kbd> FOCUS <kbd>R</kbd> RELOAD <kbd>ESC</kbd> PAUSE</div>
+      <div id="dmgFlash" class="damage-flash"></div>
+      <div id="frostVignette" class="frost-vignette"></div>
+      <div id="knockOverlay" class="knockout"><div class="snowflake-big">❄</div><small>YOU'VE BEEN</small><b>SNOW-BONKED!</b><span>Back at the blue fort in</span><em id="knockN">6</em><p>Sean is making an excellent snow angel.</p></div>
+      <div id="stickBase" class="stick-base"><div id="stickNub" class="stick-nub"></div></div>
+      <div class="touch-buttons"><button id="btnReloadTouch" type="button">R</button><button id="btnFire" type="button">❄</button></div>
+    </section>
+
+    <section class="scr scr-paused menu-panel">
+      <div class="eyebrow">HOT COCOA BREAK</div><h2>Game <span>paused</span></h2>
+      <p>The bullies have agreed not to move. Probably.</p>
+      <label class="setting"><span>Aim sensitivity</span><input id="sensRange" type="range" min="0.4" max="2" step="0.1" value="1"></label>
+      <label class="setting check"><input id="invertY" type="checkbox"><span>Invert vertical aim</span></label>
+      <button id="btnResume" class="primary-btn" type="button">BACK TO BATTLE</button>
+      <button id="btnQuitPause" type="button" class="plain-btn">Quit to title</button>
+    </section>
+
+    <section id="screenOver" class="scr scr-over" data-result="victory" aria-live="polite">
+      <article class="result-card">
+        <div class="eyebrow" id="overEyebrow">FLAG-NABBING LEGENDS</div>
+        <h2 id="overTitle">SEAN'S SQUAD WINS!</h2>
+        <div class="final-score"><b id="overBlue">3</b><span>FINAL<br>FLAGS</span><b id="overOrange">1</b></div>
+        <p id="overLine">The park is safe, the flag is home, and Petroman is still charging somewhere.</p>
+        <div class="match-stats"><span><small>CAPTURES</small><b id="statCaps">0</b></span><span><small>KNOCKOUTS</small><b id="statKos">0</b></span><span><small>ACCURACY</small><b id="statAcc">0%</b></span><span><small>SNOWBALLS</small><b id="statShots">0</b></span></div>
+        <div class="result-actions"><button id="btnRematch" class="primary-btn" type="button">REMATCH ↻</button><button id="btnQuitOver" type="button" class="plain-btn">Return to title</button></div>
+      </article>
+    </section>
+
+    <div class="webgl-note"><b>3D SNOW DAY PAUSED</b><span>This browser has hardware 3D graphics switched off. Enable WebGL or use a current Chrome, Edge, Firefox or Safari to enter the park.</span></div>
+  </div>
+  <p class="game-note">Tip: on phones the left half of the screen is your movement stick, the right half aims — and the big ❄ button throws. Use ⛶ Fullscreen for the biggest playing area.</p>
+</div></section>
+
+<div class="wrap ad-row"><div class="ad-slot ad-slot-wide below-game-ad" data-adsterra-placement="below-game-responsive" aria-label="Advertisement">Advertisement</div></div>
+
+<section class="section alt"><div class="wrap">
+  <p class="eyebrow">THE STORY SO FAR</p>
+  <h2>One snow day. Two teams. Zero chill.</h2>
+  <div class="lore-grid">
+    <article><h3>❄ The First Snow of Maple Hollow</h3><p>After saving Asteria-007 from Xelar the Bald Wizard, Sean and his friends earned a well-deserved holiday back home — and woke up to the deepest snowfall Maple Hollow has ever seen. School: cancelled. Park: transformed. Plans: enormous.</p></article>
+    <article><h3>😤 Enter the Bullies</h3><p>Rick "The Ringleader" and his eleven-kid crew claimed the whole park before breakfast, planted an orange flag on the east fort and declared themselves Winter Royalty. Sean's squad answered the only honourable way: a blue flag, a west fort, and a formal declaration of snowball war.</p></article>
+    <article><h3>🏁 The Rules of Engagement</h3><p>Two forts. Two flags. First team to three captures owns the park until spring. Everything in between — barricades, snowmen, the frozen lake, even Mr. Henderson's escaped corgi — is fair (and destructible) game.</p></article>
+    <article><h3>🐶 The Dog</h3><p>Nobody knows whose side Biscuit is on. Biscuit does not know whose side Biscuit is on. He remains the single most decorated participant of the conflict.</p></article>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <p class="eyebrow">FIELD GUIDE</p>
+  <h2>Eight power-ups. One frosty park.</h2>
+  <div class="power-grid">
+    <article><i class="pw pw-snow"></i><b>Classic Snowball</b><p>Six per pack. Five hits sends any kid into the snow. Reloads with a satisfying crunch.</p></article>
+    <article><i class="pw pw-ice"></i><b>Ice Ball</b><p>One perfect frosty hit = an instant 30-second snow nap. Handle with mittens.</p></article>
+    <article><i class="pw pw-rapid"></i><b>Snow Blaster</b><p>Twenty rapid-fire shots. Hold down throw and giggle uncontrollably.</p></article>
+    <article><i class="pw pw-mega"></i><b>Mega Snowball</b><p>Three huge lobs with splash damage. Flattens weakened forts and entire ambushes.</p></article>
+    <article><i class="pw pw-shield"></i><b>Frost Shield</b><p>The next three hits shatter harmlessly off a ring of ice. Great for flag runs.</p></article>
+    <article><i class="pw pw-cocoa"></i><b>Hot Cocoa</b><p>+1 energy and a big speed boost. Grandma-approved battlefield medicine.</p></article>
+    <article class="new"><i class="pw pw-blizzard"></i><b>Blizzard Bomb <em>NEW</em></b><p>Throws a private snowstorm that batters and slows everyone caught inside for five seconds.</p></article>
+    <article class="new"><i class="pw pw-triple"></i><b>Triple Pack <em>NEW</em></b><p>Your next six throws fan out three-wide. Excellent crowd-control, terrible table manners.</p></article>
+  </div>
+  <p class="power-extra">…and keep an eye out for the pink <b>Magnet Mittens</b>, which drag every nearby power-up straight to you for 12 seconds.</p>
+</div></section>
+
+<div class="wrap ad-row"><div class="ad-slot ad-slot-wide small" data-adsterra-placement="content-native-responsive" aria-label="Advertisement">Advertisement</div></div>
+
+<section id="roster" class="section alt"><div class="wrap wide">
+  <p class="eyebrow">THE NEIGHBOURHOOD</p>
+  <h2>All 24 kids of Maple Hollow</h2>
+  <p class="roster-lede">Every kid plays differently — speed, strength and aim shape how the squad AI attacks, defends, ambushes and panics. Blue rings are Sean's Squad; orange rings are Rick's bullies.</p>
+  <div id="rosterGrid" class="roster-grid"></div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <p class="eyebrow">HOW TO PLAY</p>
+  <h2>Controls &amp; tactics</h2>
+  <div class="controls-cols">
+    <article><h3>🖱 Desktop</h3><ul><li><kbd>WASD</kbd> / arrows — move</li><li><kbd>Mouse</kbd> — aim (pointer lock)</li><li><kbd>Click</kbd> — throw · hold for the Blaster</li><li><kbd>Right-click</kbd> — focus: zoom + lead moving targets</li><li><kbd>Shift</kbd> — sprint · <kbd>R</kbd> — reload · <kbd>Esc</kbd> — pause</li></ul></article>
+    <article><h3>📱 Mobile</h3><ul><li>Left thumb — movement stick appears where you touch</li><li>Right thumb — drag to aim</li><li>Big ❄ button — throw · <b>R</b> button — reload</li><li>Tap ⛶ Fullscreen for the biggest arena</li><li>Landscape strongly recommended</li></ul></article>
+    <article><h3>🧠 Squad tips</h3><ul><li>Orange rings = targets. Blue rings = friends. The dog = neutral chaos.</li><li>Focus throws predict where a runner will be, not where they are.</li><li>Mega Snowballs open walls; Blizzard Bombs hold lanes.</li><li>Ice-bonked bullies nap for 30 seconds — that's a flag run.</li><li>Low on energy? Cocoa first, heroics second.</li></ul></article>
+  </div>
+</div></section>
+
+<section class="section alt universe-link"><div class="wrap">
+  <p class="eyebrow">THE SUPER SEAN UNIVERSE</p>
+  <h2>Two games, one hero</h2>
+  <div class="uni-cards">
+    <a class="uni-card rpg" href="/#play"><small>THE ORIGINAL ADVENTURE</small><b>Super Sean 007: Legend of the Seven Gems</b><span>An 11-region JRPG — gather, craft, build a homestead, tame mounts and stop Xelar the Bald Wizard.</span><i>Play the RPG →</i></a>
+    <a class="uni-card snow" href="#play-snowball"><small>THE WINTER SPIN-OFF</small><b>Super Sean's Snowball Fight!</b><span>You're already here — the park is waiting. First to three flags owns winter.</span><i>Back to the battle ↑</i></a>
+  </div>
+</div></section>
+
+<div class="wrap ad-row"><div class="ad-slot ad-slot-wide" data-adsterra-placement="footer-banner-responsive" aria-label="Advertisement">Advertisement</div></div>
+
+<footer class="footer"><div class="wrap"><span>© 2026 Fire Dragon Interactive</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="/">Universe home</a></span></div></footer>
+
+<script src="consent.js" defer></script>
+<script type="module">
+  import { buildRoster, startSnowball } from './snowball/snowball-game.js';
+  buildRoster(document.getElementById('rosterGrid'));
+  startSnowball();
+</script>
+</body></html>

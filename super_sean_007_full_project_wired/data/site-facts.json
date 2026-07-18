@@ -1,13 +1,13 @@
 {
   "gameTitle": "Super Sean 007: Legend of the Seven Gems",
   "shortName": "Super Sean 007",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "officialUrl": "https://www.supersean007.com/",
   "publisher": {
     "name": "Fire Dragon Interactive",
     "url": "https://www.firedragoninteractive.com/"
   },
-  "lastModified": "2026-07-14",
+  "lastModified": "2026-07-18",
   "datePublished": "2026-07-09",
   "regionCount": 11,
   "mainChapters": 15,
@@ -104,6 +104,7 @@
     "local saves, copyable save codes and optional Cloud Sync",
     "optional one-to-four-player Party Link co-op",
     "desktop, tablet and mobile controls",
-    "public service status and automated production monitoring"
+    "public service status and automated production monitoring",
+    "companion game: Super Sean's Snowball Fight, a 3D 12-vs-12 capture-the-flag snow battle at /snowball.html"
   ]
 }

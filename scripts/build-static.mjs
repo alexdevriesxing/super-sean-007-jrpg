@@ -9,7 +9,7 @@ const entries = [
   'turn-config.js', 'cloud-controls.js', 'player-preferences.js', 'accessibility.js', 'runtime-hardening.js',
   'stats.html', 'stats.js', 'stats.css', 'status.html', 'status.js', 'status.css', 'support.html',
   'privacy.html', 'terms.html', '404.html', 'security-policy.html',
-  'guides.html', 'characters.html', 'world.html', 'updates.html', 'content.css',
+  'guides.html', 'characters.html', 'world.html', 'updates.html', 'snowball.html', 'snowball', 'content.css',
   'styles.css', 'accessibility.css', 'player-preferences.css', 'favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt',
   'ai-summary.json', 'site.webmanifest', 'humans.txt', 'security.txt',
   '_headers', '_redirects'
