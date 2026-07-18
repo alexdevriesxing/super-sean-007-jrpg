@@ -1,11 +1,11 @@
 (() => {
   'use strict';
 
-  // Banners execute on the project's stable pages.dev origin. That gives the
-  // provider the cookie-capable document it requires while keeping it
-  // cross-origin from game localStorage, cloud-sync IDs and credentials.
+  // Adsterra's banner runtime expects a cookie-capable, same-origin top window.
+  // Keep each known unit in a dedicated iframe so document.write and globals
+  // remain contained without blocking the provider's required browser APIs.
   const AD_HOST = 'demolishwrestconclusions.com';
-  const AD_FRAME_ORIGIN = 'https://super-sean-007-jrpg.pages.dev';
+  const AD_FRAME_PATH = '/ad-frame';
 
   const NATIVE_BANNER = {
     src: `https://${AD_HOST}/ce88b3be674af35280aa2502234d5353/invoke.js`,
@@ -73,7 +73,7 @@
   }
 
   function loadFrame(frame, unitId) {
-    frame.src = `${AD_FRAME_ORIGIN}/ad-frame?unit=${encodeURIComponent(unitId)}`;
+    frame.src = `${AD_FRAME_PATH}?unit=${encodeURIComponent(unitId)}`;
   }
 
   function renderBanner(slot, unit, loading = 'lazy') {

@@ -19,7 +19,7 @@ function response(html, status = 200) {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'cache-control': status === 200 ? 'public, max-age=300' : 'no-store',
-      'content-security-policy': "default-src 'none'; script-src 'unsafe-inline' https:; style-src 'unsafe-inline' https:; img-src data: blob: https:; connect-src https:; frame-src data: blob: https:; font-src data: https:; form-action https:; base-uri 'none'; frame-ancestors https://supersean007.com https://www.supersean007.com",
+      'content-security-policy': "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https:; style-src 'unsafe-inline' https:; img-src data: blob: https:; connect-src https:; frame-src data: blob: https:; font-src data: https:; form-action https:; base-uri 'none'; frame-ancestors 'self' https://supersean007.com https://www.supersean007.com",
       'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
       'referrer-policy': 'strict-origin-when-cross-origin',
       'x-content-type-options': 'nosniff',

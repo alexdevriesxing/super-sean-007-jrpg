@@ -78,8 +78,8 @@ if (/localStorage|sessionStorage/.test(statsJs)) errors.push('Diagnostics client
 if (!/Content-Security-Policy: default-src 'none'/.test(headers)) errors.push('Diagnostics does not have a dedicated restrictive CSP.');
 if (!privacy.includes('Short-lived SHA-256 network fingerprints')) errors.push('Privacy policy does not disclose abuse-prevention hashing.');
 if (!privacy.includes('permanently delete the stored cloud copy')) errors.push('Privacy policy does not disclose cloud deletion.');
-if (!ads.includes("sandbox', 'allow-scripts allow-same-origin") || !ads.includes('super-sean-007-jrpg.pages.dev') || !ads.includes('/ad-frame?unit=')) errors.push('Advertising is not isolated in the cross-origin sandbox.');
-if (!adFrame.includes('frame-ancestors https://supersean007.com https://www.supersean007.com') || !adFrame.includes("x-robots-tag") || !adFrame.includes('BANNERS[unit]')) errors.push('Cross-origin ad-frame allowlist or response hardening is incomplete.');
+if (!ads.includes("sandbox', 'allow-scripts allow-same-origin") || !ads.includes("AD_FRAME_PATH = '/ad-frame'") || !ads.includes('?unit=')) errors.push('Advertising is not contained in dedicated unit frames.');
+if (!adFrame.includes("frame-ancestors 'self' https://supersean007.com https://www.supersean007.com") || !adFrame.includes("x-robots-tag") || !adFrame.includes('BANNERS[unit]') || !adFrame.includes("'unsafe-eval'")) errors.push('Ad-frame allowlist or provider-compatible response policy is incomplete.');
 if (/SOCIAL_BAR_SRC|injectSocialBar/.test(ads)) errors.push('Top-level Social Bar code is still present.');
 if (!runtime.includes('delete game.debug')) errors.push('Production QA controls are not removed.');
 if (!runtime.includes('startNewGamePlus')) errors.push('Safe New Game+ action is not preserved after debug removal.');

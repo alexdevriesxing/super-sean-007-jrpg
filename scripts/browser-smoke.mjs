@@ -7,7 +7,7 @@ const HOST = '127.0.0.1';
 const PORT = 4173;
 const DEBUG_PORT = 9222;
 const BASE_URL = `http://${HOST}:${PORT}`;
-const VITE_BIN = path.resolve('node_modules/vite/bin/vite.js');
+const WRANGLER_BIN = path.resolve('node_modules/wrangler/bin/wrangler.js');
 const EXPECTED_VERSION = JSON.parse(await readFile('package.json', 'utf8')).version;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -150,8 +150,8 @@ let chrome;
 let cdp;
 
 try {
-  preview = spawn(process.execPath, [VITE_BIN, 'preview', '--host', HOST, '--port', String(PORT)], {
-    env: {...process.env, NO_COLOR: '1'},
+  preview = spawn(process.execPath, [WRANGLER_BIN, 'pages', 'dev', 'dist', '--ip', HOST, '--port', String(PORT)], {
+    env: {...process.env, NO_COLOR: '1', WRANGLER_SEND_METRICS: 'false'},
     stdio: ['ignore', 'pipe', 'pipe']
   });
   preview.stdout.on('data', chunk => process.stdout.write(`[preview] ${chunk}`));

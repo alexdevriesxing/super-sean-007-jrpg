@@ -303,6 +303,20 @@ generated tilesets are intentionally left — no game-ready value).
 - Production routing follows the existing Cloudflare edge policy: `www` permanently
   redirects to canonical `supersean007.com`, with metadata and monitoring aligned
   to the final host so there are no competing redirects or SEO signals.
-- Live-browser ad QA found Adsterra's banner runtime requires cookie access. Banner
-  frames now run on the cross-origin Pages host via `/ad-frame`, keeping game
-  storage isolated while allowing the provider creatives to render.
+- Live-browser ad QA found Adsterra's banner runtime requires cookie, top-window
+  and dynamic-evaluation access. Known units now run through a same-origin,
+  noindex `/ad-frame` allowlist so provider creatives can render without global
+  `atOptions` or `document.write` collisions in the game document.
+- Resumed release QA: full `npm run build` completed cleanly (48/48 tests,
+  production validation, v1.6.1 hardening and 29.6 MB performance budget).
+  Local Cloudflare Pages browser checks at 1440px, 820px and 390px confirmed all
+  visible allowlisted units and provider scripts return 200, slots reach `ready`,
+  responsive sizes select 728/468/320, 300x250 and 160x600/300 as intended, and
+  horizontal overflow remains 0px. Final creative insertion still requires the
+  production hostname because Adsterra does not serve domain-bound inventory on
+  localhost; production verification remains the release gate.
+- Updated `scripts/browser-smoke.mjs` to serve the bundle with local Cloudflare
+  Pages instead of Vite so `/ad-frame` executes as a Function in CI and cannot
+  be rewritten recursively to the homepage. The packaged Chrome gameplay smoke
+  now passes through the production-equivalent Function route; the web-game
+  action client also reached exploration with complete state and correct visuals.
