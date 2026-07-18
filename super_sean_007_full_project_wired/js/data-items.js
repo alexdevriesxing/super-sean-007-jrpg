@@ -53,6 +53,13 @@
     'Moon Charm':    {type:'equipment', slot:'charm',  img:'icon_moon', icon:{sheet:'moon', tile:5},   sell:60, maxMp:25, desc:'Shrine token. +25 max MP.'},
     'Relic Crown':   {type:'equipment', slot:'charm',  img:'icon_crown', icon:{sheet:'ruins', tile:9},  sell:140, attack:5, defense:5, maxMp:20, desc:'Crown of the old kings. +5 ATK, +5 DEF, +20 MP.'},
     'Sage Wand':     {type:'equipment', slot:'weapon', img:'icon_wand', icon:{sheet:'moon', tile:16},  sell:95, attack:14, maxMp:20, desc:'Moon-touched focus. +14 ATK, +20 max MP.'},
+    'Gear Blade +2': {type:'equipment', slot:'weapon', icon:{sheet:'petro', tile:11}, sell:110, attack:18, desc:'Forge-mastered Petro edge. +18 ATK.'},
+    'Starfall Edge +2':{type:'equipment', slot:'weapon', img:'icon_star_gold', icon:{sheet:'moon', tile:16}, sell:190, attack:28, desc:'Starlight, twice-folded at the forge. +28 ATK.'},
+    'Guardian Plate +2':{type:'equipment', slot:'armor', img:'icon_shield', icon:{sheet:'ruins', tile:3}, sell:100, defense:14, desc:'Reinforced stone-set armor. +14 DEF.'},
+    'Moonweave Cloak +2':{type:'equipment', slot:'armor', icon:{sheet:'moon', tile:9}, sell:160, defense:20, desc:'Double-woven moonlight. +20 DEF.'},
+    'Hero Sandwich': {type:'consumable', img:'icon_bread', icon:{sheet:'birthday', tile:13}, sell:14, heal:30, buff:'inspired', buffTurns:3, desc:'Hearty! Heals 30 HP and inspires your next battle (+25% damage, 3 turns).'},
+    'Iceberry Smoothie':{type:'consumable', img:'icon_potion_blue', icon:{sheet:'birthday', tile:21}, sell:14, mana:15, buff:'regen', buffTurns:3, desc:'Chilly-sweet. +15 MP and regenerating HP for your next battle.'},
+    'Iron Stew':     {type:'consumable', img:'icon_meat', icon:{sheet:'meadow', tile:6}, sell:16, heal:20, buff:'ironGuard', buffTurns:2, desc:'Petro classic. Heals 20 HP and halves damage early in your next battle.'},
     'Tome of Legends':{type:'equipment', slot:'charm', img:'icon_book', icon:{sheet:'ruins', tile:4},  sell:120, attack:4, defense:4, maxMp:25, desc:'Every hero\'s tale, annotated. +4 ATK, +4 DEF, +25 MP.'}
   };
 
@@ -83,7 +90,16 @@
     {id:'mooncharm', name:'Moon Charm',    out:{item:'Moon Charm', qty:1},   ins:[['Moon Herb',2],['Crystal Shard',2]], station:'forge', cat:'gear'},
     {id:'crown',   name:'Relic Crown',     out:{item:'Relic Crown', qty:1},  ins:[['Ancient Relic',3],['Crystal Shard',3],['Gear Part',2]], station:'forge', cat:'gear'},
     {id:'sagewand', name:'Sage Wand',      out:{item:'Sage Wand', qty:1},    ins:[['Plank',2],['Moon Herb',3],['Crystal Shard',2]], station:'forge', cat:'gear'},
-    {id:'tome',    name:'Tome of Legends', out:{item:'Tome of Legends', qty:1}, ins:[['Ancient Relic',2],['Plank',1],['Moon Herb',2]], station:'workbench', cat:'gear'}
+    {id:'tome',    name:'Tome of Legends', out:{item:'Tome of Legends', qty:1}, ins:[['Ancient Relic',2],['Plank',1],['Moon Herb',2]], station:'workbench', cat:'gear'},
+    // Forge mastery: transmute base gear + rare materials into tier-2 versions.
+    {id:'gearblade2', name:'Gear Blade +2',      out:{item:'Gear Blade +2', qty:1},      ins:[['Gear Blade',1],['Gear Part',2],['Ore Chunk',2]], station:'forge', cat:'gear'},
+    {id:'starfall2',  name:'Starfall Edge +2',   out:{item:'Starfall Edge +2', qty:1},   ins:[['Starfall Edge',1],['Crystal Shard',3],['Moon Herb',2]], station:'forge', cat:'gear'},
+    {id:'plate2',     name:'Guardian Plate +2',  out:{item:'Guardian Plate +2', qty:1},  ins:[['Guardian Plate',1],['Stone Brick',4],['Ore Chunk',2]], station:'forge', cat:'gear'},
+    {id:'cloak2',     name:'Moonweave Cloak +2', out:{item:'Moonweave Cloak +2', qty:1}, ins:[['Moonweave Cloak',1],['Moon Herb',3],['Crystal Shard',2]], station:'forge', cat:'gear'},
+    // Well-Fed dishes: eat before a fight for an opening battle buff.
+    {id:'sandwich', name:'Hero Sandwich',     out:{item:'Hero Sandwich', qty:1},     ins:[['Honey Bread',1],['Berry',1]], station:'kitchen', cat:'food'},
+    {id:'smoothie', name:'Iceberry Smoothie', out:{item:'Iceberry Smoothie', qty:1}, ins:[['Berry',2],['Crystal Shard',1]], station:'kitchen', cat:'food'},
+    {id:'ironstew', name:'Iron Stew',         out:{item:'Iron Stew', qty:1},         ins:[['Mushroom Cap',2],['Ore Chunk',1]], station:'kitchen', cat:'food'}
   ];
 
   SSG.CROPS = {

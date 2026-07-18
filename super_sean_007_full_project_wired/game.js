@@ -851,7 +851,7 @@
       return;
     }
     if (state.scene === type) { state.scene = 'explore'; return; }
-    if (!['explore', 'inventory', 'quest', 'map', 'craft', 'shop', 'build'].includes(state.scene)) return;
+    if (!['explore', 'inventory', 'quest', 'bestiary', 'map', 'craft', 'shop', 'build'].includes(state.scene)) return;
     if (type === 'build') {
       if (state.mapId !== 'homestead') { showToast('Build mode works at your Homestead (south of the village).'); return; }
       if (!state.homestead.claimed) { showToast('Claim the Homestead Crystal first!'); return; }
@@ -1040,6 +1040,7 @@
     if (e.code === 'KeyE') interact();
     if (e.code === 'KeyI') toggleScene('inventory');
     if (e.code === 'KeyQ') toggleScene('quest');
+    if (e.code === 'KeyN') toggleScene('bestiary');
     if (e.code === 'KeyM') toggleScene('map');
     if (e.code === 'KeyC') toggleScene('craft');
     if (e.code === 'KeyB') toggleScene('build');
@@ -1053,7 +1054,7 @@
         systems.startNgPlus();
       }
     }
-    if (e.code === 'Escape' && ['inventory', 'quest', 'map', 'craft', 'shop'].includes(state.scene)) state.scene = 'explore';
+    if (e.code === 'Escape' && ['inventory', 'quest', 'bestiary', 'map', 'craft', 'shop'].includes(state.scene)) state.scene = 'explore';
   });
   window.addEventListener('keyup', e => { keys[e.code] = false; });
 
@@ -1111,6 +1112,9 @@
       daily: state.daily ? {...systems.dailyRequest()} : null,
       treasure: state.treasure ? {...state.treasure} : null,
       ngPlus: state.ngPlus || 0,
+      arena: state.arena || {rank: 0, best: 0},
+      bestiaryCount: Object.keys(state.bestiary || {}).length,
+      wellFed: state.wellFed || null,
       fishing: state.scene === 'fishing' ? {pos: Number(systems.fishing.pos.toFixed(2))} : null,
       persistence: {savedAt: state.savedAt, playMinutes: Math.round(state.playMinutes), cloud: {enabled: CloudSync.enabled, status: CloudSync.status}},
       coop: {

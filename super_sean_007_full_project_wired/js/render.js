@@ -289,7 +289,7 @@
       panel(12, 496, 936, 34, 'rgba(12,39,69,.78)');
       g.fillStyle = '#fff'; g.font = '13px Nunito';
       g.fillText(`${mapName} · Coins ${h.coins} · Gems ${st.gems.length}/7${extra}`, 26, 518);
-      g.fillText('E interact · C craft · B build · I bag · Q quests · M map · P save', 560, 518);
+      g.fillText('E interact · C craft · B build · I bag · Q quests · N foes · M map · P save', 545, 518);
       if (ctx.toastTimer() > 0) {
         panel(240, 112, 480, 38, 'rgba(255,255,255,.94)');
         g.fillStyle = '#12365a'; g.font = 'bold 14px Nunito';
@@ -571,6 +571,36 @@
       g.fillStyle = '#2471a3'; g.font = 'bold 13px Nunito'; g.fillText('Press Q/Esc to close', 700, 470);
     }
 
+    /* ---------- bestiary ---------- */
+    function drawBestiary() {
+      drawWorld(); drawHud();
+      panel(70, 44, 820, 448, 'rgba(255,255,255,.97)');
+      const st = S();
+      const found = Object.entries(st.bestiary || {});
+      // Total distinct foe looks across every region (arena roster adds more).
+      const pool = new Set();
+      Object.values(ctx.maps()).forEach(m => (m.monsters || []).forEach(mo => pool.add(mo.sprite || mo.kind)));
+      g.fillStyle = '#12365a'; g.font = 'bold 26px Nunito'; g.fillText('Bestiary', 102, 86);
+      g.font = '13px Nunito'; g.fillStyle = '#2471a3';
+      g.fillText(`Discovered ${found.length} foes (${pool.size}+ roam the regions) · milestones at 10, 25 and 40 · N/Esc to close`, 102, 108);
+      const arena = st.arena || {rank: 0, best: 0};
+      g.font = 'bold 14px Nunito'; g.fillStyle = '#8b4a16';
+      g.fillText(`Champion's Circuit — Rank ${arena.rank} (best ${arena.best})`, 600, 86);
+      found.slice(0, 40).forEach(([sprite, entry], i) => {
+        const col = i % 8, row = Math.floor(i / 8);
+        const x = 102 + col * 98, y = 126 + row * 70;
+        g.fillStyle = '#f4f7fa'; g.beginPath(); g.roundRect(x - 4, y - 4, 90, 62, 8); g.fill();
+        if (!ctx.drawIcon(sprite, x + 20, y, 42, 42)) ctx.drawIcon('marker_battle', x + 20, y, 42, 42);
+        g.fillStyle = '#12365a'; g.font = 'bold 9px Nunito';
+        g.fillText(entry.name.slice(0, 16), x, y + 50);
+        g.fillStyle = '#7a90a5'; g.fillText(`×${entry.n}`, x + 70, y + 8);
+      });
+      if (!found.length) {
+        g.fillStyle = '#41576b'; g.font = '15px Nunito';
+        g.fillText('No foes recorded yet — win a battle to start your collection!', 240, 280);
+      }
+    }
+
     /* ---------- world map ---------- */
     function drawWorldMap() {
       drawWorld(); drawHud();
@@ -623,7 +653,11 @@
       g.font = '13px Nunito'; g.fillStyle = '#2471a3';
       const stText = ['workbench', 'kitchen', 'forge'].map(s => `${stations.has(s) ? '✓' : '✗'} ${s}`).join('   ');
       g.fillText(`Homestead stations: ${stText} · click a recipe to craft · Esc to close`, 92, 104);
-      SSG.RECIPES.forEach((r, i) => {
+      const craftMenu = sys().craftMenu;
+      ['materials', 'food', 'garden', 'gear'].forEach((catName, i) => {
+        button(560 + i * 88, 58, 82, 26, cap(catName), () => { craftMenu.cat = catName; }, craftMenu.cat !== catName);
+      });
+      SSG.RECIPES.filter(r => r.cat === craftMenu.cat).forEach((r, i) => {
         const col = i % 2, row = Math.floor(i / 2);
         const x = 88 + col * 410, y = 116 + row * 31;
         const ok = sys().canCraft(r);
@@ -922,6 +956,7 @@
       else if (scene === 'battle') drawBattle();
       else if (scene === 'inventory') drawInventory();
       else if (scene === 'quest') drawQuestLog();
+      else if (scene === 'bestiary') drawBestiary();
       else if (scene === 'map') drawWorldMap();
       else if (scene === 'craft') drawCraft();
       else if (scene === 'shop') drawShop();

@@ -65,7 +65,13 @@
       if (def.heal) h.hp = Math.min(h.maxHp, h.hp + def.heal);
       if (def.mana) h.mp = Math.min(heroStats().maxMp, h.mp + def.mana);
       if (def.friendship) h.friendship = Math.min(100, h.friendship + def.friendship);
-      ctx.sfx('reward'); ctx.showToast(`Used ${name}.`); ctx.save();
+      if (def.buff) {
+        S().wellFed = {buff: def.buff, turns: def.buffTurns || 3, label: name};
+        ctx.showToast(`Well fed! ${name} will power up your next battle.`);
+      } else {
+        ctx.showToast(`Used ${name}.`);
+      }
+      ctx.sfx('reward'); ctx.save();
       return true;
     }
 
@@ -463,6 +469,7 @@
 
     /* ---------------- shop ---------------- */
     const shop = {open: false, tab: 'buy', idx: 0};
+    const craftMenu = {cat: 'food'}; // active craft-screen category tab
     function shopPrices() {
       const mult = perkActive('discount') ? 0.85 : 1;
       return SSG.SHOP_STOCK
@@ -539,7 +546,51 @@
       ctx.sfx('menu_open');
       ctx.save();
     }
+    // Champion's Circuit: endless ranked arena. Every fight scales with the
+    // hero's level and the current rank; every 5th rank is a boss showdown.
+    const ARENA_ROSTER = [
+      {sprite:'mob_goblin_brute',   name:'Grubb the Brute',      kind:'slime',    element:null},
+      {sprite:'mob_lizard_guard',   name:'Scale-Captain Vess',   kind:'crystal',  element:'water'},
+      {sprite:'mob_skull_knight',   name:'Sir Rattlebone',       kind:'bat',      element:'void'},
+      {sprite:'mob_fox_spirit',     name:'Kitsu the Swift',      kind:'bat',      element:'wind'},
+      {sprite:'mob_flame_demon',    name:'Cinderjaw',            kind:'mushroom', element:'fire'},
+      {sprite:'mob_griffin',        name:'Stormwing',            kind:'bat',      element:'wind'},
+      {sprite:'mob_hellhound',      name:'Emberfang',            kind:'slime',    element:'fire'},
+      {sprite:'mob_black_knight',   name:'The Nameless Knight',  kind:'crystal',  element:'void'},
+      {sprite:'boss_sorceress',     name:'Duelist-Mage Elara',   kind:'xelar',    element:'light'},
+      {sprite:'boss_cultleader',    name:'Grandmaster Hexx',     kind:'xelar',    element:'ice'}
+    ];
+    const ARENA_BGS = ['bg_arena_mushroom', 'bg_arena_crystal', 'bg_arena_machine', 'bg_arena_moon', 'bg_arena_volcano'];
+    function arenaChallenge(npc) {
+      const st = S();
+      const h = st.hero;
+      st.arena = st.arena || {rank: 0, best: 0};
+      if (h.hp < h.maxHp * 0.4) {
+        ctx.showDialogue(npc.name, ['You look wobbly, hero. Rest up first — the Circuit shows no mercy!'], npc.char);
+        return;
+      }
+      const rank = st.arena.rank;
+      const base = ARENA_ROSTER[rank % ARENA_ROSTER.length];
+      const lap = Math.floor(rank / ARENA_ROSTER.length);
+      const boss = (rank + 1) % 5 === 0;
+      const power = rank + lap * 4 + h.level;
+      ctx.battleApi().start({
+        id: `arena_rank_${rank + 1}`,
+        arena: true,
+        boss,
+        sprite: base.sprite,
+        kind: base.kind,
+        element: base.element,
+        name: `${base.name}${lap > 0 ? ` ★${lap + 1}` : ''}`,
+        arenaBg: ARENA_BGS[rank % ARENA_BGS.length],
+        hp: 55 + power * 22, maxHp: 55 + power * 22,
+        atk: 8 + Math.floor(power * 1.7),
+        xp: 18 + rank * 7,
+        coins: 20 + rank * 8
+      });
+    }
     function talk(npc) {
+      if (npc.service === 'arena') { arenaChallenge(npc); return; }
       if (npc.service === 'inn') { innRest(npc); return; }
       if (npc.shop) { shop.open = true; shop.tab = 'buy'; shop.idx = 0; ctx.setScene('shop'); ctx.sfx('menu_open'); return; }
       if (questDelivery(npc.id)) return;
@@ -756,7 +807,7 @@
     return {
       addItem, removeItem, countItem, hasCost, payCost, costText,
       equipBonuses, heroStats, equipItem, useConsumable,
-      currentQuest, advanceMain, sideQuestFor, talk, npcVisible, toggleMount,
+      currentQuest, advanceMain, sideQuestFor, talk, npcVisible, toggleMount, craftMenu,
       nodeActive, nodeAt, nearestNode, harvest, nodeHits,
       stationsBuilt, recipeAvailable, canCraft, craft,
       build, claimRect, inClaim, pieceAt, piecesInCategory, selectedPiece,

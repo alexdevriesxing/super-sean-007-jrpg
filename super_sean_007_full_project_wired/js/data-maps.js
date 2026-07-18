@@ -130,7 +130,8 @@
       {id:'timmy', name:'Timmy', char:'ruush', sprite:'npc_village_boy', x:8*T, y:12*T, role:'Village kid'},
       {id:'cook_nadia', name:'Cook Nadia', char:'haraku', sprite:'npc_cook', x:22*T, y:8*T, role:'Runs the festival kitchen'},
       {id:'teacher_opal', name:'Teacher Opal', char:'haraku', sprite:'npc_teacher', x:6*T, y:6*T, role:'Village schoolteacher'},
-      {id:'bard_lio', name:'Bard Lio', char:'ruush', sprite:'npc_musician', x:24*T, y:14*T, role:'Plays for coins and cheer'}
+      {id:'bard_lio', name:'Bard Lio', char:'ruush', sprite:'npc_musician', x:24*T, y:14*T, role:'Plays for coins and cheer'},
+      {id:'battlemaster', name:'Battlemaster Korr', char:'petroman', sprite:'mob_black_knight', x:13*T, y:10*T+30, role:"Champion's Circuit — talk to fight the next ranked challenger!", service:'arena'}
     ];
     m.chests = [
       {id:'village_chest', x:7*T, y:15*T, reward:{coins:25, item:'Berry Juice'}, label:'Village chest'},

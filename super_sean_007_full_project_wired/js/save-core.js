@@ -30,6 +30,9 @@
     daily: null,
     treasure: null,
     mount: null,
+    wellFed: null,
+    arena: {rank: 0, best: 0},
+    bestiary: {},
     ngPlus: 0,
     playMinutes: 0,
     savedAt: 0,
@@ -54,9 +57,10 @@
     ['player', 'unlocked', 'hero', 'equipment', 'quest', 'homestead'].forEach(key => {
       merged[key] = {...base[key], ...(raw[key] || {})};
     });
-    ['items', 'flags', 'sideQuests', 'chestsOpened', 'defeatedBosses', 'nodeTimers', 'crops', 'achievements'].forEach(key => {
+    ['items', 'flags', 'sideQuests', 'chestsOpened', 'defeatedBosses', 'nodeTimers', 'crops', 'achievements', 'bestiary'].forEach(key => {
       merged[key] = {...(raw[key] || {})};
     });
+    merged.arena = {...base.arena, ...(raw.arena || {})};
     merged.stats = {...base.stats, ...(raw.stats || {})};
     merged.gems = Array.isArray(raw.gems) ? raw.gems : [];
     merged.party = Array.isArray(raw.party) && raw.party.length ? raw.party : base.party;

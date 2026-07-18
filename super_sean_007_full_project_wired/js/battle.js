@@ -18,6 +18,7 @@
 
     function selectBackground(monster) {
       const map = S().mapId || 'village';
+      if (monster.arenaBg) return monster.arenaBg;
       if (monster.final) return 'bg_arena_xelar';
       if (monster.boss) {
         if (monster.kind === 'xelar') return 'bg_darkcastle';
@@ -75,6 +76,13 @@
         intro: monster.boss ? (monster.final ? 150 : 100) : 0,
         introFinal: Boolean(monster.final)
       };
+      // Well-Fed: a dish eaten in the overworld powers up the battle opening.
+      const fed = st.wellFed;
+      if (fed && fed.buff) {
+        battle[fed.buff] = fed.turns;
+        battle.log.unshift(`Well fed! The ${fed.label} kicks in.`);
+        st.wellFed = null;
+      }
       ctx.setScene('battle');
       ctx.music(monster.boss ? 'boss' : 'battle');
       // Bosses get the cinematic name-card; regular fights get a Battle Start! card.
@@ -377,6 +385,32 @@
       sys().bumpStat('battlesWon');
       ctx.stat('battle_win');
       if (e.boss) ctx.stat('boss_win');
+      // Bestiary: record the foe (keyed by its art so each look is one entry).
+      st.bestiary = st.bestiary || {};
+      const bKey = e.sprite || e.kind;
+      const known = st.bestiary[bKey];
+      st.bestiary[bKey] = {name: e.name, n: (known?.n || 0) + 1};
+      if (!known) {
+        const found = Object.keys(st.bestiary).length;
+        [[10, 150, 'Crystal Candy'], [25, 400, 'Ancient Relic'], [40, 900, 'Gemkin Crown']].forEach(([goal, coins, item]) => {
+          const flag = `bestiary${goal}`;
+          if (found >= goal && !st.flags[flag]) {
+            st.flags[flag] = true;
+            st.hero.coins += coins;
+            sys().addItem(item, 1);
+            ctx.showToast(`Bestiary milestone: ${goal} foes! +${coins} coins and a ${item}.`);
+          }
+        });
+      }
+      // Champion's Circuit: rank up and pay the victory purse.
+      if (e.arena) {
+        st.arena = st.arena || {rank: 0, best: 0};
+        st.arena.rank += 1;
+        st.arena.best = Math.max(st.arena.best, st.arena.rank);
+        const purse = 20 + st.arena.rank * 10;
+        h.coins += purse;
+        ctx.showToast(`Champion's Circuit — Rank ${st.arena.rank}! Victory purse: ${purse} coins.`);
+      }
       const drops = rollDrops(e.kind);
       if (e.id === 'gemkin_avatar') {
         sys().addItem('Gemkin Crown', 1);

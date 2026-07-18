@@ -3,7 +3,7 @@
 Super Sean 007: Legend of the Seven Gems is a free HTML5 browser JRPG with turn-based party battles, gathering, crafting, gardening and a buildable homestead. It is playable at https://www.supersean007.com/
 
 ## Current release facts
-- Version: 1.4.0
+- Version: 1.5.0
 - Updated: 2026-07-14
 - Publisher: Fire Dragon Interactive (https://www.firedragoninteractive.com/)
 - Platform: desktop, tablet and mobile web browsers
