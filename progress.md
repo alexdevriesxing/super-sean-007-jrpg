@@ -328,3 +328,12 @@ generated tilesets are intentionally left — no game-ready value).
 - Local packaged smoke now exempts only the expected `/api/turn` 503 caused by
   intentionally absent local TURN secrets; every other browser error remains a
   failure, while the live release suite continues to verify production APIs.
+- Production release `9c67891` passed the strict custom-domain smoke on its first
+  convergence attempt. A normal headed Chrome session (required because Adsterra
+  returns empty entry scripts to HeadlessChrome) rendered real creatives for all
+  supplied inventory: 728x90, 468x60, 320x50, 300x250, 160x600, 160x300, native
+  and Social Bar. Creative images and impression requests were present, consent
+  UI was absent, and desktop/mobile horizontal overflow remained 0px.
+- Live control QA confirmed the RPG owns arrow keys during exploration (0px page
+  movement) while normal off-game ArrowDown scrolling remains 40px. Snowball
+  likewise measured 40px scrolling before deployment and 0px while playing.
