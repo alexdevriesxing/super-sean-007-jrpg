@@ -42,17 +42,29 @@ const now$ = () => performance.now() / 1000;
 /* ---------- roster cards (also used by the lore page sections) ---------- */
 export function buildRoster(gridEl) {
   const all = [...HEROES.map(k => ({ ...k, team: 0 })), ...BULLIES.map(k => ({ ...k, team: 1 }))];
-  gridEl.innerHTML = all.map((k, i) => `
+  gridEl.innerHTML = all.map((k, i) => {
+    const isBully = k.team === 1;
+    const indexInTeam = isBully ? i - 12 : i;
+    const imgUrl = isBully ? 'assets/snowball/bullies_portraits.webp' : 'assets/snowball/heroes_portraits.webp';
+    const col = indexInTeam % 4;
+    const row = Math.floor(indexInTeam / 4);
+    const bx = (col * 100) / 3;
+    const by = (row * 100) / 2;
+    return `
     <article class="kid-card team-${k.team}">
-      <div class="portrait p${i % 8}"><span>${k.name[0]}</span><i>${k.role}</i></div>
-      <div class="kid-info"><small>${k.nickname}</small><h3>${k.name}</h3><p>${k.quirk}</p>
+      <div class="portrait p${i % 8}" style="background-image: url('${imgUrl}'); background-position: ${bx}% ${by}%; background-size: 400% 300%;"></div>
+      <div class="kid-info">
+        <small>${k.nickname} • ${k.role}</small>
+        <h3>${k.name}</h3>
+        <p>${k.quirk}</p>
         <div class="stats">
           <label>SPD <span><i style="width:${k.speed}%"></i></span><b>${k.speed}</b></label>
           <label>STR <span><i style="width:${k.strength}%"></i></span><b>${k.strength}</b></label>
           <label>AIM <span><i style="width:${k.accuracy}%"></i></span><b>${k.accuracy}</b></label>
         </div>
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
 }
 
 /* ---------- boot ---------- */
@@ -709,8 +721,10 @@ export function startSnowball() {
   };
 
   /* input: keyboard + mouse */
+  const SCROLL_KEYS = new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space']);
   const onKeyDown = (e) => {
     keys.add(e.code);
+    if (SCROLL_KEYS.has(e.code)) e.preventDefault();
     if (e.code === 'KeyR') reload();
     if (e.code === 'KeyM') { muted = !muted; localStorage.setItem('ssb-muted', muted ? '1' : '0'); syncSound(); }
     if (e.code === 'Escape' && mode === 'playing') setMode('paused');

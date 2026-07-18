@@ -125,8 +125,14 @@
       if (slot.offsetParent === null && getComputedStyle(slot).position !== 'fixed') return;
       fillSlot(placement, slot);
     });
-    // The former top-level Social Bar was intentionally removed because it ran
-    // in the game origin and could access player storage.
+    // Social Bar — floating overlay, loaded directly (not sandboxable).
+    if (!document.getElementById('adsterra-social-bar')) {
+      const sb = document.createElement('script');
+      sb.id = 'adsterra-social-bar';
+      sb.src = `https://${AD_HOST}/93/ed/a8/93eda8aa20c1ab61e0841c91645b40a1.js`;
+      sb.defer = true;
+      document.body.appendChild(sb);
+    }
   }
 
   if (document.readyState === 'loading') {

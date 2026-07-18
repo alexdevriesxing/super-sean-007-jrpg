@@ -57,7 +57,7 @@
         <button type="button" data-diff="classic" class="active"><b>classic</b><span>Smart &amp; silly</span></button>
         <button type="button" data-diff="blizzard"><b>blizzard</b><span>Mean mittens</span></button>
       </div>
-      <div class="sean-card"><div class="portrait-s">S</div><div><small>YOU ARE</small><b>SUPER SEAN</b><span>Speed 86 · Strength 78 · Accuracy 88</span></div><i>Captain</i></div>
+      <div class="sean-card"><div class="portrait-s" style="background-image: url('assets/characters/sean_portrait.png'); background-size: cover; background-position: center; color: transparent;">S</div><div><small>YOU ARE</small><b>SUPER SEAN</b><span>Speed 86 · Strength 78 · Accuracy 88</span></div><i>Captain</i></div>
       <button id="btnDeploy" class="primary-btn deploy-btn" type="button">DEPLOY TO THE PARK <span>→</span></button>
     </section>
 
@@ -81,7 +81,7 @@
       <div id="killFeed" class="kill-feed" aria-live="polite"></div>
       <div id="crosshair" class="crosshair"><i></i><i></i><i></i><i></i><b></b><span class="hit-x">×</span></div>
       <div id="targetCard" class="target-card"><small id="targetTag">TARGET LOCK</small><b id="targetName"></b><span id="targetHp"></span></div>
-      <div class="health-panel"><div class="sean-mini">S</div><div><small>SUPER SEAN</small><div id="hudHearts" class="hearts"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></div></div><div id="flagCarry" class="flag-carry">🚩 FLAG!</div></div>
+      <div class="health-panel"><div class="sean-mini" style="background-image: url('assets/characters/sean_portrait.png'); background-size: cover; background-position: center; color: transparent;">S</div><div><small>SUPER SEAN</small><div id="hudHearts" class="hearts"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></div></div><div id="flagCarry" class="flag-carry">🚩 FLAG!</div></div>
       <div id="weaponPanel" class="weapon-panel" data-weapon="regular"><div><small id="hudWeaponName">CLASSIC SNOW</small><b><span id="hudAmmo">6</span><em id="hudAmmoMax">/6</em></b><span id="reloadWrap" class="reload-meter"><i id="reloadBar"></i>PACKING…</span></div><kbd>R</kbd></div>
       <div id="hudBuffs" class="active-buffs"></div>
       <div id="streakPop" class="streak-pop"><b id="streakN">2×</b><span>SNOW STREAK!</span></div>
@@ -180,6 +180,7 @@
 
 <footer class="footer"><div class="wrap"><span>© 2026 Fire Dragon Interactive</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="/">Universe home</a></span></div></footer>
 
+<script src="ads.js" defer></script>
 <script src="consent.js" defer></script>
 <script type="module">
   import { buildRoster, startSnowball } from './snowball/snowball-game.js';
