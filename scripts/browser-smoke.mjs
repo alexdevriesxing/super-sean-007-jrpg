@@ -181,12 +181,14 @@ try {
   ]);
   cdp.on('Runtime.exceptionThrown', event => exceptions.push(event.exceptionDetails?.text || 'Uncaught browser exception'));
   cdp.on('Log.entryAdded', event => {
-    if (event.entry?.level === 'error' && !/favicon|fonts\.googleapis/.test(event.entry.text || '')) exceptions.push(event.entry.text);
+    const text = event.entry?.text || '';
+    const expectedLocalTurn = /\/api\/turn(?:\?|$)/.test(event.entry?.url || '') && /503|service unavailable/i.test(text);
+    if (event.entry?.level === 'error' && !expectedLocalTurn && !/favicon|fonts\.googleapis/.test(text)) exceptions.push(text);
   });
 
-  const loaded = cdp.waitFor('Page.loadEventFired');
+  const domReady = cdp.waitFor('Page.domContentEventFired', 30_000);
   await cdp.send('Page.navigate', {url: `${BASE_URL}/?qa=1`});
-  await loaded;
+  await domReady;
   await poll(cdp, `Boolean(window.SuperSeanGame && window.render_game_to_text && window.SSGPlayerPreferences)`);
   await evaluate(cdp, `document.getElementById('consentDecline')?.click()`);
   await poll(cdp, `document.getElementById('gameLoader')?.classList.contains('hidden')`, 30_000);
@@ -259,7 +261,7 @@ try {
   const performance = await fetch(`${BASE_URL}/performance-report.json`).then(response => response.json());
   if (!performance.passed || !performance.totals?.criticalBytes) throw new Error('Performance budget report did not pass.');
 
-  const guideLoaded = cdp.waitFor('Page.loadEventFired');
+  const guideLoaded = cdp.waitFor('Page.domContentEventFired', 30_000);
   await cdp.send('Page.navigate', {url: `${BASE_URL}/guides.html`});
   await guideLoaded;
   const guide = await evaluate(cdp, `({title: document.title, h1: document.querySelector('h1')?.textContent || ''})`);

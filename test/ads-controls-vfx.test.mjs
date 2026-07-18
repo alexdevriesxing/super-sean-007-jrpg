@@ -46,6 +46,9 @@ test('packaged browser smoke runs through Cloudflare Pages Functions', async () 
   const smoke = await readFile(path.resolve('scripts', 'browser-smoke.mjs'), 'utf8');
   assert.match(smoke, /node_modules\/wrangler\/bin\/wrangler\.js/);
   assert.match(smoke, /'pages', 'dev', 'dist'/);
+  assert.match(smoke, /Page\.domContentEventFired/);
+  assert.doesNotMatch(smoke, /Page\.loadEventFired/);
+  assert.match(smoke, /expectedLocalTurn/);
   assert.doesNotMatch(smoke, /VITE_BIN/);
 });
 

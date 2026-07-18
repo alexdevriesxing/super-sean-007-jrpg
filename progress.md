@@ -320,3 +320,11 @@ generated tilesets are intentionally left — no game-ready value).
   be rewritten recursively to the homepage. The packaged Chrome gameplay smoke
   now passes through the production-equivalent Function route; the web-game
   action client also reached exploration with complete state and correct visuals.
+- The exact cold commit bundle exposed a smoke-only timeout while waiting for the
+  browser `load` event across hundreds of images and third-party ads. The harness
+  now gates navigation on `DOMContentLoaded` and retains its stronger explicit
+  waits for the game loader/runtime, removing cache-speed flakiness without
+  weakening gameplay readiness checks.
+- Local packaged smoke now exempts only the expected `/api/turn` 503 caused by
+  intentionally absent local TURN secrets; every other browser error remains a
+  failure, while the live release suite continues to verify production APIs.
